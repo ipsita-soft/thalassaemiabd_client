@@ -1,33 +1,35 @@
-import { fetchSliders } from "@/redux/slices/sliderSlice";
+import { fetchPublicSlider } from "@/redux/slices/publicSlice";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const HeroArea = () => {
     const dispatch = useDispatch();
-    const { sliders, isLoading, isError, error } = useSelector((state) => state.sliders);
+    const { sliders, isLoading, isError, error } = useSelector((state) => state.public);  // Adjust state selector
 
     useEffect(() => {
-        dispatch(fetchSliders());
+        dispatch(fetchPublicSlider());
     }, [dispatch]);
 
     if (isLoading) {
-        // return <p>Loading...</p>;
-        
+        return <p>Loading...</p>;  // Show loading state
     }
 
     if (isError) {
-        return <p>Error: {error}</p>;
+        return <p>Error: {error}</p>;  // Show error message if any
     }
+
+    // Ensure `sliders.data` exists and is an array before attempting to map
+    const sliderData = sliders?.data || [];
 
     return (
         <div id="carouselExampleFade" className="carousel slide carousel-fade" data-bs-ride="carousel">
             <div className="carousel-inner">
-                {sliders && sliders.map((slider, index) => (
+                {sliderData.map((slider, index) => (
                     <div 
                         key={slider.id} 
                         className={`carousel-item ${index === 0 ? "active" : ""}`}
                     >
-                        <img src={slider.image} className="d-block w-100" alt={slider.title} />
+                        <img src={slider.image} className="d-block w-100" alt={slider.title || 'Slider'} />
                     </div>
                 ))}
             </div>

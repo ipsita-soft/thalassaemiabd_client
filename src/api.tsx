@@ -1,9 +1,7 @@
 import axios from 'axios';
-import { store } from '@/redux/store';
-import { logout } from '@/redux/slices/authSlice';
 
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api/',
+  baseURL: 'https://backend.thalassaemiasamity.org/api/',
   headers: {
     'Content-Type': 'application/json',
   },

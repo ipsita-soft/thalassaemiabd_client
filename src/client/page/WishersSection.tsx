@@ -1,4 +1,4 @@
-import './Wishers.css'; 
+// import './Wishers.css'; 
 const Wishers = () => {
   const wisherImages = [
     'client/assets/images/wishers/01.jpg',

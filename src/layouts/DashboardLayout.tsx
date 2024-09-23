@@ -7,10 +7,11 @@ import {
     LineChart,
     Menu,
     Package,
-    Package2,
     Search,
     ShoppingCart,
+    Sliders,
     Users,
+    HospitalIcon
 } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
@@ -39,7 +40,7 @@ function DashboardLayout() {
                     <div className="flex h-full max-h-screen flex-col gap-2">
                         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
                             <Link to="/" className="flex items-center gap-2 font-semibold">
-                                <Package2 className="h-6 w-6" />
+                                <HospitalIcon className="h-6 w-6" />
                                 <span className="">BTS</span>
                             </Link>
                             <Button variant="outline" size="icon" className="ml-auto h-8 w-8">
@@ -75,7 +76,7 @@ function DashboardLayout() {
                                     className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/slider') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
                                         }`}
                                 >
-                                    <ShoppingCart className="h-4 w-4" />
+                                    <Sliders className="h-4 w-4" />
                                     Slider
                                 </Link>
 
@@ -87,7 +88,7 @@ function DashboardLayout() {
                                         }`}
                                 >
                                     <Users className="h-4 w-4" />
-                                    Customers
+                                    Patients
                                 </Link>
                                 <Link
                                     to="#"
@@ -121,35 +122,46 @@ function DashboardLayout() {
                             <SheetContent side="left" className="flex flex-col">
                                 <nav className="grid gap-2 text-lg font-medium">
                                     <Link
-                                        to="#"
+                                        to="/"
                                         className="flex items-center gap-2 text-lg font-semibold"
                                     >
-                                        <Package2 className="h-6 w-6" />
+                                        <HospitalIcon className="h-6 w-6" />
                                         <span className="ml-4">BTS</span>
                                     </Link>
+
                                     <Link
-                                        to="#"
-                                        className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
+                                        to="/dashboard/home"
+                                        className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground  ${isActive('/dashboard/home') ? ' bg-muted  ' : ' hover:text-foreground'
+                                            }`}
                                     >
                                         <Home className="h-5 w-5" />
                                         Dashboard
                                     </Link>
+
+
+
+
                                     <Link
-                                        to="#"
-                                        className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
+                                        to="/dashboard/slider"
+                                        className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground  ${isActive('/dashboard/slider') ? ' bg-muted  ' : ' hover:text-foreground'
+                                            }`}
                                     >
-                                        <ShoppingCart className="h-5 w-5" />
-                                        Orders
+                                        <Sliders className="h-4 w-4" />
+                                        Slider
+                                    </Link>
+
+
+                                    <Link
+                                        to="/dashboard/payments"
+                                        className={`mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground  ${isActive('/dashboard/payments') ? ' bg-muted  ' : ' hover:text-foreground'
+                                            }`}
+                                    >
+                                        <Package className="h-5 w-5" />
+                                        Payments
+
                                         <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
                                             6
                                         </Badge>
-                                    </Link>
-                                    <Link
-                                        to="#"
-                                        className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-                                    >
-                                        <Package className="h-5 w-5" />
-                                        Products
                                     </Link>
                                     <Link
                                         to="#"
