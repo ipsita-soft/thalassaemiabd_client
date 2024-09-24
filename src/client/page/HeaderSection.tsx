@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [isNavCollapsed, setIsNavCollapsed] = useState(true);
@@ -164,14 +165,14 @@ const Header = () => {
                     </div>
                   </div>
 
-                  <a href="#" className="btn">
+                  <Link to="/login" className="btn">
                     <img
                       src="client/assets/images/icon/user.png"
                       className="card-img-top"
                       style={{ width: '35px' }}
                       alt="profile"
                     />
-                  </a>
+                  </Link>
                 </div>
               </nav>
               {/* End Navbar */}

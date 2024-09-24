@@ -1,24 +1,48 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import API from '../../api';
 
+// Define a custom error type to include response property
+interface AxiosError {
+  response?: {
+    data: {
+      message: string;
+    };
+  };
+}
+
 // Thunk for logging in the user
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
-  async (userData, { rejectWithValue }) => {
+  async (userData: any, { rejectWithValue }) => {
     try {
       const response = await API.post('/login', userData);
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data.message);
+      // Type assertion to AxiosError
+      const axiosError = error as AxiosError;
+      if (axiosError.response) {
+        return rejectWithValue(axiosError.response.data.message);
+      }
+      return rejectWithValue('An unknown error occurred');
     }
   }
 );
 
-const initialState = {
+interface AuthState {
+  token: string | null;
+  user: any; 
+  roles: string[];
+  permissions: string[];
+  status: 'idle' | 'loading' | 'succeeded' | 'failed';
+  error: string | null;
+}
+
+// Initial state
+const initialState: AuthState = {
   token: localStorage.getItem('token') || null,
-  user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null,
-  roles: localStorage.getItem('roles') ? JSON.parse(localStorage.getItem('roles')) : [],
-  permissions: localStorage.getItem('permissions') ? JSON.parse(localStorage.getItem('permissions')) : [],
+  user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') as string) : null,
+  roles: localStorage.getItem('roles') ? JSON.parse(localStorage.getItem('roles') as string) : [],
+  permissions: localStorage.getItem('permissions') ? JSON.parse(localStorage.getItem('permissions') as string) : [],
   status: 'idle',
   error: null,
 };
@@ -32,18 +56,18 @@ const authSlice = createSlice({
       state.user = null;
       state.roles = [];
       state.permissions = [];
-      localStorage.removeItem('token'); // Clear token on logout
-      localStorage.removeItem('user');  // Clear user on logout
-      localStorage.removeItem('roles'); // Clear roles on logout
-      localStorage.removeItem('permissions'); // Clear permissions on logout
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('roles');
+      localStorage.removeItem('permissions');
     },
     setUser(state, action) {
       state.user = action.payload;
-      state.roles = action.payload.roles;
-      state.permissions = action.payload.permissions;
+      state.roles = action.payload.roles || [];
+      state.permissions = action.payload.permissions || [];
       localStorage.setItem('user', JSON.stringify(action.payload));
-      localStorage.setItem('roles', JSON.stringify(action.payload.roles));
-      localStorage.setItem('permissions', JSON.stringify(action.payload.permissions));
+      localStorage.setItem('roles', JSON.stringify(action.payload.roles || []));
+      localStorage.setItem('permissions', JSON.stringify(action.payload.permissions || []));
     },
   },
   extraReducers: (builder) => {
@@ -59,14 +83,14 @@ const authSlice = createSlice({
         state.user = data;
         state.roles = data.roles || [];
         state.permissions = data.permissions || [];
-        localStorage.setItem('token', data.token); // Store token in localStorage
-        localStorage.setItem('user', JSON.stringify(data)); // Store user data
-        localStorage.setItem('roles', JSON.stringify(data.roles)); // Store roles
-        localStorage.setItem('permissions', JSON.stringify(data.permissions)); // Store permissions
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data));
+        localStorage.setItem('roles', JSON.stringify(data.roles || []));
+        localStorage.setItem('permissions', JSON.stringify(data.permissions || []));
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.payload;
+        state.error = action.payload as string | null;
       });
   },
 });

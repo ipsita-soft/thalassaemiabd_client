@@ -1,8 +1,7 @@
-// EditSlider.tsx
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
-import { updateSlider } from '@/redux/slices/sliderSlice'; // Add updateSlider action in sliderSlice.tsx
+import { updateSlider } from '@/redux/slices/sliderSlice'; // Ensure this action exists
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,14 +9,27 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { RootState } from '@/redux/store'; // Import RootState to use selector
+type Slider = {
+  id: string;
+  sorting_index: number;
+  status: 'Active' | 'Inactive'; // Update this based on your actual data structure
+  // Add other properties of Slider if needed
+};
 
 type EditSliderProps = {
   sliderId: string;
+  open: boolean;
+  onClose: () => void;
 };
 
 const EditSliderModal: React.FC<EditSliderProps> = ({ sliderId }) => {
+
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    image: File | null;
+    sorting_index: number | null;
+    status: number;
+  }>({
     image: null,
     sorting_index: null,
     status: 2,
@@ -25,10 +37,15 @@ const EditSliderModal: React.FC<EditSliderProps> = ({ sliderId }) => {
   const { toast } = useToast();
   const dispatch = useDispatch<AppDispatch>();
   const sliders = useSelector((state: RootState) => state.sliders.sliders);
-  const sliderToEdit = sliders.find((slider) => slider.id === sliderId);
+
+  const sliderToEdit = sliders.find((slider) => slider.id.toString() === sliderId) as Slider;
 
   useEffect(() => {
+
+
     if (sliderToEdit) {
+
+      console.log(sliderToEdit);
       setFormData({
         image: null,
         sorting_index: sliderToEdit.sorting_index,
@@ -38,15 +55,12 @@ const EditSliderModal: React.FC<EditSliderProps> = ({ sliderId }) => {
   }, [sliderToEdit]);
 
   const handleSubmit = async (event: React.FormEvent) => {
-
     event.preventDefault();
     const sliderData = new FormData();
-    sliderData.append('image', formData.image ?? '');
-    sliderData.append('sorting_index', formData.sorting_index);
-    sliderData.append('status', formData.status);
-    for (let [key, value] of sliderData.entries()) {
-      console.log(`${key}: ${value}`);
-    }
+    sliderData.append('image', formData.image || ''); // Ensure this is not null
+    sliderData.append('sorting_index', formData.sorting_index?.toString() || ''); // Convert to string
+    sliderData.append('status', formData.status.toString()); // Convert to string
+
     try {
       await dispatch(updateSlider({ id: sliderId, data: sliderData }));
       toast({
@@ -71,11 +85,11 @@ const EditSliderModal: React.FC<EditSliderProps> = ({ sliderId }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" className="mr-2" >Edit Slider</Button>
+        <Button className="mr-2 w-40 bg-slate-500">Edit Slider</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle >Edit Slider</DialogTitle>
+          <DialogTitle>Edit Slider</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4">
@@ -84,7 +98,7 @@ const EditSliderModal: React.FC<EditSliderProps> = ({ sliderId }) => {
               <Input
                 type="file"
                 id="image"
-                onChange={(e) => setFormData({ ...formData, image: e.target.files?.[0] || '' })}
+                onChange={(e) => setFormData({ ...formData, image: e.target.files?.[0] || null })}
                 placeholder="Choose Image"
               />
             </div>
@@ -94,7 +108,7 @@ const EditSliderModal: React.FC<EditSliderProps> = ({ sliderId }) => {
                 type="number"
                 id="sorting_index"
                 value={formData.sorting_index || ''}
-                onChange={(e) => setFormData({ ...formData, sorting_index: +e.target.value })}
+                onChange={(e) => setFormData({ ...formData, sorting_index: e.target.value ? +e.target.value : null })}
                 placeholder="Enter Sorting Index"
               />
             </div>
@@ -116,7 +130,7 @@ const EditSliderModal: React.FC<EditSliderProps> = ({ sliderId }) => {
           </div>
           <DialogFooter className="mt-4">
             <Button type="submit">Submit</Button>
-            <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+            <p className='btn bg-gray-300 text-gray-800 hover:bg-gray-400 transition ' onClick={() => setOpen(false)}>Cancel</p>
           </DialogFooter>
         </form>
       </DialogContent>

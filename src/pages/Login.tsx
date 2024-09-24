@@ -1,26 +1,24 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@radix-ui/react-label';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from '@/redux/slices/authSlice';
-
-
+import { AppDispatch, RootState } from '@/redux/store';
 
 function Login() {
-  
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { message, status, error, token, user } = useSelector((state) => state.auth);
+  const { status, error, token } = useSelector((state: RootState) => state.auth);
 
   const [phone, setphone] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(loginUser({ phone: phone, password }));
+    dispatch(loginUser({ phone, password })); // Ensure correct action type
   };
 
   useEffect(() => {
@@ -50,7 +48,6 @@ function Login() {
                 value={phone}
                 onChange={(e) => setphone(e.target.value)}
               />
-              {<p className="text-red-500 mt-2">{message?.phone}</p>}
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Password</Label>
@@ -61,7 +58,6 @@ function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              {<p className="text-red-500 mt-2">{message?.password}</p>}
             </div>
             <Button type="submit" className="w-full">
               Sign in
@@ -77,7 +73,6 @@ function Login() {
               <Link to="/register" className="underline">
                 Sign up
               </Link>
-            
             </div>
           </div>
         </CardFooter>

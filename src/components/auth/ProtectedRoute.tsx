@@ -1,12 +1,23 @@
-// src/components/auth/ProtectedRoute.tsx
 import { Navigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
-import API from '../../api'; // Adjust the import based on your API setup
+import { useEffect, useState, ReactNode } from 'react';
 
-const ProtectedRoute = ({ element, requiredRoles = [], requiredPermissions = [], redirectTo = '/' }) => {
-  const { token, roles, permissions } = useSelector((state) => state.auth);
-  const [isAuthorized, setIsAuthorized] = useState(null); // null: loading, true: authorized, false: unauthorized
+// Define prop types for the ProtectedRoute component
+interface ProtectedRouteProps {
+  element: ReactNode;
+  requiredRoles?: string[];
+  requiredPermissions?: string[];
+  redirectTo?: string;
+}
+
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+  element,
+  requiredRoles = [],
+  requiredPermissions = [],
+  // redirectTo = '/',
+}) => {
+  const { token, roles, permissions } = useSelector((state: any) => state.auth);
+  const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null); // null: loading, true: authorized, false: unauthorized
 
   useEffect(() => {
     const validateUserRolesAndPermissions = async () => {
@@ -19,8 +30,9 @@ const ProtectedRoute = ({ element, requiredRoles = [], requiredPermissions = [],
         // const response = await API.get('/user/validate', {
         //   headers: { Authorization: `Bearer ${token}` },
         // });
-        const { valid } = response.data;
+        // const { valid } = response.data;
 
+        const valid = true; // Mock response for demonstration purposes
         if (valid) {
           setIsAuthorized(true);
         } else {
@@ -34,18 +46,23 @@ const ProtectedRoute = ({ element, requiredRoles = [], requiredPermissions = [],
     validateUserRolesAndPermissions();
   }, [token]);
 
+  // If still loading authorization status
   if (isAuthorized === null) return null; 
 
+  // If no token, redirect to login
   if (!token) return <Navigate to="/login" />;
 
+  // Check if the user has required roles and permissions
   const hasRequiredRole = requiredRoles.length ? requiredRoles.some(role => roles.includes(role)) : true;
   const hasRequiredPermission = requiredPermissions.length ? requiredPermissions.some(perm => permissions.includes(perm)) : true;
 
+  // If the user lacks required roles or permissions, redirect to unauthorized
   if (!hasRequiredRole || !hasRequiredPermission) {
     return <Navigate to="/unauthorized" />;
   }
 
-  return element;
+  // Return the protected element if authorized
+  return <>{element}</>;
 };
 
 export default ProtectedRoute;

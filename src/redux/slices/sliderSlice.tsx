@@ -1,6 +1,32 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { addSliderApi, deleteSliderApi, getSlidersApi, showSliderApi, updateSliderApi } from '@/redux/api/slliderApi';
 
+type Slider = {
+  id: string;
+  image?: string;
+};
+
+type ErrorPayload = {
+  message?: string;
+  data?: any;
+};
+
+
+interface Meta {
+  current_page: number;
+  from: number;
+  last_page: number;
+  links: {
+    url: string | null;
+    label: string;
+    active: boolean;
+  }[];
+  path: string;
+  per_page: number;
+  to: number;
+  total: number;
+}
+
 export const addSlider = createAsyncThunk(
   'sliders/addSlider',
   async (sliderData: FormData, { rejectWithValue }) => {
@@ -24,7 +50,6 @@ export const fetchSliders = createAsyncThunk(
     }
   }
 );
-
 
 export const updateSlider = createAsyncThunk(
   'sliders/updateSlider',
@@ -50,7 +75,6 @@ export const fetchSlider = createAsyncThunk(
   }
 );
 
-
 export const deleteSlider = createAsyncThunk(
   'sliders/deleteSlider',
   async (id: string, { rejectWithValue }) => {
@@ -66,11 +90,12 @@ export const deleteSlider = createAsyncThunk(
 const sliderSlice = createSlice({
   name: 'sliders',
   initialState: {
-    sliders: [],
-    meta: null,
+    sliders: [] as Slider[],
+    slider: {} as Slider,
+    meta: null as Meta | null,
     isLoading: false,
     isError: false,
-    error: null,
+    error: null as ErrorPayload | null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -82,12 +107,12 @@ const sliderSlice = createSlice({
       })
       .addCase(addSlider.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.sliders = [...state.sliders, action.payload.data];
+        state.sliders.push(action.payload.data); // Use push for clarity
       })
       .addCase(addSlider.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
-        state.error = action.payload;
+        state.error = action.payload as ErrorPayload;
       })
       .addCase(fetchSliders.pending, (state) => {
         state.isLoading = true;
@@ -96,13 +121,13 @@ const sliderSlice = createSlice({
       })
       .addCase(fetchSliders.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.sliders = action.payload.data;
-        state.meta = action.payload.meta;
+        state.sliders = action.payload?.data || [];
+        state.meta = action.payload?.meta || null;
       })
       .addCase(fetchSliders.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
-        state.error = action.payload;
+        state.error = action.payload as ErrorPayload;
       })
       .addCase(updateSlider.pending, (state) => {
         state.isLoading = true;
@@ -123,23 +148,21 @@ const sliderSlice = createSlice({
       .addCase(updateSlider.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
-        state.error = action.payload;
+        state.error = action.payload as ErrorPayload;
       })
       .addCase(fetchSlider.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
       .addCase(fetchSlider.fulfilled, (state, action) => {
-        state.sliders = action.payload.data;
+        state.slider = action.payload.data;
         state.isLoading = false;
       })
-
       .addCase(fetchSlider.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
-        state.error = action.payload as string;
+        state.error = action.payload as ErrorPayload;
       })
-
       .addCase(deleteSlider.pending, (state) => {
         state.isLoading = true;
         state.isError = false;
@@ -147,17 +170,15 @@ const sliderSlice = createSlice({
       })
       .addCase(deleteSlider.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.sliders = state.sliders.filter(slider => slider.id !== action.payload);
         console.log('Deleted slider ID:', action.payload); // For debugging
       })
-      
       .addCase(deleteSlider.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
-        state.error = action.payload;
+        state.error = action.payload as ErrorPayload;
       });
-
   },
 });
-
 
 export default sliderSlice.reducer;

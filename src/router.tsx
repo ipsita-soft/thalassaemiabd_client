@@ -22,14 +22,14 @@ const router = createBrowserRouter([
     path: '/dashboard',
     element: <ProtectedRoute 
       element={<DashboardLayout />} 
-      requiredRoles={['admin']} 
+      requiredRoles={['admin','patient']} 
     />,
     children: [
       {
         path: 'home',
         element: <ProtectedRoute 
           element={<HomePage />} 
-          requiredPermissions={['view_users']} 
+          requiredPermissions={['view_users','profile_edit']} 
         />,
       },
 

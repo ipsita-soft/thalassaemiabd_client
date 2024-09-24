@@ -101,9 +101,7 @@ function DashboardLayout() {
                             </nav>
                         </div>
 
-                        <div className="mt-auto p-4">
-                            <LogoutButton />
-                        </div>
+                        
                     </div>
                 </div>
                 <div className="flex flex-col">
@@ -202,6 +200,7 @@ function DashboardLayout() {
                                     <CircleUser className="h-5 w-5" />
                                     <span className="sr-only">Toggle user menu</span>
                                 </Button>
+                                
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -209,9 +208,14 @@ function DashboardLayout() {
                                 <DropdownMenuItem>Settings</DropdownMenuItem>
                                 <DropdownMenuItem>Support</DropdownMenuItem>
                                 <DropdownMenuSeparator />
+                             
                                 {/* <DropdownMenuItem><Link to='/login'>Logout</Link></DropdownMenuItem> */}
                             </DropdownMenuContent>
                         </DropdownMenu>
+
+
+                        <LogoutButton  />
+                       
                     </header>
 
                     <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">

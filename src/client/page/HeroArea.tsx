@@ -1,13 +1,23 @@
-import { fetchPublicSlider } from "@/redux/slices/publicSlice";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store"; // Adjust the import path as per your store location
+import { fetchPublicSlider } from "@/redux/slices/publicSlice";
+
+// Define the type for the slider item (based on the data you expect in the slider)
+interface Slider {
+    id: number;
+    image: string;
+    title?: string; // title is optional based on your data
+}
 
 const HeroArea = () => {
-    const dispatch = useDispatch();
-    const { sliders, isLoading, isError, error } = useSelector((state) => state.public);  // Adjust state selector
+    const dispatch = useDispatch<AppDispatch>();
+
+    // Adjust the selector to properly match the state structure
+    const { sliders, isLoading, isError, error } = useSelector((state: RootState) => state.public);
 
     useEffect(() => {
-        dispatch(fetchPublicSlider());
+        dispatch(fetchPublicSlider({}));  // Fetch sliders on mount
     }, [dispatch]);
 
     if (isLoading) {
@@ -18,13 +28,15 @@ const HeroArea = () => {
         return <p>Error: {error}</p>;  // Show error message if any
     }
 
-    // Ensure `sliders.data` exists and is an array before attempting to map
-    const sliderData = sliders?.data || [];
+    // Access the data array from sliders
+    const sliderData: Slider[] = Array.isArray(sliders.data) ? sliders.data : [];
+    
+    console.log(sliders); // This will log the actual slider data
 
     return (
         <div id="carouselExampleFade" className="carousel slide carousel-fade" data-bs-ride="carousel">
             <div className="carousel-inner">
-                {sliderData.map((slider, index) => (
+                {sliderData.map((slider: Slider, index: number) => (
                     <div 
                         key={slider.id} 
                         className={`carousel-item ${index === 0 ? "active" : ""}`}
