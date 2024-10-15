@@ -1,32 +1,38 @@
+import { CSSProperties, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store"; // Adjust the import path as per your store location
+import { fetchPublicBlogNews } from "@/redux/slices/publicSlice";
+import { Link } from "react-router-dom";
 
-const blogData = [
-  {
-    id: 1,
-    title: "Hereditary disease thalassemia",
-    image: "client/assets/images/blog/blog1.jpg",
-    description: "Lorem ipsum dolor sit amet, consectetur elit, sed do eiusmod tempor ut labore et dolore magna aliqua...",
-    link: "https://www.prothomalo.com/bangladesh/0p8pbcqjf6",
-    target: "_blank",
-  },
-  {
-    id: 2,
-    title: "The right program is needed",
-    image: "client/assets/images/blog/blog2.jpg",
-    description: "Lorem ipsum dolor sit amet, consectetur elit, sed do eiusmod tempor ut labore et dolore magna aliqua...",
-    link: "https://www.prothomalo.com/bangladesh/0p8pbcqjf6",
-    target: "_blank",
-  },
-  {
-    id: 3,
-    title: "Prevention of thalassemia",
-    image: "client/assets/images/blog/blog3.jpg",
-    description: "Lorem ipsum dolor sit amet, consectetur elit, sed do eiusmod tempor ut labore et dolore magna aliqua...",
-    link: "client/assets/images/pdf/Features.pdf",
-    target: "_blank",
-  },
-];
+// Define the lineClamp function with proper typing
+const lineClamp = (lines: number): CSSProperties => ({
+  display: '-webkit-box',
+  WebkitLineClamp: lines.toString(),
+  WebkitBoxOrient: 'vertical',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+});
 
 const BlogNews = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  // Adjust the selector to properly match the state structure
+  const { blogNews, isLoading, isError, error } = useSelector((state: RootState) => state.public);
+
+  useEffect(() => {
+    dispatch(fetchPublicBlogNews({ per_page: 6 })); // Fetch blog news on mount
+  }, [dispatch]);
+
+  if (isLoading) {
+    return <p>Loading...</p>; // Show loading state
+  }
+
+  if (isError) {
+    return <p>Error: {error}</p>; // Show error message if any
+  }
+
+  const sliderData = Array.isArray(blogNews.data) ? blogNews.data : [];
+
   return (
     <section id="about-boxes" className="about-boxes">
       <div className="container" data-aos="fade-up">
@@ -37,9 +43,8 @@ const BlogNews = () => {
             </div>
           </div>
         </div>
-
         <div className="row wow fadeInUp" data-wow-delay=".2s">
-          {blogData.map((blog, index) => (
+          {sliderData.map((blog, index) => (
             <div
               key={blog.id}
               className="col-lg-4 col-md-6 d-flex align-items-stretch"
@@ -49,14 +54,15 @@ const BlogNews = () => {
               <div className="card">
                 <img src={blog.image} className="card-img-top" alt={blog.title} />
                 <div className="card-body">
-                  <h5 className="card-title text-start">
-                    <a href={blog.link} target={blog.target}>
+                  <h5 className="card-title text-start" style={lineClamp(2)}>
+                    <Link to={`/blog-news/${blog.id}`} target="_blank">
                       {blog.title}
-                    </a>
+                    </Link>
                   </h5>
-                  <p className="card-text" style={{ textAlign: "justify" }}>
-                    {blog.description} <a href="#">Read More</a>
+                  <p className="card-text" style={{ ...lineClamp(5), textAlign: "justify" }}>
+                    {blog.description} 
                   </p>
+                  <Link to={`/blog-news/${blog.id}`}>Read More</Link>
                 </div>
               </div>
             </div>
@@ -64,7 +70,7 @@ const BlogNews = () => {
         </div>
 
         <div className="button mt-4 text-center">
-          <button className="btn">See More All News</button>
+          <Link to='blog-news-all' className="btn">See More All News</Link>
         </div>
       </div>
     </section>

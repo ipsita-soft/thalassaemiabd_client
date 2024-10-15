@@ -1,5 +1,21 @@
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/redux/store'; // Update path as necessary
+import { fetchSetting } from '@/redux/slices/publicSlice'; // Import the thunk
 
 const Footer = () => {
+    const dispatch = useDispatch<AppDispatch>();
+
+    const { setting } = useSelector((state: RootState) => state.public);
+
+    useEffect(() => {
+        // Fetch settings without checking for id
+        dispatch(fetchSetting({}));
+    }, [dispatch]);
+
+
+
+
     return (
         <footer className="footer overlay">
             {/* Start Footer Middle */}
@@ -11,19 +27,18 @@ const Footer = () => {
                             <div className="single-footer f-about">
                                 <div className="logo">
                                     <a href="index.html">
-                                        <img src="client/assets/images/logo/BTSH Logo 2024.png" alt="Logo" />
+                                        <img src={setting?.footerlogo} alt="Logo" />
                                     </a>
                                 </div>
                                 <p>
-                                    Bangladesh Thalassaemia Samity & Hospital has got 4500+ registered patients and
-                                    monthly we are providing 1000 blood transfusions at our premises.
+                                   {setting?.slogan}
                                 </p>
                                 <ul className="social">
-                                    <li><a href="javascript:void(0)"><i className="lni lni-facebook-filled"></i></a></li>
-                                    <li><a href="javascript:void(0)"><i className="lni lni-twitter-original"></i></a></li>
-                                    <li><a href="javascript:void(0)"><i className="lni lni-instagram"></i></a></li>
-                                    <li><a href="javascript:void(0)"><i className="lni lni-linkedin-original"></i></a></li>
-                                    <li><a href="javascript:void(0)"><i className="lni lni-youtube"></i></a></li>
+                                    <li><a href={setting?.facebook}><i className="lni lni-facebook-filled"></i></a></li>
+                                    <li><a href={setting?.twitter}><i className="lni lni-twitter-original"></i></a></li>
+                                    <li><a href={setting?.instagram}><i className="lni lni-instagram"></i></a></li>
+                                    <li><a href={setting?.linkedin}><i className="lni lni-linkedin-original"></i></a></li>
+                                    <li><a href={setting?.youtube}><i className="lni lni-youtube"></i></a></li>
                                 </ul>
                             </div>
                             {/* End Single Widget */}
@@ -94,21 +109,22 @@ const Footer = () => {
                             <div className="single-footer last f-contact">
                                 <h3>Contact</h3>
                                 <ul>
-                                    <li><i className="lni lni-map-marker"></i> Green Garden Tower (Level -6), 25/A & 25/B,
-                                        Bir Uttam K M Shafiullah Sarak (Green Road), Dhaka-1205.
+                                    <li><i className="lni lni-map-marker"></i>{setting?.location}
                                     </li>
-                                    <li><i className="lni lni-phone"></i> +8801944-303 048</li>
-                                    <li><i className="lni lni-envelope"></i> thalbangla.info@gmail.com</li>
+                                    <li><i className="lni lni-phone"></i>{setting?.phone}</li>
+                                    <li><i className="lni lni-envelope"></i> {setting?.email}</li>
                                 </ul>
 
                                 <ul className="finan">
-                                    <h4 className="accept">We Accept</h4>
-                                    <img className="img-fluid" src="client/assets/images/financial/bkash.jpg" alt="bkash" />
-                                    <img className="img-fluid" src="client/assets/images/financial/nagad.jpg" alt="nagad" />
-                                    <img className="img-fluid" src="client/assets/images/financial/rocket.jpg" alt="rocket" />
-                                    <img className="img-fluid" src="client/assets/images/financial/mastercard.jpg" alt="mastercard" />
-                                    <img className="img-fluid" src="client/assets/images/financial/visa.jpg" alt="visa" />
-                                    <img className="img-fluid" src="client/assets/images/financial/dbbl.jpg" alt="dbbl" />
+                                    <div className='row'>    
+                                         <h4 className="accept">We Accept</h4>
+                                        <img className="img-fluid" src="client/assets/images/financial/bkash.jpg" alt="bkash" />
+                                        <img className="img-fluid" src="client/assets/images/financial/nagad.jpg" alt="nagad" />
+                                        <img className="img-fluid" src="client/assets/images/financial/rocket.jpg" alt="rocket" />
+                                        <img className="img-fluid" src="client/assets/images/financial/mastercard.jpg" alt="mastercard" />
+                                        <img className="img-fluid" src="client/assets/images/financial/visa.jpg" alt="visa" />
+                                        <img className="img-fluid" src="client/assets/images/financial/dbbl.jpg" alt="dbbl" />
+                                        </div>
                                 </ul>
                             </div>
                             {/* End Single Widget */}

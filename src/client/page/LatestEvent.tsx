@@ -1,45 +1,46 @@
+import { CSSProperties, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store"; // Adjust import path if necessary
+import { fetchPublicEvent } from "@/redux/slices/publicSlice";
+import { Link } from "react-router-dom";
 
-const eventData = [
-  {
-    id: 1,
-    title: "Thalassaemia Awareness Program at 10 Minutes School",
-    image: "client/assets/images/event/img1.jpg",
-    description: "Lorem ipsum dolor sit amet, consectetur elit, sed do eiusmod tempor ut labore et dolore magna aliqua...",
-    date: "04 Jul, 2024",
-    detailsLink: "event-details.html",
-  },
-  {
-    id: 2,
-    title: "Blood Donation Program at Stamford University",
-    image: "client/assets/images/event/img2.jpg",
-    description: "Lorem ipsum dolor sit amet, consectetur elit, sed do eiusmod tempor ut labore et dolore magna aliqua...",
-    date: "04 Jul, 2024",
-    detailsLink: "event-details.html",
-  },
-  {
-    id: 3,
-    title: "Blood Donation Program at SL Embassy",
-    image: "client/assets/images/event/img3.jpg",
-    description: "Lorem ipsum dolor sit amet, consectetur elit, sed do eiusmod tempor ut labore et dolore magna aliqua...",
-    date: "04 Jul, 2024",
-    detailsLink: "event-details.html",
-  },
-];
+// Define the lineClamp function with proper typing
+const lineClamp = (lines: number): CSSProperties => ({
+  display: '-webkit-box',
+  WebkitLineClamp: lines.toString(),
+  WebkitBoxOrient: 'vertical',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+});
 
 const LatestEvent = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { events, isLoading, isError, error } = useSelector((state: RootState) => state.public);
+
+  useEffect(() => {
+    dispatch(fetchPublicEvent({ per_page: 6 })); // Fetch events on component mount
+  }, [dispatch]);
+
+  if (isLoading) return <p>Loading...</p>;
+
+  if (isError) return <p>Error: {error}</p>;
+
+  const eventsData = Array.isArray(events?.data) ? events.data : [];
+
   return (
     <section id="event" className="event">
       <div className="container" data-aos="fade-up">
         <div className="row">
           <div className="col-12">
             <div className="section-title">
-              <h2 className="wow fadeInUp" data-wow-delay=".2s">Latest Event</h2>
+              <h2 className="wow fadeInUp" data-wow-delay=".2s">Latest Events</h2>
             </div>
           </div>
         </div>
 
         <div className="row mb-4 wow fadeInUp" data-wow-delay=".2s">
-          {eventData.map((event, index) => (
+          {eventsData.map((event, index) => (
             <div
               key={event.id}
               className="col-lg-4 col-md-6 d-flex align-items-stretch"
@@ -47,17 +48,23 @@ const LatestEvent = () => {
               data-aos-delay={(index + 1) * 100}
             >
               <div className="card single_event">
-                <img src={event.image} className="card-img-top" alt={event.title} />
+                <img
+                  src={event.image}
+                  className="card-img-top"
+                  alt={event.title}
+                />
                 <div className="card-body">
-                  <h5 className="card-title text-start">
-                    <a href={event.detailsLink}>{event.title}</a>
+                  <h5 className="card-title text-start" >
+                    <Link style={lineClamp(2)} to={`/events/${event.id}`}>{event.title}</Link>
                   </h5>
-                  <p className="card-text">{event.description}</p>
+                  <p className="card-text" style={{ ...lineClamp(5), textAlign: "justify" }}>
+                    {event.description}
+                  </p>
                   <div className="more d-flex justify-content-between">
                     <span className="post-date">
                       <i className="lni lni-calendar"></i> {event.date}
                     </span>
-                    <a href={event.detailsLink}>Read More</a>
+                    <Link to={`/events/${event.id}`}>Read More</Link>
                   </div>
                 </div>
               </div>
@@ -66,7 +73,7 @@ const LatestEvent = () => {
         </div>
 
         <div className="button mt-4 text-center">
-          <button className="btn">See More All Event</button>
+          <Link to='/events-all' className="btn">See All Events</Link>
         </div>
       </div>
     </section>

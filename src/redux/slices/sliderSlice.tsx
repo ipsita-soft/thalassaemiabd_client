@@ -96,6 +96,7 @@ const sliderSlice = createSlice({
     isLoading: false,
     isError: false,
     error: null as ErrorPayload | null,
+    
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -144,6 +145,7 @@ const sliderSlice = createSlice({
             }
             : slider
         );
+        state.error = action.payload as ErrorPayload;
       })
       .addCase(updateSlider.rejected, (state, action) => {
         state.isLoading = false;

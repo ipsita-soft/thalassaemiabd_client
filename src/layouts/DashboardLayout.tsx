@@ -11,7 +11,16 @@ import {
     ShoppingCart,
     Sliders,
     Users,
-    HospitalIcon
+    HospitalIcon,
+    Newspaper,
+    Calendar,
+    HandHeart,
+    AlignStartVertical,
+    GalleryVerticalEnd,
+    Settings,
+    TargetIcon,
+    HistoryIcon
+
 } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
@@ -30,6 +39,7 @@ import LogoutButton from '../components/auth/Logout';
 
 function DashboardLayout() {
     const location = useLocation();
+    const id = 1;
 
     const isActive = (path: string) => location.pathname === path;
 
@@ -81,6 +91,109 @@ function DashboardLayout() {
                                 </Link>
 
 
+                                <Link
+                                    to="/dashboard/blog-news"
+                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/blog-news') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                        }`}
+                                >
+                                    <Newspaper className="h-4 w-4" />
+                                    Blog & News
+                                </Link>
+
+                                <Link
+                                    to="/dashboard/events"
+                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/events') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                        }`}
+                                >
+                                    <Calendar className="h-4 w-4" />
+                                    Events
+                                </Link>
+
+
+
+
+                                <Link
+                                    to="/dashboard/wishers"
+                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/wishers') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                        }`}
+                                >
+                                    <HandHeart className="h-4 w-4" />
+                                    Wishers
+                                </Link>
+
+
+                                <Link
+                                    to="/dashboard/doctor-sliders"
+                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/doctor-sliders') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                        }`}
+                                >
+                                    <AlignStartVertical className="h-4 w-4" />
+                                    Doctor Sliders
+                                </Link>
+
+
+                                <Link
+                                    to="/dashboard/who-we-are"
+                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/who-we-are') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                        }`}
+                                >
+                                    <Users className="h-4 w-4" />
+                                    Who We Are
+                                </Link>
+
+
+                                <Link
+                                    to="/dashboard/galleries"
+                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/galleries') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                        }`}
+                                >
+                                    <GalleryVerticalEnd className="h-4 w-4" />
+                                    galleries
+                                </Link>
+
+                                <Link
+
+                                    to={`/dashboard/settings/${id}`}  // Dynamically insert the 'id'
+                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive(`/dashboard/settings/${id}`)
+                                        ? 'bg-muted text-primary'
+                                        : 'text-muted-foreground hover:text-primary'
+                                        }`}
+                                >
+                                    <Settings className="h-4 w-4" />
+                                    Settings
+                                </Link>
+
+
+
+                                <Link
+
+                                    to={`/dashboard/mission-vision/${id}`}  // Dynamically insert the 'id'
+                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive(`/dashboard/mission-vision/${id}`)
+                                        ? 'bg-muted text-primary'
+                                        : 'text-muted-foreground hover:text-primary'
+                                        }`}
+                                >
+                                    <TargetIcon className="h-4 w-4" />
+                                    Mission vision
+                                </Link>
+
+
+                                <Link
+
+                                    to={`/dashboard/bts-history/${id}`}  // Dynamically insert the 'id'
+                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive(`/dashboard/bts-history/${id}`)
+                                        ? 'bg-muted text-primary'
+                                        : 'text-muted-foreground hover:text-primary'
+                                        }`}
+                                >
+                                    <HistoryIcon className="h-4 w-4" />
+                                    Bts History
+                                </Link>
+
+
+
+
+
 
                                 <Link
                                     to="#"
@@ -101,7 +214,7 @@ function DashboardLayout() {
                             </nav>
                         </div>
 
-                        
+
                     </div>
                 </div>
                 <div className="flex flex-col">
@@ -200,7 +313,7 @@ function DashboardLayout() {
                                     <CircleUser className="h-5 w-5" />
                                     <span className="sr-only">Toggle user menu</span>
                                 </Button>
-                                
+
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
@@ -208,14 +321,14 @@ function DashboardLayout() {
                                 <DropdownMenuItem>Settings</DropdownMenuItem>
                                 <DropdownMenuItem>Support</DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                             
+
                                 {/* <DropdownMenuItem><Link to='/login'>Logout</Link></DropdownMenuItem> */}
                             </DropdownMenuContent>
                         </DropdownMenu>
 
 
-                        <LogoutButton  />
-                       
+                        <LogoutButton />
+
                     </header>
 
                     <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">

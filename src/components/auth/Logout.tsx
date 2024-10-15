@@ -3,7 +3,15 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../../redux/slices/authSlice'; // Adjust the import based on your slice location
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../ui/button';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogTitle, AlertDialogTrigger } from '@radix-ui/react-alert-dialog';
+import { 
+  AlertDialog, 
+  AlertDialogAction, 
+  AlertDialogCancel, 
+  AlertDialogContent, 
+  AlertDialogDescription, 
+  AlertDialogTitle, 
+  AlertDialogTrigger 
+} from '@radix-ui/react-alert-dialog';
 import { AppDispatch } from '@/redux/store';
 
 const Logout = () => {
@@ -19,45 +27,38 @@ const Logout = () => {
 
   return (
     <>
-      <AlertDialog open={open} onOpenChange={() => setOpen(!open)}>
+      <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogTrigger asChild>
-          <Button onClick={() => setOpen(true)} className='flex items-center space-x-2 bg-secondary  text-white px-4 py-2 rounded-md'>
+          <Button 
+            onClick={() => setOpen(true)} 
+            className="flex items-center space-x-2 bg-secondary text-white px-4 py-2 rounded-md"
+          >
             <span>Logout</span>
           </Button>
         </AlertDialogTrigger>
+        
+        {/* Modal Content */}
         <AlertDialogContent
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.5)', // Background overlay
-            zIndex: 9999, // Ensure it's above other content
-          }}
+          className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50 z-50"
         >
-          <div style={{
-            background: 'white',
-            padding: '20px',
-            borderRadius: '8px',
-            maxWidth: '400px',
-            textAlign: 'center',
-          }}>
-            <AlertDialogTitle >Confirm Logout</AlertDialogTitle>
-            <AlertDialogDescription>
+          <div className="bg-white p-6 rounded-lg max-w-md w-full text-center">
+            <AlertDialogTitle className="text-lg font-bold">Confirm Logout</AlertDialogTitle>
+            <AlertDialogDescription className="mt-2">
               Are you sure you want to log out? Your session will be terminated.
             </AlertDialogDescription>
-            <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'center' }}>
-              <AlertDialogCancel className='btn bg-slate-300' onClick={() => setOpen(false)} style={{ marginRight: '1rem' }}>Cancel</AlertDialogCancel>
+            <div className="mt-4 flex justify-center space-x-4">
+              <AlertDialogCancel 
+                className="btn bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded" 
+                onClick={() => setOpen(false)}
+              >
+                Cancel
+              </AlertDialogCancel>
               <AlertDialogAction
                 onClick={() => {
                   handleLogout();
                   setOpen(false);
                 }}
-                className='btn text-white bg-red-600'
+                className="btn bg-red-500 hover:bg-red-400 text-white px-4 py-2 rounded"
               >
                 Logout
               </AlertDialogAction>

@@ -85,7 +85,7 @@ const EditSliderModal: React.FC<EditSliderProps> = ({ sliderId }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="mr-2 w-40 bg-slate-500">Edit Slider</Button>
+        <Button className="mr-2 mt-1 w-40 bg-slate-300 text-white hover:bg-slate-400 transition ">Edit </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

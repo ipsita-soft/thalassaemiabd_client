@@ -30,7 +30,7 @@ const ShowSlide: React.FC<EditSliderProps> = ({ sliderId }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="mr-2 mt-1 w-40 bg-blue-600 text-white hover:bg-blue-700 transition">Show</Button>
+        <Button className="mr-2 mt-1 w-40 bg-blue-300 text-white hover:bg-blue-400 transition">Show</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] rounded-lg shadow-lg bg-white p-6">
         <DialogHeader>

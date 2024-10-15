@@ -1,7 +1,22 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/redux/store'; // Update path as necessary
+import { fetchSetting } from '@/redux/slices/publicSlice'; // Import the thunk
 
 const Header = () => {
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  // Access setting data from Redux state
+  const { setting } = useSelector((state: RootState) => state.public);
+
+  useEffect(() => {
+    // Fetch settings without checking for id
+    dispatch(fetchSetting({}));
+  }, [dispatch]);
+
+
   const [isNavCollapsed, setIsNavCollapsed] = useState(true);
 
   const handleNavCollapse = () => setIsNavCollapsed(!isNavCollapsed);
@@ -27,9 +42,9 @@ const Header = () => {
             <div className="nav-inner">
               {/* Start Navbar */}
               <nav className="navbar navbar-expand-lg">
-                <a className="navbar-brand" href="index.html">
-                  <img src="/client/assets/images/logo/logo.png" alt="Logo" />
-                </a>
+                <Link className="navbar-brand" to="/">
+                  <img src={setting?.headerlogo} alt="Logo" />
+                </Link>
 
                 <button
                   className={`navbar-toggler mobile-menu-btn ${isNavCollapsed ? "collapsed" : "active"}`}
@@ -50,9 +65,9 @@ const Header = () => {
                 >
                   <ul id="nav" className="navbar-nav ms-auto">
                     <li className="nav-item">
-                      <a
+                      <Link
                         className="page-scroll active dd-menu collapsed"
-                        href="index.html"
+                        to="/"
                         data-bs-toggle="collapse"
                         data-bs-target="#submenu-1-1"
                         aria-controls="navbarSupportedContent"
@@ -60,7 +75,7 @@ const Header = () => {
                         aria-label="Toggle navigation"
                       >
                         Home
-                      </a>
+                      </Link>
                     </li>
 
                     <li className="nav-item">
@@ -77,10 +92,10 @@ const Header = () => {
                       </a>
                       <ul className="sub-menu collapse" id="submenu-1-2">
                         <li className="nav-item">
-                          <a href="bts-history.html">BTS History</a>
+                          <Link to="bts-history">BTS History</Link>
                         </li>
                         <li className="nav-item">
-                          <a href="mission&vision.html">Vision & Mission</a>
+                          <Link to="mission-vision">Vision & Mission</Link>
                         </li>
                         <li className="nav-item">
                           <a href="tif-membership.html">TIF Membership</a>
@@ -88,19 +103,23 @@ const Header = () => {
                         <li className="nav-item">
                           <a href="our-projects.html">Our Projects</a>
                         </li>
-                        <li className="nav-item">
-                          <a href="advisors.html">Advisors</a>
-                        </li>
+
                         <li className="nav-item">
                           <a href="Committee.html">Executive Committee</a>
                         </li>
+
+
                         <li className="nav-item">
-                          <a href="collection-committee.html">
-                            Blood Collection Committee
-                          </a>
+                          <Link to="advisors">Advisors</Link>
+                        </li>
+
+                        <li className="nav-item">
+
+                          <Link to="blood-collection-committee">   Blood Collection Committee</Link>
+
                         </li>
                         <li className="nav-item">
-                          <a href="zakat-board.html">Zakat Board</a>
+                          <Link to="zakat-board">Zakat Board</Link>
                         </li>
                         <li className="nav-item">
                           <a href="employee-list.html">Employee List</a>
@@ -133,6 +152,21 @@ const Header = () => {
                         <li className="nav-item">
                           <a href="awareness.html">Awareness</a>
                         </li>
+                      </ul>
+                    </li>
+
+
+
+                    <li className="nav-item">
+                      <a className="page-scroll dd-menu collapsed" href="#" data-bs-toggle="collapse"
+                        data-bs-target="#submenu-1-3" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">Media</a>
+                      <ul className="sub-menu collapse" id="submenu-1-3">
+                        <li className="nav-item"><a href="events-all">Events</a></li>
+                        <li className="nav-item"><Link to="photo-gallery">Photos</Link></li>
+                        <li className="nav-item"><Link to="videos-gallery">Videos</Link></li>
+                        <li className="nav-item"><Link to="blog-news-all">Blogs & News</Link></li>
+                        <li className="nav-item"><a href="advertisements.html">Advertisements</a></li>
                       </ul>
                     </li>
 

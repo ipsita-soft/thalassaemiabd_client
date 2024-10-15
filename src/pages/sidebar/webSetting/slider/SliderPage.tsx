@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useState } from "react";
 import {
     SortingState,
@@ -35,7 +33,8 @@ import { fetchSliders } from "@/redux/slices/sliderSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import DeleteSlider from "./DeleteSlider";
-import { useToast } from '@/hooks/use-toast';
+import { toast } from '@/hooks/use-toast';
+
 import ShowSlider from "./ShowSlider";
 
 interface Slider {
@@ -59,6 +58,7 @@ export function SliderPage() {
     const [filterValue, setFilterValue] = useState("");
     const [perPage, setPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(meta?.current_page || 1);
+    const [isEditModalOpen, setEditModalOpen] = useState(false);
 
     useEffect(() => {
         const params = {
@@ -116,15 +116,14 @@ export function SliderPage() {
             enableHiding: false,
             cell: ({ row }: { row: { original: Slider } }) => {
                 const slider = row.original;
-                const [isEditModalOpen, setEditModalOpen] = useState(false);
-                const { toast } = useToast();
 
                 const handleDeleteSuccess = () => {
                     toast({
                         title: 'Success',
                         description: 'Slider deleted successfully!',
                     });
-                    dispatch(fetchSliders({})); // Dispatch here
+                    
+                    dispatch(fetchSliders({}));
                 };
 
                 return (
@@ -151,7 +150,7 @@ export function SliderPage() {
                             <br />
 
                             <DeleteSlider
-                                id={slider.id.toString()}
+                                Id={slider.id.toString()}
                                 onSuccess={handleDeleteSuccess} // Pass the callback here
                             />
 
@@ -197,6 +196,7 @@ export function SliderPage() {
     return (
         <div className="p-4">
             <div className="flex flex-col lg:flex-row justify-between items-center mb-4 space-y-4 lg:space-y-0 lg:space-x-4">
+               
                 <Input
                     type="text"
                     placeholder="Filter by Status"

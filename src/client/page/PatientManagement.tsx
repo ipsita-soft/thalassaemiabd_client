@@ -1,5 +1,41 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store"; // Adjust the import path as per your store location
+import { fetchDoctorSlider } from "@/redux/slices/publicSlice";
+
+
+interface DoctorSliders {
+  id: number;
+  image: string;
+  name: string;
+  sorting_index: number; // Added sorting_index
+  status: string;        // Added status
+}
+
 
 const PatientManagement = () => {
+
+  const dispatch = useDispatch<AppDispatch>();
+  const { doctorSliders, isLoading, isError, error } = useSelector((state: RootState) => state.public);
+  useEffect(() => {
+    dispatch(fetchDoctorSlider({}));  // Fetch sliders on mount
+  }, [dispatch]);
+
+
+  if (isLoading) {
+    return <p>Loading...</p>;  // Show loading state
+  }
+
+  if (isError) {
+    return <p>Error: {error}</p>;  // Show error message if any
+  }
+
+  const doctorSliderData: DoctorSliders[] = Array.isArray(doctorSliders.data) ? doctorSliders.data : [];
+
+  console.log(doctorSliders); // This will log the actual slider data
+
+
+
   return (
     <section className="treatment section">
       <div className="container">
@@ -18,7 +54,23 @@ const PatientManagement = () => {
             <div className="doctors_slide">
               <div id="carouselExampleCaptions" className="carousel slide doctor_slide" data-bs-ride="carousel">
                 <div className="carousel-inner doctors">
-                  <div className="carousel-item active">
+
+                  
+                {doctorSliderData.map((slider: DoctorSliders, index: number) => (
+                    <div 
+                        key={slider.id} 
+                        className={`carousel-item ${index === 0 ? "active" : ""}`}
+                    >
+                        <img src={slider.image} className="d-block w-100" alt={slider.name || 'Slider'} />
+
+                        <div className="carousel-caption d-none d-md-block doctors_details">
+                      <h5>{slider.name}</h5>
+                    </div>
+                    </div>
+                ))}
+                
+
+                  {/* <div className="carousel-item active">
                     <img
                       src="client/assets/images/doctors/Dr. Kabirul Islam.JPG"
                       className="d-block w-100"
@@ -28,6 +80,7 @@ const PatientManagement = () => {
                       <h5>Dr. Kabirul Islam</h5>
                     </div>
                   </div>
+
                   <div className="carousel-item">
                     <img
                       src="client/assets/images/doctors/Prof. Dr. M A Khan.JPG"
@@ -37,7 +90,10 @@ const PatientManagement = () => {
                     <div className="carousel-caption d-none d-md-block doctors_details">
                       <h5>Dr. M A Khan</h5>
                     </div>
-                  </div>
+                  </div> */}
+
+
+
                 </div>
 
                 <button
