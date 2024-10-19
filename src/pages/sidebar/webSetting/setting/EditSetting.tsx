@@ -294,7 +294,7 @@ const EditSetting: React.FC<EditSettingProps> = ({ Id }) => {
       <div className='grid grid-cols-2 gap-2'>
 
         <div className="grid gap-2">
-          <Label htmlFor="copyrighttext">Copyright Text</Label>
+          <Label htmlFor="copyrighttext">Breaking News Text</Label>
           <Input
             type="text"
             id="copyrighttext"

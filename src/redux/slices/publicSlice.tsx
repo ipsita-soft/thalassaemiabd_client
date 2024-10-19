@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getPublicBlogNews, getPublicSlider, getDoctorSlider, getWishers, getPublicEvent, getSingleEvent, getSingleBlogNews, getGallery, getSetting, getMissionVision, getWhoWeArePage, getBtsHistory } from "../api/publicApi";
+import { getPublicBlogNews, getPublicSlider, getDoctorSlider, getWishers, getPublicEvent, getSingleEvent, getSingleBlogNews, getGallery, getSetting, getMissionVision, getWhoWeArePage, getBtsHistory, getPublicOurProjects, getSingleProject, getPublicNotices, getPublicTifPages } from "../api/publicApi";
 
 
 // Define a type for the slider objects
@@ -9,6 +9,57 @@ interface Slider {
     sorting_index: number; // Added sorting_index
     status: string;        // Added status
 }
+
+interface Project {
+    id: number;
+    image: string;
+    sorting_index: number;
+    status: string;
+    title: string;
+    description: string;
+}
+
+
+// Interface for TIF Slider items
+interface TIFSlider {
+    id: number;
+    image: string;
+    status: string;
+    type: string;
+    sorting_index: number;
+    deleted_at: string | null;
+    created_at: string;
+    updated_at: string;
+}
+
+// Interface for TIF Attachment items
+interface TIFAttachment {
+    id: number;
+    title: string;
+    file: string;
+    status: string;
+    type: string;
+    sorting_index: number;
+    deleted_at: string | null;
+    created_at: string;
+    updated_at: string;
+}
+
+// Interface for the main TIF object
+interface TIFPages {
+    id: number;
+    title: string;
+    image: string;
+    description: string;
+    videolink: string;
+    type: string;
+    deleted_at: string | null;
+    created_at: string;
+    updated_at: string;
+    tif_slider: TIFSlider[]; // Array of TIFSlider items
+    tif_attachment: TIFAttachment[]; // Array of TIFAttachment items
+}
+
 
 interface Wishers {
     id: number;
@@ -74,6 +125,14 @@ interface Event {
     sorting_index: number; // Added sorting_index
     status: string;        // Added status
 }
+interface Notices {
+    id: number;
+    pdf: string;
+    title: string;
+    date: string;
+    sorting_index: number; // Added sorting_index
+    status: string;        // Added status
+}
 
 interface MissionVision {
     id: number;
@@ -113,17 +172,25 @@ interface SingleMissionVision {
 interface SingleBtsHistory {
     data: BtsHistory; // This is the structure of the response you receive
 }
+interface SingleProject {
+    data: Project; // This is the structure of the response you receive
+}
+
 
 
 // Define a type for the slice state
 interface PublicState {
     sliders: { data: Slider[] };
     doctorSliders: { data: DoctorSliders[] };
+    tifPage: TIFPages | null;
+    project: { data: Project[] };
+    singleProject: Project | null;
     whoWeArePage: { data: WhoWeArePage[] }
     blogNews: { data: BlogNews[] };
     singleBlogNews: BlogNews | null;
     wishers: { data: Wishers[] };
     events: { data: Event[] };
+    notices: { data: Notices[] };
     galleries: { data: Gallery[] }
     singleEvent: Event | null;
     setting: SettingData | null;
@@ -159,10 +226,14 @@ interface WhoWeArePage {
 const initialState: PublicState = {
     sliders: { data: [] },
     blogNews: { data: [] },
+    tifPage: null,
     singleBlogNews: null,
+    project: { data: [] },
+    singleProject: null,
     doctorSliders: { data: [] },
     whoWeArePage: { data: [] },
     events: { data: [] },
+    notices: { data: [] },
     singleEvent: null,
     setting: null,
     missionVision: null,
@@ -178,7 +249,7 @@ const initialState: PublicState = {
 
 // Async thunk to fetch the sliders
 export const fetchPublicSlider = createAsyncThunk(
-    'publicSlider/fetchPublicSlider',
+    'public/fetchPublicSlider',
     async (params: object = {}, { rejectWithValue }) => {
         try {
             const response = await getPublicSlider(params);
@@ -192,7 +263,7 @@ export const fetchPublicSlider = createAsyncThunk(
 
 
 export const fetchDoctorSlider = createAsyncThunk(
-    'publicSlider/fetchDoctorSlider',
+    'public/fetchDoctorSlider',
     async (params: object = {}, { rejectWithValue }) => {
         try {
             const response = await getDoctorSlider(params);
@@ -205,7 +276,7 @@ export const fetchDoctorSlider = createAsyncThunk(
 
 
 export const fetchWhoWeArePage = createAsyncThunk(
-    'publicSlider/fetchWhoWeArePage',
+    'public/fetchWhoWeArePage',
     async (params: string, { rejectWithValue }) => {
         try {
             const response = await getWhoWeArePage(params);
@@ -218,7 +289,7 @@ export const fetchWhoWeArePage = createAsyncThunk(
 
 
 export const fetchWishers = createAsyncThunk(
-    'publicSlider/fetchWishers',
+    'public/fetchWishers',
     async (params: object = {}, { rejectWithValue }) => {
         try {
             const response = await getWishers(params);
@@ -230,7 +301,7 @@ export const fetchWishers = createAsyncThunk(
 );
 
 export const fetchPublicBlogNews = createAsyncThunk(
-    'publicBlogNews/fetchPublicBlogNews',
+    'public/fetchPublicBlogNews',
     async (params: object = {}, { rejectWithValue }) => {
         try {
             const response = await getPublicBlogNews(params);
@@ -240,10 +311,33 @@ export const fetchPublicBlogNews = createAsyncThunk(
         }
     }
 );
+export const fetchPublicOurProjects = createAsyncThunk(
+    'public/fetchPublicOurProjects',
+    async (params: object = {}, { rejectWithValue }) => {
+        try {
+            const response = await getPublicOurProjects(params);
+            return response.data.data; // Assuming response.data contains the sliders array
+        } catch (error: any) {
+            return rejectWithValue(error.response ? error.response.data : new Error('Error fetching public data'));
+        }
+    }
+);
+
+export const fetchSingleProject = createAsyncThunk(
+    'public/fetchSingleProject',
+    async (id: string | number, { rejectWithValue }) => {
+        try {
+            const response = await getSingleProject(id);
+            return response.data; // Assuming response contains event data
+        } catch (error: any) {
+            return rejectWithValue(error.response ? error.response.data : new Error('Error fetching single event'));
+        }
+    }
+);
 
 
 export const fetchPublicGallery = createAsyncThunk(
-    'fetchPublicGallery/fetchPublicGallery',
+    'public/fetchPublicGallery',
     async (params: object = {}, { rejectWithValue }) => {
         try {
             const response = await getGallery(params);
@@ -267,7 +361,7 @@ export const fetchSingleBlogNews = createAsyncThunk(
 );
 
 export const fetchPublicEvent = createAsyncThunk(
-    'publicBlogNews/fetchPublicEvent',
+    'public/fetchPublicEvent',
     async (params: object = {}, { rejectWithValue }) => {
         try {
             const response = await getPublicEvent(params);
@@ -277,6 +371,33 @@ export const fetchPublicEvent = createAsyncThunk(
         }
     }
 );
+
+
+export const fetchPublicNotices = createAsyncThunk(
+    'public/fetchPublicNotices',
+    async (params: object = {}, { rejectWithValue }) => {
+        try {
+            const response = await getPublicNotices(params);
+            return response.data.data; // Assuming response.data contains the sliders array
+        } catch (error: any) {
+            return rejectWithValue(error.response ? error.response.data : new Error('Error fetching public notices'));
+        }
+    }
+);
+
+
+export const fetchPublicTifPages = createAsyncThunk(
+    'public/fetchPublicTifPages',
+    async (tipType: string | number, { rejectWithValue }) => {
+        try {
+            const response = await getPublicTifPages(tipType);
+            return response.data.data; // Assuming response.data contains the sliders array
+        } catch (error: any) {
+            return rejectWithValue(error.response ? error.response.data : new Error('Error fetching public TifPages'));
+        }
+    }
+);
+
 
 export const fetchSingleEvent = createAsyncThunk(
     'public/fetchSingleEvent',
@@ -419,18 +540,50 @@ const publicSlice = createSlice({
                 state.error = action.payload;
             })
 
-            //single event 
-
-            .addCase(fetchSingleEvent.pending, (state) => {
+            //notices call 
+            .addCase(fetchPublicNotices.pending, (state) => {
                 state.isLoading = true;
                 state.isError = false;
                 state.error = null;
             })
-            .addCase(fetchSingleEvent.fulfilled, (state, action: PayloadAction<SingleEventResponse>) => {
+            .addCase(fetchPublicNotices.fulfilled, (state, action: PayloadAction<Notices[]>) => {
                 state.isLoading = false;
-                state.singleEvent = action.payload.data;
+                state.notices = { data: action.payload };
             })
-            .addCase(fetchSingleEvent.rejected, (state, action: PayloadAction<any>) => {
+            .addCase(fetchPublicNotices.rejected, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.payload;
+            })
+
+            //TIF Pages call 
+            .addCase(fetchPublicTifPages.pending, (state) => {
+                state.isLoading = true;
+                state.isError = false;
+                state.error = null;
+            })
+            .addCase(fetchPublicTifPages.fulfilled, (state, action: PayloadAction<TIFPages>) => {
+                state.isLoading = false;
+                state.tifPage = action.payload;
+            })
+            .addCase(fetchPublicTifPages.rejected, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.payload;
+            })
+
+            //single event 
+
+            .addCase(fetchSingleProject.pending, (state) => {
+                state.isLoading = true;
+                state.isError = false;
+                state.error = null;
+            })
+            .addCase(fetchSingleProject.fulfilled, (state, action: PayloadAction<SingleEventResponse>) => {
+                state.isLoading = false;
+                state.singleProject = action.payload.data;
+            })
+            .addCase(fetchSingleProject.rejected, (state, action: PayloadAction<any>) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.error = action.payload;
@@ -535,6 +688,40 @@ const publicSlice = createSlice({
                 state.blogNews = { data: action.payload };
             })
             .addCase(fetchPublicBlogNews.rejected, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.payload;
+            })
+
+            // single  OurProjects
+
+            .addCase(fetchSingleEvent.pending, (state) => {
+                state.isLoading = true;
+                state.isError = false;
+                state.error = null;
+            })
+            .addCase(fetchSingleEvent.fulfilled, (state, action: PayloadAction<SingleProject>) => {
+                state.isLoading = false;
+                state.singleProject = action.payload.data;
+            })
+            .addCase(fetchSingleEvent.rejected, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.payload;
+            })
+
+
+            //OurProjects
+            .addCase(fetchPublicOurProjects.pending, (state) => {
+                state.isLoading = true;
+                state.isError = false;
+                state.error = null;
+            })
+            .addCase(fetchPublicOurProjects.fulfilled, (state, action: PayloadAction<Project[]>) => {
+                state.isLoading = false;
+                state.project = { data: action.payload };
+            })
+            .addCase(fetchPublicOurProjects.rejected, (state, action: PayloadAction<any>) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.error = action.payload;

@@ -30,31 +30,29 @@ import {
 } from "@/components/ui/table";
 import Add from "./Add";
 import Edit from "./Edit";
-import Show from "./Show";
 import Delete from "./Delete";
-import { get } from "@/redux/slices/doctorSliderSlice";
+import { get } from "@/redux/slices/tifSliderSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { toast } from '@/hooks/use-toast';
-
+import Navbar from "../tifPage/Navbar";
 
 
 interface Data {
     id: number;
     image: string;
-    name: string;
-    sorting_index: number;
     status: "Active" | "Inactive";
+    type: string;
+    sorting_index: number;
+
 }
 
-export function DoctorSliderPage() {
+export function TifSliderPage() {
     const dispatch: AppDispatch = useDispatch();
-    const { doctorSliders, meta, isLoading, isError, error } = useSelector(
-        (state: RootState) => state.doctorSliders
+    const { tifSliders, meta, isLoading, isError, error } = useSelector(
+        (state: RootState) => state.tifSliders
     );
 
-
-    const [showSliderDetails, setShowSliderDetails] = useState(false);
 
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -81,12 +79,14 @@ export function DoctorSliderPage() {
             ),
         },
 
+
+
         {
-            id: "name",
-            header: "Name",
+            id: "type",
+            header: "Type",
             cell: ({ row }: { row: { original: Data } }) => (
                 <div>
-                    {row.original.name}
+                    {row.original.type}
                 </div>
             ),
         },
@@ -158,12 +158,7 @@ export function DoctorSliderPage() {
                                 onClose={() => setEditModalOpen(false)}
                             />
                             <br />
-                            <Show
-                                Id={wisher.id.toString()}
-                                open={showSliderDetails}
-                                onClose={() => setShowSliderDetails(false)}
-                            />
-                            <br />
+
 
                             <Delete
                                 Id={wisher.id.toString()}
@@ -180,7 +175,7 @@ export function DoctorSliderPage() {
     ];
 
     const table = useReactTable({
-        data: doctorSliders as unknown as Data[],
+        data: tifSliders as unknown as Data[],
         columns,
         state: {
             sorting,
@@ -218,6 +213,12 @@ export function DoctorSliderPage() {
         ) :
 
             <div className="p-4">
+
+                <div className="mb-4">
+                    <Navbar />
+
+                </div>
+
                 <div className="flex flex-col lg:flex-row justify-between items-center mb-4 space-y-4 lg:space-y-0 lg:space-x-4">
                     <Input
                         type="text"

@@ -68,32 +68,6 @@ const PatientManagement = () => {
                     </div>
                     </div>
                 ))}
-                
-
-                  {/* <div className="carousel-item active">
-                    <img
-                      src="client/assets/images/doctors/Dr. Kabirul Islam.JPG"
-                      className="d-block w-100"
-                      alt="Dr. Kabirul Islam"
-                    />
-                    <div className="carousel-caption d-none d-md-block doctors_details">
-                      <h5>Dr. Kabirul Islam</h5>
-                    </div>
-                  </div>
-
-                  <div className="carousel-item">
-                    <img
-                      src="client/assets/images/doctors/Prof. Dr. M A Khan.JPG"
-                      className="d-block w-100"
-                      alt="Dr. M A Khan"
-                    />
-                    <div className="carousel-caption d-none d-md-block doctors_details">
-                      <h5>Dr. M A Khan</h5>
-                    </div>
-                  </div> */}
-
-
-
                 </div>
 
                 <button

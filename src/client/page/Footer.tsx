@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store'; // Update path as necessary
 import { fetchSetting } from '@/redux/slices/publicSlice'; // Import the thunk
+import Marquee from "react-marquee-slider";
 
 const Footer = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -31,7 +32,7 @@ const Footer = () => {
                                     </a>
                                 </div>
                                 <p>
-                                   {setting?.slogan}
+                                    {setting?.slogan}
                                 </p>
                                 <ul className="social">
                                     <li><a href={setting?.facebook}><i className="lni lni-facebook-filled"></i></a></li>
@@ -116,15 +117,15 @@ const Footer = () => {
                                 </ul>
 
                                 <ul className="finan">
-                                    <div className='row'>    
-                                         <h4 className="accept">We Accept</h4>
+                                    <div className='row'>
+                                        <h4 className="accept">We Accept</h4>
                                         <img className="img-fluid" src="client/assets/images/financial/bkash.jpg" alt="bkash" />
                                         <img className="img-fluid" src="client/assets/images/financial/nagad.jpg" alt="nagad" />
                                         <img className="img-fluid" src="client/assets/images/financial/rocket.jpg" alt="rocket" />
                                         <img className="img-fluid" src="client/assets/images/financial/mastercard.jpg" alt="mastercard" />
                                         <img className="img-fluid" src="client/assets/images/financial/visa.jpg" alt="visa" />
                                         <img className="img-fluid" src="client/assets/images/financial/dbbl.jpg" alt="dbbl" />
-                                        </div>
+                                    </div>
                                 </ul>
                             </div>
                             {/* End Single Widget */}
@@ -159,10 +160,43 @@ const Footer = () => {
             </div>
             {/* End Footer Bottom */}
 
+            <a href={`https://wa.me/${setting?.whatsapp}`} target="_blank" className="scroll-top2">
+                <i className="lni lni-whatsapp"></i>
+            </a>
+
             {/* Scroll to Top */}
             <a href="#" className="scroll-top">
                 <i className="lni lni-chevron-up"></i>
             </a>
+
+            <div className="onoffswitch3">
+                <input type="checkbox" name="onoffswitch3" className="onoffswitch3-checkbox" id="myonoffswitch3" checked />
+                <label className="onoffswitch3-label" htmlFor="myonoffswitch3">
+                    <span className="onoffswitch3-inner">
+                        <span className="onoffswitch3-active">
+                            <Marquee
+                                velocity={50}
+                                direction="rtl" 
+                                scatterRandomly={false} 
+                                resetAfterTries={100} 
+                                onInit={() => console.log("Marquee initialized")}
+                                onFinish={() => console.log("Marquee finished")}
+                            >
+                                <div></div>
+                                <div className='w-96'>{setting?.copyrighttext}</div>
+                            </Marquee>
+                            <span className="onoffswitch3-switch">BREAKING NEWS <i className="lni lni-close"></i></span>
+                        </span>
+                        <span className="onoffswitch3-inactive">
+                            <span className="onoffswitch3-switch">
+                                BREAKING NEWS <i className="lni lni-angle-double-right"></i>
+                            </span>
+                        </span>
+                    </span>
+                </label>
+            </div>
+
+
         </footer>
     );
 };

@@ -19,7 +19,9 @@ import {
     GalleryVerticalEnd,
     Settings,
     TargetIcon,
-    HistoryIcon
+    HistoryIcon,
+    List,
+    CalendarClock
 
 } from 'lucide-react';
 
@@ -110,6 +112,16 @@ function DashboardLayout() {
                                 </Link>
 
 
+                                <Link
+                                    to="/dashboard/notices"
+                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/notices') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                        }`}
+                                >
+                                    <CalendarClock className="h-4 w-4" />
+                                    Notices
+                                </Link>
+
+
 
 
                                 <Link
@@ -129,6 +141,15 @@ function DashboardLayout() {
                                 >
                                     <AlignStartVertical className="h-4 w-4" />
                                     Doctor Sliders
+                                </Link>
+
+                                <Link
+                                    to="/dashboard/our-projects"
+                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/our-projects') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                        }`}
+                                >
+                                    <List className="h-4 w-4" />
+                                    Our Projects
                                 </Link>
 
 
@@ -192,6 +213,14 @@ function DashboardLayout() {
 
 
 
+                                <Link
+                                    to="/dashboard/tif-page"
+                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/tif-page') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                        }`}
+                                >
+                                    <GalleryVerticalEnd className="h-4 w-4" />
+                                    Tif Page
+                                </Link>
 
 
 

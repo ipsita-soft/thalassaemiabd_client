@@ -11,6 +11,10 @@ import settingReducers from './slices/settingSlice';
 import missionVisionReducers from './slices/missionVisionSlice';
 import whoWeAreReducers from './slices/whoWeAreSlice';
 import btsHistoryReducers from './slices/btsHistorySlice';
+import ourProjectReducers from './slices/ourProjectSlice';
+import noticesReducers from './slices/noticesSlice';
+import pagesReducers from './slices/pagesSlice';
+import tifSliderReducers from './slices/tifSliderSlice'
 
 export const store = configureStore({
   reducer: {
@@ -25,6 +29,10 @@ export const store = configureStore({
     missionVision: missionVisionReducers,
     whoWeAres: whoWeAreReducers,
     btsHistory: btsHistoryReducers,
+    projects: ourProjectReducers,
+    notices: noticesReducers,
+    pages: pagesReducers,
+    tifSliders: tifSliderReducers,
     //public reducer
     public: publicReducer,
   },

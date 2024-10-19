@@ -32,6 +32,14 @@ import ZakatBoard from './client/page/ZakatBoard.tsx';
 import BloodCollectionCommittee from './client/page/BloodCollectionCommittee.tsx';
 import BtsHistory from './client/page/BtsHistory.tsx';
 import EditBtsHistory from './pages/sidebar/webSetting/missionVision/EditBtsHistory.tsx';
+import { ProjectPage } from './pages/sidebar/webSetting/Project/ProjectPage.tsx';
+import OurProjects from './client/page/OurProjects.tsx';
+import ProjectDetails from './client/page/ProjectDetails.tsx';
+import NoticeDetails from './client/page/NoticeDetails.tsx';
+import { NoticesPage } from './pages/sidebar/webSetting/notices/NoticesPage.tsx';
+import TifMembership from './client/page/TifMembership.tsx';
+import { TifPage } from './pages/sidebar/webSetting/tifPage/TifPage.tsx';
+import { TifSliderPage } from './pages/sidebar/webSetting/tifSlider/TifSliderPage.tsx';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -49,6 +57,29 @@ const router = createBrowserRouter([
         path: 'blog-news-all',
         element: <BlogNewsAll />
       },
+
+      {
+        path: 'our-projects',
+        element: <OurProjects />
+      },
+      {
+        path: 'page/:TifType',
+        element: <TifMembership/>
+      },
+
+
+      {
+        path: 'project-details/:id',
+        element: <ProjectDetails />
+      },
+
+
+      {
+        path: 'notice',
+        element: <NoticeDetails />
+      },
+
+
       {
         path: 'blog-news/:id',
         element: <SingleBlogNews />
@@ -129,6 +160,14 @@ const router = createBrowserRouter([
         />,
       },
 
+      {
+        path: 'notices',
+        element: <ProtectedRoute
+          element={<NoticesPage/>}
+          requiredPermissions={['notice-all']}
+        />,
+      },
+
 
 
       {
@@ -145,6 +184,15 @@ const router = createBrowserRouter([
         element: <ProtectedRoute
           element={<DoctorSliderPage />}
           requiredPermissions={['doctorSlider-all']}
+        />,
+      },
+
+
+      {
+        path: 'our-projects',
+        element: <ProtectedRoute
+          element={<ProjectPage />}
+          requiredPermissions={['projects-all']}
         />,
       },
 
@@ -206,6 +254,24 @@ const router = createBrowserRouter([
           />
         ),
       },
+
+
+      {
+        path: 'tif-page',
+        element: <ProtectedRoute
+          element={<TifPage />}
+          requiredPermissions={['tif-member-all']}
+        />,
+      },
+
+      {
+        path: 'tif-page-slider',
+        element: <ProtectedRoute
+          element={<TifSliderPage />}
+          requiredPermissions={['tif-member-all']}
+        />,
+      },
+
 
 
       {

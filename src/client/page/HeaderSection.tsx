@@ -98,10 +98,11 @@ const Header = () => {
                           <Link to="mission-vision">Vision & Mission</Link>
                         </li>
                         <li className="nav-item">
-                          <a href="tif-membership.html">TIF Membership</a>
+
+                        <Link to={`/page/tif_member`}>TIF Membership</Link>
                         </li>
                         <li className="nav-item">
-                          <a href="our-projects.html">Our Projects</a>
+                          <Link to="our-projects">Our Projects</Link>
                         </li>
 
                         <li className="nav-item">
@@ -150,7 +151,7 @@ const Header = () => {
                           <a href="prevention.html">Prevention</a>
                         </li>
                         <li className="nav-item">
-                          <a href="awareness.html">Awareness</a>
+                          <Link to={`/page/awareness`}>Awareness</Link>
                         </li>
                       </ul>
                     </li>
@@ -166,8 +167,16 @@ const Header = () => {
                         <li className="nav-item"><Link to="photo-gallery">Photos</Link></li>
                         <li className="nav-item"><Link to="videos-gallery">Videos</Link></li>
                         <li className="nav-item"><Link to="blog-news-all">Blogs & News</Link></li>
-                        <li className="nav-item"><a href="advertisements.html">Advertisements</a></li>
+                        <li className="nav-item">
+                          <Link to={`/page/advertisements`}>Advertisements</Link>
+                          </li>
                       </ul>
+                    </li>
+
+
+                    <li className="nav-item">
+                      <Link to="notice">Notice</Link>
+
                     </li>
 
                     {/* Additional Nav Items */}

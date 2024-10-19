@@ -30,9 +30,9 @@ import {
 } from "@/components/ui/table";
 import Add from "./Add";
 import Edit from "./Edit";
-import Show from "./Show";
+// import Show from "./Show";
 import Delete from "./Delete";
-import { get } from "@/redux/slices/doctorSliderSlice";
+import { get } from "@/redux/slices/noticesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { toast } from '@/hooks/use-toast';
@@ -41,20 +41,20 @@ import { toast } from '@/hooks/use-toast';
 
 interface Data {
     id: number;
-    image: string;
-    name: string;
+    pdf: string;
     sorting_index: number;
+    title: string;
+    date: string;
     status: "Active" | "Inactive";
 }
 
-export function DoctorSliderPage() {
+export function NoticesPage() {
     const dispatch: AppDispatch = useDispatch();
-    const { doctorSliders, meta, isLoading, isError, error } = useSelector(
-        (state: RootState) => state.doctorSliders
+    const { notices, meta, isLoading, isError, error } = useSelector(
+        (state: RootState) => state.notices
     );
 
 
-    const [showSliderDetails, setShowSliderDetails] = useState(false);
 
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -82,24 +82,27 @@ export function DoctorSliderPage() {
         },
 
         {
-            id: "name",
-            header: "Name",
+            id: "title",
+            header: "Title",
             cell: ({ row }: { row: { original: Data } }) => (
-                <div>
-                    {row.original.name}
-                </div>
+                <div className="text-left">{row.original.title + 1}</div>
             ),
         },
 
         {
-            id: "image",
-            header: "Image",
+            id: "date",
+            header: "Date",
             cell: ({ row }: { row: { original: Data } }) => (
-                <img
-                    src={row.original.image}
-                    alt="events"
-                    className="w-16 h-16 object-cover"
-                />
+                <div className="text-left">{row.original.date}</div>
+            ),
+        },
+        {
+            id: "pdf",
+            header: "Pdf",
+            cell: ({ row }: { row: { original: Data } }) => (
+                <>
+                    <a target="_blank" href={row.original.pdf}>Pdf Download</a>
+                </>
             ),
         },
         {
@@ -130,14 +133,14 @@ export function DoctorSliderPage() {
             id: "actions",
             enableHiding: false,
             cell: ({ row }: { row: { original: Data } }) => {
-                const wisher = row.original;
+                const notice = row.original;
 
 
 
                 const handleDeleteSuccess = () => {
                     toast({
                         title: 'Success',
-                        description: 'Doctor slider deleted successfully!',
+                        description: 'notice deleted successfully!',
                     });
                     dispatch(get({})); // Dispatch here
                 };
@@ -153,20 +156,21 @@ export function DoctorSliderPage() {
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
                             <Edit
-                                Id={wisher.id.toString()}
+
+                                Id={notice.id.toString()}
                                 open={isEditModalOpen}
                                 onClose={() => setEditModalOpen(false)}
                             />
-                            <br />
+                            {/* <br />
                             <Show
-                                Id={wisher.id.toString()}
+                                Id={notice.id.toString()}
                                 open={showSliderDetails}
                                 onClose={() => setShowSliderDetails(false)}
-                            />
+                            /> */}
                             <br />
 
                             <Delete
-                                Id={wisher.id.toString()}
+                                Id={notice.id.toString()}
                                 onSuccess={handleDeleteSuccess} // Pass the callback here
                             />
 
@@ -180,7 +184,7 @@ export function DoctorSliderPage() {
     ];
 
     const table = useReactTable({
-        data: doctorSliders as unknown as Data[],
+        data: notices as unknown as Data[],
         columns,
         state: {
             sorting,

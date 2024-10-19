@@ -32,7 +32,7 @@ import Add from "./Add";
 import Edit from "./Edit";
 import Show from "./Show";
 import Delete from "./Delete";
-import { get } from "@/redux/slices/doctorSliderSlice";
+import { get } from "@/redux/slices/ourProjectSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { toast } from '@/hooks/use-toast';
@@ -43,14 +43,16 @@ interface Data {
     id: number;
     image: string;
     name: string;
+    title: string;
+    description: string;
     sorting_index: number;
     status: "Active" | "Inactive";
 }
 
-export function DoctorSliderPage() {
+export function ProjectPage() {
     const dispatch: AppDispatch = useDispatch();
-    const { doctorSliders, meta, isLoading, isError, error } = useSelector(
-        (state: RootState) => state.doctorSliders
+    const { projects, meta, isLoading, isError, error } = useSelector(
+        (state: RootState) => state.projects
     );
 
 
@@ -82,11 +84,11 @@ export function DoctorSliderPage() {
         },
 
         {
-            id: "name",
-            header: "Name",
+            id: "title",
+            header: "Title",
             cell: ({ row }: { row: { original: Data } }) => (
                 <div>
-                    {row.original.name}
+                    {row.original.title}
                 </div>
             ),
         },
@@ -97,7 +99,7 @@ export function DoctorSliderPage() {
             cell: ({ row }: { row: { original: Data } }) => (
                 <img
                     src={row.original.image}
-                    alt="events"
+                    alt="image"
                     className="w-16 h-16 object-cover"
                 />
             ),
@@ -130,7 +132,7 @@ export function DoctorSliderPage() {
             id: "actions",
             enableHiding: false,
             cell: ({ row }: { row: { original: Data } }) => {
-                const wisher = row.original;
+                const data = row.original;
 
 
 
@@ -153,20 +155,20 @@ export function DoctorSliderPage() {
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
                             <Edit
-                                Id={wisher.id.toString()}
+                                Id={data.id.toString()}
                                 open={isEditModalOpen}
                                 onClose={() => setEditModalOpen(false)}
                             />
                             <br />
                             <Show
-                                Id={wisher.id.toString()}
+                                Id={data.id.toString()}
                                 open={showSliderDetails}
                                 onClose={() => setShowSliderDetails(false)}
                             />
                             <br />
 
                             <Delete
-                                Id={wisher.id.toString()}
+                                Id={data.id.toString()}
                                 onSuccess={handleDeleteSuccess} // Pass the callback here
                             />
 
@@ -180,7 +182,7 @@ export function DoctorSliderPage() {
     ];
 
     const table = useReactTable({
-        data: doctorSliders as unknown as Data[],
+        data: projects as unknown as Data[],
         columns,
         state: {
             sorting,

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import {
     SortingState,
     ColumnFiltersState,
@@ -10,7 +11,7 @@ import {
     useReactTable,
     flexRender,
 } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Youtube } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from '@/components/ui/spinner';
 import {
@@ -28,33 +29,35 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import Add from "./Add";
 import Edit from "./Edit";
-import Show from "./Show";
-import Delete from "./Delete";
-import { get } from "@/redux/slices/doctorSliderSlice";
+import { get } from "@/redux/slices/pagesSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import { toast } from '@/hooks/use-toast';
 
+import Navbar from "./Navbar";
+import TruncatedDescription from "./TruncatedDescription";
 
 
 interface Data {
-    id: number;
-    image: string;
-    name: string;
-    sorting_index: number;
+    id: string;
+    title?: string;
+    image?: string;
+    description?: string;
+    videolink?: string;
+    type?: string;
     status: "Active" | "Inactive";
 }
 
-export function DoctorSliderPage() {
+
+
+
+export function TifPage() {
     const dispatch: AppDispatch = useDispatch();
-    const { doctorSliders, meta, isLoading, isError, error } = useSelector(
-        (state: RootState) => state.doctorSliders
+    const { tifPages, meta, isLoading, isError, error } = useSelector(
+        (state: RootState) => state.pages
     );
 
-
-    const [showSliderDetails, setShowSliderDetails] = useState(false);
+    console.log(tifPages);
 
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -82,12 +85,10 @@ export function DoctorSliderPage() {
         },
 
         {
-            id: "name",
-            header: "Name",
+            id: "title",
+            header: "Title",
             cell: ({ row }: { row: { original: Data } }) => (
-                <div>
-                    {row.original.name}
-                </div>
+                <div className="text-left">{row.original.title}</div>
             ),
         },
 
@@ -95,52 +96,53 @@ export function DoctorSliderPage() {
             id: "image",
             header: "Image",
             cell: ({ row }: { row: { original: Data } }) => (
-                <img
-                    src={row.original.image}
-                    alt="events"
-                    className="w-16 h-16 object-cover"
-                />
+                row.original.type !== 'video' ? (
+                    <img
+                        src={row.original.image}
+                        alt="Image"
+                        className="w-16 h-16 object-cover"
+                    />
+                ) : (
+                    <span>No Image (Type is Video)</span> // Optional text when it's a video
+                )
             ),
         },
+
         {
-            accessorKey: "sorting_index",
-            header: ({ column }: { column: any }) => (
-                <Button
-                    variant="ghost"
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === "asc")
-                    }
-                >
-                    Sorting Index
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            ),
+            id: "Video",
+            header: "video Url",
             cell: ({ row }: { row: { original: Data } }) => (
-                <div className="text-center">{row.original.sorting_index}</div>
+                <a href={row.original.videolink} target="_blank" rel="noopener noreferrer" className="text-left">
+                    <Youtube />
+                </a>
             ),
         },
+
+
         {
-            accessorKey: "status",
-            header: "Status",
+            accessorKey: "type",
+            header: "Type",
             cell: ({ row }: { row: { original: Data } }) => (
-                <div className="text-center">{row.original.status}</div>
+                <div className="text-center">{row.original.type}</div>
             ),
         },
+
+
+        {
+            id: "description",
+            header: "Description",
+            cell: ({ row }: { row: { original: Data } }) => (
+                <TruncatedDescription description={row.original.description} />
+
+            ),
+        },
+
+
         {
             id: "actions",
             enableHiding: false,
             cell: ({ row }: { row: { original: Data } }) => {
-                const wisher = row.original;
-
-
-
-                const handleDeleteSuccess = () => {
-                    toast({
-                        title: 'Success',
-                        description: 'Doctor slider deleted successfully!',
-                    });
-                    dispatch(get({})); // Dispatch here
-                };
+                const page = row.original;
 
                 return (
                     <DropdownMenu>
@@ -153,22 +155,15 @@ export function DoctorSliderPage() {
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
                             <Edit
-                                Id={wisher.id.toString()}
+
+                                Id={page.id.toString()}
                                 open={isEditModalOpen}
                                 onClose={() => setEditModalOpen(false)}
                             />
-                            <br />
-                            <Show
-                                Id={wisher.id.toString()}
-                                open={showSliderDetails}
-                                onClose={() => setShowSliderDetails(false)}
-                            />
+
                             <br />
 
-                            <Delete
-                                Id={wisher.id.toString()}
-                                onSuccess={handleDeleteSuccess} // Pass the callback here
-                            />
+
 
 
 
@@ -180,7 +175,7 @@ export function DoctorSliderPage() {
     ];
 
     const table = useReactTable({
-        data: doctorSliders as unknown as Data[],
+        data: tifPages as unknown as Data[],
         columns,
         state: {
             sorting,
@@ -197,6 +192,9 @@ export function DoctorSliderPage() {
     });
 
     const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFilterValue(event.target.value);
+        setColumnFilters([{ id: "status", value: event.target.value }]);
+
         setFilterValue(event.target.value);
         setColumnFilters([{ id: "status", value: event.target.value }]);
     };
@@ -218,6 +216,12 @@ export function DoctorSliderPage() {
         ) :
 
             <div className="p-4">
+
+                <div className="mb-4">
+                    <Navbar />
+
+                </div>
+
                 <div className="flex flex-col lg:flex-row justify-between items-center mb-4 space-y-4 lg:space-y-0 lg:space-x-4">
                     <Input
                         type="text"
@@ -239,7 +243,6 @@ export function DoctorSliderPage() {
                             <option value={250}>250</option>
                         </select>
                     </div>
-                    <Add />
                 </div>
                 {isError ? (
                     <>Error: {error && <p>Error: {error.message}</p>}</>
