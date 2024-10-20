@@ -6,6 +6,7 @@ import { Register } from './pages/Register';
 import DashboardLayout from './layouts/DashboardLayout';
 import AuthLayout from './layouts/AuthLayout';
 import ClientLayout from './layouts/ClientLayout';
+import UserPanelLayout from './layouts/UserPanelLayoyut.tsx';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import PublicRoute from './components/auth/PublicRoute.tsx';
 import Unauthorized from './pages/Unauthorized'; // Import the Unauthorized page
@@ -115,6 +116,8 @@ const router = createBrowserRouter([
       },
     ]
   },
+
+
 
   {
     path: '/dashboard',
@@ -311,6 +314,14 @@ const router = createBrowserRouter([
     path: '/unauthorized',
     element: <Unauthorized />,
   },
+
+  {
+    path: '/userpanel',
+    element: <PublicRoute
+      element={<UserPanelLayout />}
+    />,
+  },
+
 ]);
 
 export default router;

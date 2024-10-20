@@ -16,7 +16,6 @@ interface WhoWeArePage {
 }
 
 
-
 const AdvisorsCommittee = () => {
 
     const dispatch = useDispatch<AppDispatch>();
@@ -37,9 +36,6 @@ const AdvisorsCommittee = () => {
     const advisors: WhoWeArePage[] = Array.isArray(whoWeArePage.data) ? whoWeArePage.data : [];
 
     console.log(advisors); // This will log the actual slider data
-
-
-
 
     return (
         <section className="advisors-Committee section mt-14">
