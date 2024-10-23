@@ -41,6 +41,10 @@ import { NoticesPage } from './pages/sidebar/webSetting/notices/NoticesPage.tsx'
 import TifMembership from './client/page/TifMembership.tsx';
 import { TifPage } from './pages/sidebar/webSetting/tifPage/TifPage.tsx';
 import { TifSliderPage } from './pages/sidebar/webSetting/tifSlider/TifSliderPage.tsx';
+import Notice from './client/userpanel/notice.tsx';
+import AnnualReports from './client/userpanel/annualreport.tsx';
+import MyProfile from './client/userpanel/MyProfile.tsx';
+import UpdateProfile from './client/userpanel/UpdateProfile.tsx';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -315,12 +319,39 @@ const router = createBrowserRouter([
     element: <Unauthorized />,
   },
 
+  
+
+
+
+
+
+
   {
     path: '/userpanel',
-    element: <PublicRoute
-      element={<UserPanelLayout />}
-    />,
+    element: <UserPanelLayout />,
+    children: [
+      {
+        path: '/userpanel/notices',
+        element: <Notice />
+      },
+      {
+        path: '/userpanel/annual-reports',
+        element: <AnnualReports />
+      },
+      {
+        path: '/userpanel/my-profile',
+        element: <MyProfile />
+      },
+      {
+        path: '/userpanel/update-profile',
+        element: <UpdateProfile />
+      },
+
+    ]
   },
+
+
+
 
 ]);
 

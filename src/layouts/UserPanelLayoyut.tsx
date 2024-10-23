@@ -1,24 +1,23 @@
 import { Outlet, useOutlet } from "react-router-dom";
 
-import Footer from "@/client/page/Footer";
-import Header from "@/client/page/HeaderSection";
-import Dashboard from "@/client/page/Dashboard";
+import Dashboard from "@/client/userpanel/Dashboard";
+import PanelFooter from "@/client/userpanel/PanelFooter";
+import PanelHeader from "@/client/userpanel/Panelheader";
 
 function UserPanelLayout() {
     const outlet = useOutlet();
 
     return (
         <div>
-            <Header />
+            <PanelHeader/>
             {outlet ? (
                 <Outlet />
             ) : (
                 <>
-                    <Dashboard />
+                <Dashboard/>
                 </>
             )}
-
-            <Footer />
+            <PanelFooter />
         </div>
     );
 }
