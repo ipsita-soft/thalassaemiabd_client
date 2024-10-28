@@ -16,6 +16,9 @@ interface WhoWeArePage {
 const AdvisorsCommittee = () => {
     const dispatch = useDispatch<AppDispatch>();
 
+
+const AdvisorsCommittee = () => {
+
     // State to store selected year
     const [yearId, setYearId] = useState<number | null>(null);
     const [activeData, setActiveData] = useState<string | undefined>(undefined);
@@ -60,6 +63,7 @@ const AdvisorsCommittee = () => {
             }
         }
     }, [dispatch, yearId, yearList?.data]);
+
 
 
     // Fetch Year List data
