@@ -1,23 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch } from '@/redux/store';
-import { update } from '@/redux/slices/eventsSlice';
+import { AppDispatch, RootState } from '@/redux/store';
+import { update } from '@/redux/slices/pageAttachmentSlice';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { RootState } from '@/redux/store';
-// import { DateTimePicker } from '@/components/ui/datetime-picker';
+
 
 type MyData = {
   id: string;
   sorting_index: number;
   status: 'Active' | 'Inactive';
+  type: string;
   title: string;
-  date: string;
-  description: string;
+
 };
 
 type EditSliderProps = {
@@ -29,58 +28,50 @@ type EditSliderProps = {
 const Edit: React.FC<EditSliderProps> = ({ Id }) => {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState<{
-    image: File | null;
-    sorting_index: number | null;
+    file: File | null;
     title: string | null;
-    description: string | null;
-    date: Date | undefined;
+    sorting_index: number | null;
     status: number;
+    type: string | undefined;
   }>({
-    image: null,
+    file: null,
     sorting_index: null,
-    title: null,
-    description: null,
-    date: undefined,
     status: 2,
+    type: '',
+    title: '',
   });
 
   const { toast } = useToast();
   const dispatch = useDispatch<AppDispatch>();
-  const events = useSelector((state: RootState) => state.events.events);
-  // const eventsError = useSelector((state: RootState) => state.events.error);
-  // console.log(eventsError)
+  const pageAttachmentSlice = useSelector((state: RootState) => state.tifAttachmentPages.tifAttachmentPages);
+  const Error = useSelector((state: RootState) => state.events.error);
 
-  const eventsToEdit = events.find((event) => event.id.toString() === Id) as MyData | undefined;
+  const ToEdit = pageAttachmentSlice.find((pageAttachmentSlice) => pageAttachmentSlice.id.toString() === Id) as MyData | undefined;
+
+
+  console.log(ToEdit);
 
   useEffect(() => {
-    if (eventsToEdit) {
+    if (ToEdit) {
       setFormData({
-        image: null,
-        sorting_index: eventsToEdit.sorting_index,
-        title: eventsToEdit.title,
-        description: eventsToEdit.description,
-        date: new Date(eventsToEdit.date), // Convert string to Date
-        status: eventsToEdit.status === 'Active' ? 1 : 2,
+        file: null,
+        title: ToEdit.title,
+        sorting_index: ToEdit.sorting_index,
+        status: ToEdit.status == 'Active' ? 1 : 2,
+        type: ToEdit.type,
       });
     }
-  }, [eventsToEdit]);
+  }, [ToEdit]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const Data = new FormData();
-    if (formData.image) {
-      Data.append('image', formData.image);
-    }
+    Data.append('file', formData.file || '');
+    Data.append('title', formData.title?.toString() || '');
     Data.append('sorting_index', formData.sorting_index?.toString() || '');
-    Data.append('title', formData.title || '');
-    Data.append('description', formData.description || '');
     Data.append('status', formData.status.toString());
-    const formattedDate = formData.date
-      ? new Date(formData.date.getTime() + 6 * 60 * 60 * 1000)
-        .toISOString()
-        .split('T')[0]
-      : '';
-    Data.append('date', formattedDate);
+    Data.append('type', formData.type?.toString() || '');
+    console.log(Error);
     try {
       await dispatch(update({ id: Id, data: Data }));
 
@@ -88,7 +79,7 @@ const Edit: React.FC<EditSliderProps> = ({ Id }) => {
         title: 'Success',
         description: 'Data updated successfully!',
       });
-      setOpen(false);
+      setOpen(true);
     } catch (error) {
       console.error('Data to update :', error);
       toast({
@@ -99,7 +90,7 @@ const Edit: React.FC<EditSliderProps> = ({ Id }) => {
     }
   };
 
-  if (!eventsToEdit) {
+  if (!ToEdit) {
     return null; // Or render a loading state
   }
 
@@ -110,60 +101,57 @@ const Edit: React.FC<EditSliderProps> = ({ Id }) => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] md:max-w-[600px] lg:max-w-[700px] xl:max-w-[800px] w-full">
         <DialogHeader>
-          <DialogTitle>Edit Event</DialogTitle>
+          <DialogTitle>Edit</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4">
+
+
             <div className="grid gap-2">
-              <Label htmlFor="title">Title</Label>
+              <Label htmlFor="type">Type</Label>
+              <Select
+                value={formData.type}
+                onValueChange={(value) => setFormData({ ...formData, type: value })}
+
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="tif_member">Tif Member</SelectItem>
+                  <SelectItem value="awareness">Awareness</SelectItem>
+                  <SelectItem value="advertisements">Advertisements</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+
+
+            <div className="grid gap-2 d-none">
+              <Label htmlFor="sorting_index">Title</Label>
               <Input
-                type="text"
+                type="title"
                 id="title"
                 value={formData.title || ''}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value || null })}
-                placeholder="Enter title"
-                required
+                onChange={(e) => setFormData({ ...formData, title: e.target.value ? e.target.value : null })}
+                placeholder="Enter Sorting Index"
               />
             </div>
 
+
             <div className="grid gap-2">
-              <Label htmlFor="image">Image</Label>
+              <Label htmlFor="file">Image</Label>
               <Input
                 type="file"
                 id="image"
-                onChange={(e) => setFormData({ ...formData, image: e.target.files?.[0] || null })}
-                placeholder="Choose Image"
+                onChange={(e) => setFormData({ ...formData, file: e.target.files?.[0] || null })}
+                placeholder="Choose PDF file"
               />
             </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="description">Description</Label>
-              <Input
-                type="textarea"
-                id="description"
-                value={formData.description || ''}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value || null })}
-                placeholder="Enter description"
-                required
-              />
-            </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="date">Date</Label> <br />
 
-              <Input
-                  type="date"
-                  id="date"
-                  value={formData.date ? formData.date.toISOString().split('T')[0] : ''}
-                  onChange={(e) => setFormData({ ...formData, date: e.target.value ? new Date(e.target.value) : undefined })}
-                  required
-                />
 
-              {/* <DateTimePicker
-                value={formData.date || undefined}
-                onChange={(date) => setFormData({ ...formData, date: date || undefined })}
-              /> */}
-            </div>
 
             <div className="grid gap-2">
               <Label htmlFor="sorting_index">Sorting Index</Label>
@@ -186,7 +174,7 @@ const Edit: React.FC<EditSliderProps> = ({ Id }) => {
                   <SelectValue placeholder="Select Status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1">Active</SelectItem>
+                  <SelectItem value="1">Active </SelectItem>
                   <SelectItem value="2">Inactive</SelectItem>
                 </SelectContent>
               </Select>

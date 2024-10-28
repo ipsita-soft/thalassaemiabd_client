@@ -1,21 +1,16 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { addApi, deleteApi, getApi, showApi, updateApi } from '@/redux/api/whoWeAreApi';
+import { addApi, deleteApi, getApi, showApi, updateApi } from '@/redux/api/yearsApi';
 
 type Data = {
-  id?: string | undefined;
-  image?: string;
-  name?: string;
-  designation?: string;
-  type?: string;
-  sorting_index?: number;
+  id: string;
+  date?: string
+  sorting_index?: string;
   status?: string;
-}
+};
 
 type ErrorPayload = {
   success?: boolean;
   message?: string;
-  errors?:string;
-  phone?:string;
   data?: any;
 };
 
@@ -36,20 +31,19 @@ interface Meta {
 }
 
 export const add = createAsyncThunk(
-  'who-we-are/add',
+  'years/add',
   async (Data: FormData, { rejectWithValue }) => {
     try {
       const response = await addApi(Data);
       return response;
     } catch (error: any) {
-      // console.log('slice err labib',error.errors )
-      return rejectWithValue(error.errors ? error.errors : new Error('Error adding Data slice '));
+      return rejectWithValue(error.response ? error.response.data : new Error('Error adding Data'));
     }
   }
 );
 
 export const get = createAsyncThunk(
-  'who-we-are/get',
+  'years/get',
   async (params: object = {}, { rejectWithValue }) => {
     try {
       const response = await getApi(params);
@@ -61,7 +55,7 @@ export const get = createAsyncThunk(
 );
 
 export const update = createAsyncThunk(
-  'who-we-are/update',
+  'years/update',
   async ({ id, data }: { id: string; data: FormData }, { rejectWithValue }) => {
     try {
       const response = await updateApi(id, data);
@@ -73,7 +67,7 @@ export const update = createAsyncThunk(
 );
 
 export const show = createAsyncThunk(
-  'who-we-are/show',
+  'years/show',
   async (id: string, { rejectWithValue }) => {
     try {
       const data = await showApi(id);
@@ -85,7 +79,7 @@ export const show = createAsyncThunk(
 );
 
 export const deleteData = createAsyncThunk(
-  'who-we-are/delete',
+  'years/delete',
   async (id: string, { rejectWithValue }) => {
     try {
       await deleteApi(id);
@@ -96,11 +90,11 @@ export const deleteData = createAsyncThunk(
   }
 );
 
-const whoWeAreSlice = createSlice({
-  name: 'who-we-are',
+const yearsSlice = createSlice({
+  name: 'years',
   initialState: {
-    whoWeAres: [] as Data[],
-    whoWeAre: {} as Data,
+    years: [] as Data[],
+    year: {} as Data,
     meta: null as Meta | null,
     isLoading: false,
     isError: false,
@@ -116,7 +110,7 @@ const whoWeAreSlice = createSlice({
       })
       .addCase(add.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.whoWeAres.push(action.payload.data);
+        state.years.push(action.payload.data);
       })
       .addCase(add.rejected, (state, action) => {
         state.isLoading = false;
@@ -130,7 +124,7 @@ const whoWeAreSlice = createSlice({
       })
       .addCase(get.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.whoWeAres = action.payload?.data || [];
+        state.years = action.payload?.data || [];
         state.meta = action.payload?.meta || null;
       })
       .addCase(get.rejected, (state, action) => {
@@ -145,13 +139,13 @@ const whoWeAreSlice = createSlice({
       })
       .addCase(update.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.whoWeAres = state.whoWeAres.map((whoWeAre) =>
-          whoWeAre.id === action.payload.data.id
+        state.years = state.years.map((year) =>
+          year.id === action.payload.data.id
             ? {
               ...action.payload.data,
               image: `${action.payload.data.image}?v=${new Date().getTime()}`,
             }
-            : whoWeAre
+            : year
         );
         state.error = action.payload;
       })
@@ -165,7 +159,7 @@ const whoWeAreSlice = createSlice({
         state.error = null;
       })
       .addCase(show.fulfilled, (state, action) => {
-        state.whoWeAres = action.payload.data;
+        state.year = action.payload.data;
         state.isLoading = false;
       })
       .addCase(show.rejected, (state, action) => {
@@ -180,7 +174,7 @@ const whoWeAreSlice = createSlice({
       })
       .addCase(deleteData.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.whoWeAres = state.whoWeAres.filter(whoWeAre => whoWeAre.id !== action.payload);
+        state.years = state.years.filter(year => year.id !== action.payload);
         console.log('Deleted Data ID:', action.payload); // For debugging
       })
       .addCase(deleteData.rejected, (state, action) => {
@@ -191,4 +185,4 @@ const whoWeAreSlice = createSlice({
   },
 });
 
-export default whoWeAreSlice.reducer;
+export default yearsSlice.reducer;

@@ -30,40 +30,28 @@ import {
 } from "@/components/ui/table";
 import Add from "./Add";
 import Edit from "./Edit";
+// import Show from "./Show";
 import Delete from "./Delete";
-import { get } from "@/redux/slices/whoWeAreSlice";
+import { get } from "@/redux/slices/yearsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { toast } from '@/hooks/use-toast';
-import Navbar from "./Navbar";
+import Navbar from "../whoWeAre/Navbar";
 
 
-interface Year {
-    id: string;
-    date: string;
-    sorting_index: number;
-    status: "Active" | "Inactive";
-}
 
 interface Data {
     id: number;
-    image: string;
-    name: string;
-    designation: string;
-    type: string;
     sorting_index: number;
-    year: Year;
+    date: string;
     status: "Active" | "Inactive";
 }
 
-export function WhoWeArePage() {
+export function YearsPage() {
     const dispatch: AppDispatch = useDispatch();
-    const { whoWeAres, meta, isLoading, isError, error } = useSelector(
-        (state: RootState) => state.whoWeAres
+    const { years, meta, isLoading, isError, error } = useSelector(
+        (state: RootState) => state.years
     );
-
-
-    console.log(whoWeAres)
 
 
     const [sorting, setSorting] = useState<SortingState>([]);
@@ -92,49 +80,13 @@ export function WhoWeArePage() {
         },
 
         {
-            id: "name",
-            header: "Name",
+            id: "date",
+            header: "Date",
             cell: ({ row }: { row: { original: Data } }) => (
-                <div>
-                    <p className="mt-1">{row.original.name}</p>
-                </div>
+                <div className="text-left">{row.original.date}</div>
             ),
         },
-
-
-        {
-            id: "designation",
-            header: "Designation",
-            cell: ({ row }: { row: { original: Data } }) => (
-                <div>
-                    <p className="mt-1">{row.original.designation}</p>
-                </div>
-            ),
-        },
-
-        {
-            id: "image",
-            header: "Image",
-            cell: ({ row }: { row: { original: Data } }) => (
-                <img
-                    src={row.original.image}
-                    alt="events"
-                    className="w-16 h-16 object-cover"
-                />
-            ),
-        },
-
-        {
-            id: "type",
-            header: "Type",
-            cell: ({ row }: { row: { original: Data } }) => (
-                <div className="text-capitalize">
-                    {row.original.type}
-
-                </div>
-            ),
-        },
-
+    
         {
             accessorKey: "sorting_index",
             header: ({ column }: { column: any }) => (
@@ -160,22 +112,17 @@ export function WhoWeArePage() {
             ),
         },
         {
-            accessorKey: "year",
-            header: "Years",
-            cell: ({ row }: { row: { original: Data } }) => (
-                <div className="text-center">{row.original?.year?.date}</div>
-            ),
-        },
-        {
             id: "actions",
             enableHiding: false,
             cell: ({ row }: { row: { original: Data } }) => {
-                const wisher = row.original;
+                const notice = row.original;
+
+
 
                 const handleDeleteSuccess = () => {
                     toast({
                         title: 'Success',
-                        description: 'Wisher deleted successfully!',
+                        description: 'notice deleted successfully!',
                     });
                     dispatch(get({})); // Dispatch here
                 };
@@ -191,21 +138,21 @@ export function WhoWeArePage() {
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
                             <Edit
-                                Id={wisher.id.toString()}
+
+                                Id={notice.id.toString()}
                                 open={isEditModalOpen}
                                 onClose={() => setEditModalOpen(false)}
                             />
-                            <br />
-                            {/* <Show
-                                Id={wisher.id.toString()}
+                            {/* <br />
+                            <Show
+                                Id={notice.id.toString()}
                                 open={showSliderDetails}
                                 onClose={() => setShowSliderDetails(false)}
-                            /> 
+                            /> */}
                             <br />
-                            */}
 
                             <Delete
-                                Id={wisher.id.toString()}
+                                Id={notice.id.toString()}
                                 onSuccess={handleDeleteSuccess} // Pass the callback here
                             />
 
@@ -219,7 +166,7 @@ export function WhoWeArePage() {
     ];
 
     const table = useReactTable({
-        data: whoWeAres as unknown as Data[],
+        data: years as unknown as Data[],
         columns,
         state: {
             sorting,
@@ -250,8 +197,6 @@ export function WhoWeArePage() {
 
     return (
 
-
-
         isLoading ? (
             <div className="flex justify-center items-center h-screen">
                 <Spinner >Loading...</Spinner>
@@ -259,13 +204,9 @@ export function WhoWeArePage() {
         ) :
 
             <div className="p-4">
-
-                <div className="mb-4">
+                <>
                     <Navbar />
-
-                </div>
-
-
+                </>
                 <div className="flex flex-col lg:flex-row justify-between items-center mb-4 space-y-4 lg:space-y-0 lg:space-x-4">
                     <Input
                         type="text"
@@ -290,11 +231,7 @@ export function WhoWeArePage() {
                     <Add />
                 </div>
                 {isError ? (
-                    <>Error: {error && <p>{error.errors}</p>}
-
-                        {console.log('error data', error)}
-                    </>
-
+                    <>Error: {error && <p>Error: {error.message}</p>}</>
                 ) : (
                     <div className="overflow-x-auto">
                         <Table>

@@ -21,7 +21,8 @@ import {
     TargetIcon,
     HistoryIcon,
     List,
-    CalendarClock
+    CalendarClock,
+    Book
 
 } from 'lucide-react';
 
@@ -123,6 +124,17 @@ function DashboardLayout() {
 
 
 
+                                <Link
+                                    to="/dashboard/publications"
+                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/publications') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                        }`}
+                                >
+                                    <Book className="h-4 w-4" />
+                                    Publications
+                                </Link>
+
+
+
 
                                 <Link
                                     to="/dashboard/wishers"
@@ -155,7 +167,7 @@ function DashboardLayout() {
 
                                 <Link
                                     to="/dashboard/who-we-are"
-                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/who-we-are') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/who-we-are') || isActive('/dashboard/years') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
                                         }`}
                                 >
                                     <Users className="h-4 w-4" />
@@ -215,7 +227,7 @@ function DashboardLayout() {
 
                                 <Link
                                     to="/dashboard/tif-page"
-                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/tif-page') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/tif-page') || isActive('/dashboard/tif-page-slider') || isActive('/dashboard/tif-page-attachment') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
                                         }`}
                                 >
                                     <GalleryVerticalEnd className="h-4 w-4" />

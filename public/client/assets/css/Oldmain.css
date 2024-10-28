@@ -890,8 +890,55 @@ ol {
 @media only screen and (min-width: 480px) and (max-width: 767px) {
   .container {
     width: 450px;
+
+  }
+
+  .carousel-control-next,
+  .carousel-control-prev {
+    position: absolute;
+    top: 60px !important;
+    bottom: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 15%;
+    padding: 0;
+    color: #fff;
+    text-align: center;
+    background: 0 0;
+    border: 0;
+    opacity: .5;
+
   }
 }
+
+
+
+@media (max-width: 480px) {
+
+  .carousel-control-next,
+  .carousel-control-prev {
+    position: absolute;
+    top: 60px !important;
+    bottom: 0;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 15%;
+    padding: 0;
+    color: #fff;
+    text-align: center;
+    background: 0 0;
+    border: 0;
+    opacity: .5;
+
+  }
+}
+
+
+
 
 /* Bread Crumbs */
 .breadcrumbs {
@@ -1066,6 +1113,62 @@ ol {
   margin-left: 0;
 }
 
+
+
+
+
+/*======================================
+    Start Founder & President CSS
+========================================*/
+
+.founder {
+  background: #f9f9f9;
+}
+
+.founder-page {
+  background-color: #fff;
+  padding: 15px 30px 50px;
+  border-radius: 4px;
+}
+
+.founder-page .founder-title {
+  background-color: #dc2323;
+  padding: 10px 0px;
+}
+
+.founder-page .founder-title h2 {
+  color: #fff;
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.founder-page .founder-content img {
+  width: 20rem;
+  box-shadow: 2px 3px 3px rgba(255, 0, 0, 0.5);
+}
+
+.founder-page .founder-content h5 {
+  font-size: 23px;
+  font-weight: 600;
+  color: #dc2323;
+  margin: 26px 0px 6px 0px;
+}
+
+.founder-page .founder-content .pdesig {
+  font-size: 16px;
+  color: #046939;
+  font-weight: 400;
+}
+
+.founder-page .founder-content p {
+  text-align: justify;
+  color: #393939;
+  font-size: 15px;
+  line-height: 30px;
+  margin: 20px 0 0;
+}
+
+
 /* One Click Scrool Top Button*/
 .scroll-top {
   width: 45px;
@@ -1087,7 +1190,7 @@ ol {
   position: fixed;
   bottom: 30px;
   right: 30px;
-  z-index: 9;
+  z-index: 15;
   cursor: pointer;
   -webkit-transition: all .3s ease-out 0s;
   transition: all .3s ease-out 0s;
@@ -1100,6 +1203,47 @@ ol {
   -webkit-transform: translate3d(0, -5px, 0);
   transform: translate3d(0, -5px, 0);
   background-color: #081828;
+}
+
+
+/* ----- Whats appp -----*/
+.scroll-top2 i {
+  font-size: 28px;
+}
+
+.scroll-top2 {
+  width: 45px;
+  height: 45px;
+  line-height: 45px;
+  background: #30d14e;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-size: 14px;
+  color: #fff !important;
+  border-radius: 0;
+  position: fixed;
+  bottom: 90px;
+  right: 30px;
+  z-index: 15;
+  cursor: pointer;
+  -webkit-transition: all .3s ease-out 0s;
+  transition: all .3s ease-out 0s;
+  border-radius: 2px;
+}
+
+.scroll-top2:hover {
+  -webkit-box-shadow: 0 1rem 3rem rgba(35, 38, 45, 0.15) !important;
+  box-shadow: 0 1rem 3rem rgba(35, 38, 45, 0.15) !important;
+  -webkit-transform: translate3d(0, -5px, 0);
+  transform: translate3d(0, -5px, 0);
+  background-color: #22a73a;
 }
 
 /* Overlay */
@@ -1302,12 +1446,11 @@ ol {
   color: #fff !important;
 }
 
-@media only screen and (min-width: 320px) and (max-width: 991px) {
-  .zakat_button .btn {
-    margin-bottom: 8px;
+@media only screen and (min-width: 300px) and (max-width: 991px) {
+  .zakat_button {
+    margin-bottom: 10px;
   }
 }
-
 
 
 /* ===========================================
@@ -1919,8 +2062,8 @@ ol {
 
 .hover-links {
   position: absolute;
-  top: 100%;
-  right: 6%;
+  top: 111%;
+  right: 5%;
   width: 18%;
   opacity: 0;
   padding: 10px;
@@ -1965,24 +2108,86 @@ ol {
   color: #fff;
   background-color: #0c6c3f;
   transition: all 0.3s ease-in-out;
+}
+
+/* End Donate Dropdown Button */
+
+
+
+
+/* --------------------------------
+    Start User button
+-----------------------------------*/
+.user-button a i {
+  color: #dc2323;
+  font-size: 35px;
+}
+
+.user-button a i:hover {
+  color: #086a3b;
+}
+
+.user-links {
+  position: absolute;
+  top: 111%;
+  right: 0%;
+  width: 24%;
+  opacity: 0;
+  padding: 10px;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.3s ease-out 0s;
+  background-color: #DC2323;
+  box-shadow: 0px 10px 20px #1414140e;
+  border-top: 1px solid #eee;
+}
+
+.user-links li {
+  display: block;
+  margin-left: 0;
+}
+
+.user-links .dnt-item {
+  width: 100%;
+  margin-bottom: 7px;
+  z-index: 1;
+  position: relative;
+  margin-right: 15px;
+}
+
+.user-button:hover .user-links {
+  opacity: 1;
+  visibility: visible;
+}
+
+.user-links a {
+  padding: 10px 14px;
+  color: #fff;
+  display: block;
+  font-size: 14px;
+  font-weight: 400;
+  text-transform: capitalize;
+  position: relative;
+  transition: all 0.3s ease-out 0s;
+}
+
+.user-links a:hover {
+  color: #fff;
+  background-color: #0c6c3f;
+  transition: all 0.3s ease-in-out;
 
 }
 
-@media (max-width: 991px) {
-  .hover-links {
-    width: 90%;
-  }
-
-}
-
+/* end user button */
 
 /*======================================
      End Header CSS
   ========================================*/
 
+
+
+
 /* ========== Start Clients Section =========*/
-
-
 
 .clients_section {
   background-size: cover;
@@ -2022,7 +2227,7 @@ ol {
 }
 
 .clients_slide {
-  /* height: 100px; */
+  height: 100px;
   margin: auto;
   overflow: hidden;
   position: relative;
@@ -2031,7 +2236,7 @@ ol {
 
 .clients_slide::before,
 .clients_slide::after {
-  background: linear-gradient(to right, white 0%, rgba(255, 255, 255, 0) 100%);
+  /*background: linear-gradient(to right, white 0%, rgba(255, 255, 255, 0) 100%);*/
   content: "";
   height: 100px;
   position: absolute;
@@ -2058,12 +2263,12 @@ ol {
   width: calc(250px * 14);
 }
 
-.clients_slide .slide {
-  /* height: 100px; */
+.clients_slide .slide2 {
+  height: 100px;
   width: 250px;
 }
 
-.clients_slide .slide img {
+.clients_slide .slide2 img {
   height: 100%;
   width: 75%;
 }
@@ -2439,8 +2644,6 @@ ol {
   transition: 0.5s;
   color: #ffffff;
 }
-
-
 
 /*======================================
    End Blood Donation CSS
@@ -4232,7 +4435,7 @@ End bts history css
 /* ======== Donate Zakat Start ====== */
 
 .zakat .content {
-  padding: 50px 0px;
+  padding: 0px 0px 50px;
 }
 
 .zakat .content img {
@@ -4294,12 +4497,13 @@ End bts history css
 }
 
 .zakat-button {
-  padding: 8px 42px;
+  padding: 8px 34px;
   border-radius: 4px;
   background-color: #dc2323;
   color: #fff;
   font-weight: 600;
   border: 2px solid #dc2323;
+  margin-right: 4px;
 }
 
 .zakat-button:hover {
@@ -4633,6 +4837,488 @@ blockquote .shape {
 
 /* End Blog Single */
 
+
+
+
+/* -----------------------------
+  Start Patient Story Area
+---------------------------------*/
+.patient-story {
+  background-color: #f9f9f9;
+}
+
+.patient-story .content-left {
+  position: relative;
+}
+
+.patient-story .content-left img {
+  width: 100%;
+}
+
+
+.patient-story .content-right h4 {
+  font-size: 16px;
+  background: #dc2323;
+  display: inline-block;
+  padding: 8px 16px;
+  color: #FFF;
+  border-radius: 30px;
+}
+
+.patient-story .content-right h3 {
+  font-size: 26px;
+  color: #0e0c0c;
+  margin-top: 26px;
+  margin-bottom: 5px;
+}
+
+.patient-story .content-right h5 {
+  font-size: 20px;
+  color: #086a3b;
+  margin-bottom: 10px;
+}
+
+.patient-story .content-right p {
+  font-size: 14px;
+  line-height: 30px;
+}
+
+.patient-story .content-bottom {
+  margin-top: 10px;
+}
+
+.patient-story .content-bottom p {
+  font-size: 14px;
+  line-height: 30px;
+}
+
+.patient-story .content-right .button {
+  margin-top: 50px;
+}
+
+
+
+.related-patient-story {
+  background-color: #f9f9f9;
+}
+
+
+
+/* serch widget */
+
+.related-patient-story .search-widget {
+  position: relative;
+}
+
+.related-patient-story .search-widget form {
+  position: relative;
+}
+
+.related-patient-story .search-widget form input {
+  width: 100%;
+  background-color: transparent;
+  height: 45px;
+  border: none;
+  padding: 0 70px 0 20px;
+  font-size: 14px;
+  font-weight: 400;
+  border: 1px solid #eee;
+  border-radius: 0;
+  background-color: #fff;
+  color: #081828;
+}
+
+.related-patient-story .search-widget form input::-webkit-input-placeholder {
+  color: #333;
+}
+
+.related-patient-story .search-widget form input:-ms-input-placeholder {
+  color: #333;
+}
+
+.related-patient-story .search-widget form input::-ms-input-placeholder {
+  color: #333;
+}
+
+.related-patient-story.search-widget form input::placeholder {
+  color: #333;
+}
+
+.related-patient-story .search-widget form button {
+  position: absolute;
+  right: 5px;
+  top: 52%;
+  width: 37px;
+  height: 36px;
+  z-index: 1;
+  color: #fff !important;
+  font-size: 13px;
+  -webkit-transition: all 0.3s ease-out 0s;
+  transition: all 0.3s ease-out 0s;
+  color: #fff;
+  border-radius: 0;
+  padding: 0 !important;
+  border: none;
+  margin-top: -19px;
+  background: #dc2323;
+}
+
+.related-patient-story .search-widget form button i {
+  font-size: 16px;
+}
+
+.related-patient-story .search-widget form button:hover {
+  background-color: #081828;
+  color: #fff;
+}
+
+.related-patient-story.search-widget form button:hover {
+  background-color: #081828;
+  color: #fff;
+}
+
+.related-patient-story .more-patients p a {
+  font-size: 15px;
+  color: #04723e;
+  font-weight: 500;
+}
+
+/* ---------------------------------
+End Patient Story Area
+-----------------------------------*/
+
+
+
+
+/* ---------------------------------
+  Start Blood Donor Story Area
+-----------------------------------*/
+
+.bd_story {
+  background-color: #f9f9f9;
+}
+
+.bd_story .content-left {
+  position: relative;
+}
+
+.bd_story .content-left img {
+  width: 100%;
+}
+
+
+.bd_story .content-right h4 {
+  font-size: 16px;
+  background: #dc2323;
+  display: inline-block;
+  padding: 8px 16px;
+  color: #FFF;
+  border-radius: 30px;
+}
+
+.bd_story .content-right h3 {
+  font-size: 26px;
+  color: #0e0c0c;
+  margin-top: 26px;
+  margin-bottom: 5px;
+}
+
+.bd_story .content-right h5 {
+  font-size: 20px;
+  color: #086a3b;
+  margin-bottom: 10px;
+}
+
+
+.bd_story .content-right h2 {
+  display: block;
+  font-size: 32px;
+  margin-bottom: 20px;
+  line-height: 45px;
+  text-transform: capitalize;
+  position: relative;
+  font-weight: 700;
+}
+
+
+.bd_story .content-right p {
+  font-size: 14px;
+  line-height: 30px;
+}
+
+.bd_story .content-bottom {
+  margin-top: 10px;
+}
+
+.bd_story .content-bottom p {
+  font-size: 14px;
+  line-height: 30px;
+}
+
+.bd_story .content-right .button {
+  margin-top: 50px;
+}
+
+
+
+.related-bd_story {
+  background-color: #f9f9f9;
+}
+
+
+
+/* serch widget */
+
+.related-bd_story .search-widget {
+  position: relative;
+}
+
+.related-bd_story .search-widget form {
+  position: relative;
+}
+
+.related-bd_story .search-widget form input {
+  width: 100%;
+  background-color: transparent;
+  height: 45px;
+  border: none;
+  padding: 0 70px 0 20px;
+  font-size: 14px;
+  font-weight: 400;
+  border: 1px solid #eee;
+  border-radius: 0;
+  background-color: #fff;
+  color: #081828;
+}
+
+.related-bd_story .search-widget form input::-webkit-input-placeholder {
+  color: #333;
+}
+
+.related-bd_story .search-widget form input:-ms-input-placeholder {
+  color: #333;
+}
+
+.related-bd_story .search-widget form input::-ms-input-placeholder {
+  color: #333;
+}
+
+.related-bd_story .search-widget form input::placeholder {
+  color: #333;
+}
+
+.related-bd_story .search-widget form button {
+  position: absolute;
+  right: 5px;
+  top: 52%;
+  width: 37px;
+  height: 36px;
+  z-index: 1;
+  color: #fff !important;
+  font-size: 13px;
+  -webkit-transition: all 0.3s ease-out 0s;
+  transition: all 0.3s ease-out 0s;
+  color: #fff;
+  border-radius: 0;
+  padding: 0 !important;
+  border: none;
+  margin-top: -19px;
+  background: #dc2323;
+}
+
+.related-bd_story .search-widget form button i {
+  font-size: 16px;
+}
+
+.related-bd_story .search-widget form button:hover {
+  background-color: #081828;
+  color: #fff;
+}
+
+.related-bd_story .search-widget form button:hover {
+  background-color: #081828;
+  color: #fff;
+}
+
+.related-bd_story .more-bd p a {
+  font-size: 15px;
+  color: #04723e;
+  font-weight: 500;
+}
+
+/* ---------------------------------
+  End Blood Donor Story Area
+-----------------------------------*/
+
+
+
+/* ---------------------------------
+  Start Sponsor's Story Area
+-----------------------------------*/
+.sponsor-story {
+  background-color: #f9f9f9;
+}
+
+.sponsor-story .content-left {
+  position: relative;
+}
+
+.sponsor-story .content-left img {
+  width: 100%;
+}
+
+.sponsor-story .content-right h4 {
+  font-size: 16px;
+  background: #dc2323;
+  display: inline-block;
+  padding: 8px 16px;
+  color: #FFF;
+  border-radius: 30px;
+}
+
+.sponsor-story .content-right h3 {
+  font-size: 26px;
+  color: #0e0c0c;
+  margin-top: 26px;
+  margin-bottom: 5px;
+}
+
+.sponsor-story .content-right h5 {
+  font-size: 20px;
+  color: #086a3b;
+  margin-bottom: 10px;
+}
+
+
+.sponsor-story .content-right h2 {
+  display: block;
+  font-size: 32px;
+  margin-bottom: 20px;
+  line-height: 45px;
+  text-transform: capitalize;
+  position: relative;
+  font-weight: 700;
+}
+
+.sponsor-story .content-right h2 {
+  display: block;
+  font-size: 32px;
+  margin-bottom: 20px;
+  line-height: 45px;
+  text-transform: capitalize;
+  position: relative;
+  font-weight: 700;
+}
+
+
+.sponsor-story .content-right p {
+  font-size: 14px;
+  line-height: 30px;
+}
+
+.sponsor-story .content-bottom {
+  margin-top: 30px;
+}
+
+.sponsor-story .content-bottom p {
+  font-size: 14px;
+  line-height: 30px;
+}
+
+.sponsor-story .content-right .button {
+  margin-top: 50px;
+}
+
+
+
+.related-sponsor-story {
+  background-color: #f9f9f9;
+}
+
+
+
+/* serch widget */
+
+.related-sponsor-story .search-widget {
+  position: relative;
+}
+
+.related-sponsor-story .search-widget form {
+  position: relative;
+}
+
+.related-sponsor-story .search-widget form input {
+  width: 100%;
+  background-color: transparent;
+  height: 45px;
+  border: none;
+  padding: 0 70px 0 20px;
+  font-size: 14px;
+  font-weight: 400;
+  border: 1px solid #eee;
+  border-radius: 0;
+  background-color: #fff;
+  color: #081828;
+}
+
+.related-sponsor-story .search-widget form input::-webkit-input-placeholder {
+  color: #333;
+}
+
+.related-sponsor-story .search-widget form input:-ms-input-placeholder {
+  color: #333;
+}
+
+.related-sponsor-story .search-widget form input::-ms-input-placeholder {
+  color: #333;
+}
+
+.related-sponsor-story .search-widget form input::placeholder {
+  color: #333;
+}
+
+.related-sponsor-story .search-widget form button {
+  position: absolute;
+  right: 5px;
+  top: 52%;
+  width: 37px;
+  height: 36px;
+  z-index: 1;
+  color: #fff !important;
+  font-size: 13px;
+  -webkit-transition: all 0.3s ease-out 0s;
+  transition: all 0.3s ease-out 0s;
+  color: #fff;
+  border-radius: 0;
+  padding: 0 !important;
+  border: none;
+  margin-top: -19px;
+  background: #dc2323;
+}
+
+.related-sponsor-story .search-widget form button i {
+  font-size: 16px;
+}
+
+.related-sponsor-story .search-widget form button:hover {
+  background-color: #081828;
+  color: #fff;
+}
+
+.related-sponsor-story .search-widget form button:hover {
+  background-color: #081828;
+  color: #fff;
+}
+
+.related-sponsor-story .more-sponsors p a {
+  font-size: 15px;
+  color: #04723e;
+  font-weight: 500;
+}
+
+/* ---------------------------------
+  End Sponsor's Story Area
+-----------------------------------*/
 
 
 
@@ -5348,13 +6034,13 @@ blockquote .shape {
 
 
 /*======================================
-  Start  Login CSS
+  Start  Patient Registration CSS
 ========================================*/
-.login {
+.patient-registration {
   background-color: #f9f9f9;
 }
 
-.login .form-head {
+.patient-registration .form-head {
   padding: 50px;
   border-radius: 0;
   background-color: #fff;
@@ -5363,7 +6049,7 @@ blockquote .shape {
   border-top: 5px solid #dc2323;
 }
 
-.login .form-head .title {
+.patient-registration .form-head .title {
   font-size: 24px;
   line-height: 1.42;
   font-weight: 500;
@@ -5371,11 +6057,11 @@ blockquote .shape {
   text-align: center;
 }
 
-.login .form-head form .form-group {
+.patient-registration .form-head form .form-group {
   margin-bottom: 15px;
 }
 
-.login .form-head form .form-group label {
+.patient-registration .form-head form .form-group label {
   display: block;
   margin-bottom: .5rem;
   color: #888;
@@ -5383,7 +6069,7 @@ blockquote .shape {
   font-weight: 400;
 }
 
-.login .form-head form .form-group input {
+.patient-registration .form-head form .form-group input {
   width: 100%;
   min-height: 50px;
   padding: 3px 20px;
@@ -5395,51 +6081,51 @@ blockquote .shape {
   font-size: 15px;
 }
 
-.login .form-head form .check-and-pass .form-check {
+.patient-registration .form-head form .check-and-pass .form-check {
   float: left;
 }
 
-.login .form-head form .check-and-pass .form-check a {
+.patient-registration .form-head form .check-and-pass .form-check a {
   color: #ce1337;
 }
 
-.login .form-head form .check-and-pass .form-check .form-check-input:checked {
+.patient-registration .form-head form .check-and-pass .form-check .form-check-input:checked {
   background-color: #ce1337;
   border-color: #ce1337;
 }
 
-.login .form-head form .check-and-pass .form-check-label a:hover {
+.patient-registration .form-head form .check-and-pass .form-check-label a:hover {
   text-decoration: underline;
 }
 
-.login .form-head form .check-and-pass .lost-pass {
+.patient-registration .form-head form .check-and-pass .lost-pass {
   float: right;
   color: #777;
   position: relative;
   top: -2px;
 }
 
-.login .form-head form .check-and-pass .lost-pass:hover {
+.patient-registration .form-head form .check-and-pass .lost-pass:hover {
   color: #ce1337;
   text-decoration: underline;
 }
 
-.login .form-head form .button {
+.patient-registration .form-head form .button {
   margin-top: 25px;
 }
 
-.login .form-head form .button .btn {
+.patient-registration .form-head form .button .btn {
   width: 100%;
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
 }
 
-.login .form-head form .button .btn:hover {
+.patient-registration .form-head form .button .btn:hover {
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
 }
 
-.login .form-head form .outer-link {
+.patient-registration .form-head form .outer-link {
   display: block;
   font-size: 14px;
   font-weight: 400;
@@ -5448,15 +6134,15 @@ blockquote .shape {
   text-align: center;
 }
 
-.login .form-head form .outer-link a {
+.patient-registration .form-head form .outer-link a {
   color: #0c6c3f;
 }
 
-.login .form-head form .outer-link a:hover {
+.patient-registration .form-head form .outer-link a:hover {
   text-decoration: underline;
 }
 
-.login .form-head .alt-option {
+.patient-registration .form-head .alt-option {
   margin: 30px 0;
   text-align: center;
   display: inline-block;
@@ -5465,14 +6151,14 @@ blockquote .shape {
   z-index: 1;
 }
 
-.login .form-head .alt-option span {
+.patient-registration .form-head .alt-option span {
   font-size: 15px;
   background: #fff;
   color: #888;
   padding: 5px 15px;
 }
 
-.login .form-head .alt-option::before {
+.patient-registration .form-head .alt-option::before {
   position: absolute;
   left: 0;
   top: 50%;
@@ -5483,19 +6169,19 @@ blockquote .shape {
   z-index: -1;
 }
 
-.login .form-head .socila-login ul {
+.patient-registration .form-head .socila-login ul {
   margin-bottom: 20px;
 }
 
-.login .form-head .socila-login ul li {
+.patient-registration .form-head .socila-login ul li {
   display: block;
 }
 
-.login .form-head .socila-login ul li:last-child {
+.patient-registration .form-head .socila-login ul li:last-child {
   margin: 0;
 }
 
-.login .form-head .socila-login ul li a {
+.patient-registration .form-head .socila-login ul li a {
   padding: 15px 14px;
   text-align: center;
   border: 1px solid #eee;
@@ -5506,63 +6192,36 @@ blockquote .shape {
   font-size: 12px;
 }
 
-.login .form-head .socila-login ul li a.facebook:hover {
+.patient-registration .form-head .socila-login ul li a.facebook:hover {
   color: #fff;
   background: #3b5999;
   border-color: transparent;
 }
 
-.login .form-head .socila-login ul li a.facebook:hover i {
+.patient-registration .form-head .socila-login ul li a.facebook:hover i {
   color: #fff;
 }
 
-.login .form-head .socila-login ul li a.facebook i {
+.patient-registration .form-head .socila-login ul li a.facebook i {
   color: #3b5999;
 }
 
-.login .form-head .socila-login ul li a.google:hover {
+.patient-registration .form-head .socila-login ul li a.google:hover {
   color: #fff;
   background: #dd4b39;
   border-color: transparent;
 }
 
-.login .form-head .socila-login ul li a.google:hover i {
+.patient-registration .form-head .socila-login ul li a.google:hover i {
   color: #fff;
 }
 
-.login .form-head .socila-login ul li a.google i {
+.patient-registration .form-head .socila-login ul li a.google i {
   color: #dd4b39;
 }
 
-.login .form-head .socila-login ul li a.instagram:hover {
-  color: #fff;
-  background: #e4405f;
-  border-color: transparent;
-}
 
-.login .form-head .socila-login ul li a.instagram:hover i {
-  color: #fff;
-}
-
-.login .form-head .socila-login ul li a.instagram i {
-  color: #e4405f;
-}
-
-.login .form-head .socila-login ul li a.linkedin:hover {
-  color: #fff;
-  background: #0077B5;
-  border-color: transparent;
-}
-
-.login .form-head .socila-login ul li a.linkedin:hover i {
-  color: #fff;
-}
-
-.login .form-head .socila-login ul li a.linkedin i {
-  color: #0077B5;
-}
-
-.login .form-head .socila-login ul li a i {
+.patient-registration .form-head .socila-login ul li a i {
   display: inline-block;
   margin-right: 10px;
   font-size: 15px;
@@ -5571,7 +6230,7 @@ blockquote .shape {
 }
 
 /*======================================
-  End  Login CSS
+  End  Patient Registration CSS
 ========================================*/
 
 
@@ -7450,7 +8109,7 @@ blockquote .shape {
 
 .footer .single-footer .finan img {
   width: 65px;
-  margin: 4px;
+  margin: 4px 0 0px;
 }
 
 .footer .footer-bottom {
@@ -7530,10 +8189,140 @@ blockquote .shape {
 
   .slide img {
     margin-top: 40px !important;
-    height: 50vh !important;
+    height: 40vh !important;
   }
 
   .navbar-brand img {
     width: 100px !important;
   }
 }
+
+
+
+
+
+
+/* start marque news */
+
+.onoffswitch3 {
+  position: relative;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.onoffswitch3 {
+  width: 100vw;
+  line-height: 45px;
+  /* display: flex; */
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+  font-size: 14px;
+  color: #fff !important;
+  position: fixed;
+  bottom: 60px;
+  z-index: 15;
+  cursor: pointer;
+  transition: all .3s ease-out 0s;
+  border-radius: 2px;
+}
+
+.onoffswitch3-checkbox {
+  display: none;
+}
+
+.onoffswitch3-label {
+  display: block;
+  overflow: hidden;
+  cursor: pointer;
+  border: 0px solid #999999;
+  border-radius: 0px;
+}
+
+.onoffswitch3-inner {
+  display: block;
+  width: 200%;
+  margin-left: -100%;
+  -moz-transition: margin 0.3s ease-in 0s;
+  -webkit-transition: margin 0.3s ease-in 0s;
+  -o-transition: margin 0.3s ease-in 0s;
+  transition: margin 0.3s ease-in 0s;
+}
+
+.onoffswitch3-inner>span {
+  display: block;
+  float: left;
+  position: relative;
+  width: 50%;
+  height: 30px;
+  padding: 0;
+  line-height: 30px;
+  font-size: 14px;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.onoffswitch3-inner .onoffswitch3-active {
+  padding-left: 10px;
+  background-color: #02713e;
+  color: #FFFFFF;
+}
+
+.onoffswitch3-inner .onoffswitch3-inactive {
+  width: 145px;
+  padding: 0px 5px;
+  background-color: #dc2323;
+  color: #FFFFFF;
+}
+
+.onoffswitch3-switch {
+  display: block;
+  margin: 0px;
+  text-align: center;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.onoffswitch3-switch i {
+  font-size: 12px;
+  padding: 3px;
+}
+
+.onoffswitch3-active .onoffswitch3-switch {
+  background: #dc2323;
+  left: 0;
+  width: 160px;
+}
+
+.onoffswitch3-inactive {
+  background: #A1A1A1;
+  right: 0;
+  width: 20px;
+}
+
+.onoffswitch3-checkbox:checked+.onoffswitch3-label .onoffswitch3-inner {
+  margin-left: 0;
+}
+
+.glyphicon-remove {
+  padding: 3px 0px 0px 0px;
+  color: #fff;
+  background-color: #000;
+  height: 25px;
+  width: 25px;
+  border-radius: 15px;
+  border: 2px solid #fff;
+}
+
+.scroll-text {
+  color: #fff;
+}
+
+/* end marque news */

@@ -67,7 +67,7 @@ const Add: React.FC = () => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] md:max-w-[825px]">
         <DialogHeader>
-          <DialogTitle>Add New Blog News</DialogTitle>
+          <DialogTitle>Add New</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4">

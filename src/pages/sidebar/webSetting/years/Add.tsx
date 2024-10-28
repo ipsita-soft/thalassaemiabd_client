@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
-import { add } from '@/redux/slices/ourProjectSlice';
+import { add } from '@/redux/slices/yearsSlice';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,17 +9,15 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from 'lucide-react';
-import ReactQuill from 'react-quill';
+// import { DateTimePicker } from '@/components/ui/datetime-picker';
 
 const Add: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
-    image: undefined as File | undefined,
+    date: null as string | null,
     sorting_index: null as number | null,
-    title: null as string | null,
-    description: null as string | null,
     status: 1,
   });
 
@@ -31,14 +29,10 @@ const Add: React.FC = () => {
     setLoading(true);
 
     const Data = new FormData();
-    if (formData.image) {
-      Data.append('image', formData.image);
-    }
 
-    Data.append('status', formData.status.toString());
-    Data.append('description', formData.status.toString());
+    Data.append('date', (formData.date ?? '').toString());
     Data.append('sorting_index', (formData.sorting_index ?? 0).toString());
-    Data.append('title', (formData.title ?? '').toString());
+    Data.append('status', formData.status.toString());
 
     try {
       await dispatch(add(Data));
@@ -47,10 +41,8 @@ const Add: React.FC = () => {
         description: "Data added successfully!",
       });
       setFormData({
-        image: undefined,
+        date: null,
         sorting_index: null,
-        description: null,
-        title: null,
         status: 1,
       });
       setOpen(false);
@@ -74,75 +66,56 @@ const Add: React.FC = () => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] md:max-w-[825px]">
         <DialogHeader>
-          <DialogTitle>Add New</DialogTitle>
+          <DialogTitle>Add New Year</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4">
-
-
-            <div>
-              <Label htmlFor="name">Title</Label>
+            <div className="grid gap-2">
+              <Label htmlFor="date">Date</Label>
               <Input
                 type="text"
-                id="title"
-                value={formData.title !== null ? formData.title : ''}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                placeholder="Enter Name"
+                id="date"
+                value={formData.date !== null ? formData.date : ''}
+                onChange={(e) => setFormData({ ...formData, date: e.target.value || null })}
+                placeholder="Enter date"
                 required
               />
             </div>
 
-            <div className="..">
-              <Label htmlFor="image">Image</Label>
-              <Input
-                type="file"
-                id="image"
-                onChange={(e) => setFormData({ ...formData, image: e.target.files ? e.target.files[0] : undefined })}
-                placeholder="Choose Image"
-                required
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label htmlFor="status">Status</Label>
+                <Select
+                  defaultValue={formData.status.toString()}
+                  onValueChange={(value) => setFormData({ ...formData, status: +value })}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="1">Active</SelectItem>
+                    <SelectItem value="2">Inactive</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <Label htmlFor="sorting_index">Sorting Index</Label>
+                <Input
+                  type="number"
+                  id="sorting_index"
+                  value={formData.sorting_index !== null ? formData.sorting_index : ''}
+                  onChange={(e) => setFormData({ ...formData, sorting_index: e.target.value ? +e.target.value : null })}
+                  placeholder="Enter Sorting Index"
+                  required
+                />
+              </div>
             </div>
-
-
-           <div className="mt-4">
-              <Label htmlFor="description">Description</Label>
-              <ReactQuill
-                value={formData.description !== null ? formData.description : ''}
-                onChange={(value) => setFormData({ ...formData, description: value })}
-
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="status">Status</Label>
-              <Select
-                defaultValue={formData.status.toString()}
-                onValueChange={(value) => setFormData({ ...formData, status: +value })}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">Active</SelectItem>
-                  <SelectItem value="2">Inactive</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <Label htmlFor="sorting_index">Sorting Index</Label>
-              <Input
-                type="number"
-                id="sorting_index"
-                value={formData.sorting_index !== null ? formData.sorting_index : ''}
-                onChange={(e) => setFormData({ ...formData, sorting_index: e.target.value ? +e.target.value : null })}
-                placeholder="Enter Sorting Index"
-                required
-              />
-            </div>
-
-
           </div>
+
+
+
+
 
           <DialogFooter className="mt-4">
             <Button type="submit" disabled={loading}>

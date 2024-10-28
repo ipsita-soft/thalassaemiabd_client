@@ -10,7 +10,7 @@ import {
     useReactTable,
     flexRender,
 } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import {MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from '@/components/ui/spinner';
 import {
@@ -31,39 +31,27 @@ import {
 import Add from "./Add";
 import Edit from "./Edit";
 import Delete from "./Delete";
-import { get } from "@/redux/slices/whoWeAreSlice";
+import { get } from "@/redux/slices/pageAttachmentSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { toast } from '@/hooks/use-toast';
-import Navbar from "./Navbar";
+import Navbar from "../tifPage/Navbar";
 
-
-interface Year {
-    id: string;
-    date: string;
-    sorting_index: number;
-    status: "Active" | "Inactive";
-}
 
 interface Data {
     id: number;
-    image: string;
-    name: string;
-    designation: string;
-    type: string;
-    sorting_index: number;
-    year: Year;
+    title: string;
+    file: string;
     status: "Active" | "Inactive";
+    sorting_index:string;
+    type: string;
 }
 
-export function WhoWeArePage() {
+export function TifAttachmentPage() {
     const dispatch: AppDispatch = useDispatch();
-    const { whoWeAres, meta, isLoading, isError, error } = useSelector(
-        (state: RootState) => state.whoWeAres
+    const { tifSliders, meta, isLoading, isError, error } = useSelector(
+        (state: RootState) => state.tifSliders
     );
-
-
-    console.log(whoWeAres)
 
 
     const [sorting, setSorting] = useState<SortingState>([]);
@@ -91,79 +79,53 @@ export function WhoWeArePage() {
             ),
         },
 
+
         {
-            id: "name",
-            header: "Name",
+            id: "title",
+            header: "Title",
             cell: ({ row }: { row: { original: Data } }) => (
                 <div>
-                    <p className="mt-1">{row.original.name}</p>
+                    {row.original.title}
                 </div>
             ),
         },
 
-
-        {
-            id: "designation",
-            header: "Designation",
-            cell: ({ row }: { row: { original: Data } }) => (
-                <div>
-                    <p className="mt-1">{row.original.designation}</p>
-                </div>
-            ),
-        },
-
-        {
-            id: "image",
-            header: "Image",
-            cell: ({ row }: { row: { original: Data } }) => (
-                <img
-                    src={row.original.image}
-                    alt="events"
-                    className="w-16 h-16 object-cover"
-                />
-            ),
-        },
 
         {
             id: "type",
             header: "Type",
             cell: ({ row }: { row: { original: Data } }) => (
-                <div className="text-capitalize">
+                <div>
                     {row.original.type}
-
                 </div>
             ),
         },
 
         {
-            accessorKey: "sorting_index",
-            header: ({ column }: { column: any }) => (
-                <Button
-                    variant="ghost"
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === "asc")
-                    }
-                >
-                    Sorting Index
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            ),
+            id: "sorting_index",
+            header: "Sorting Index",
             cell: ({ row }: { row: { original: Data } }) => (
-                <div className="text-center">{row.original.sorting_index}</div>
+                <div>
+                    {row.original.sorting_index}
+                </div>
             ),
         },
+
+        {
+            id: "file",
+            header: "File",
+            cell: ({ row }: { row: { original: Data } }) => (
+                <a href={row.original.file} target="_blank">PDF</a>
+            ),
+        },
+
         {
             accessorKey: "status",
             header: "Status",
             cell: ({ row }: { row: { original: Data } }) => (
-                <div className="text-center">{row.original.status}</div>
-            ),
-        },
-        {
-            accessorKey: "year",
-            header: "Years",
-            cell: ({ row }: { row: { original: Data } }) => (
-                <div className="text-center">{row.original?.year?.date}</div>
+                <div>
+                    {row.original.status}
+                </div>
             ),
         },
         {
@@ -172,10 +134,12 @@ export function WhoWeArePage() {
             cell: ({ row }: { row: { original: Data } }) => {
                 const wisher = row.original;
 
+
+
                 const handleDeleteSuccess = () => {
                     toast({
                         title: 'Success',
-                        description: 'Wisher deleted successfully!',
+                        description: 'Doctor slider deleted successfully!',
                     });
                     dispatch(get({})); // Dispatch here
                 };
@@ -196,13 +160,7 @@ export function WhoWeArePage() {
                                 onClose={() => setEditModalOpen(false)}
                             />
                             <br />
-                            {/* <Show
-                                Id={wisher.id.toString()}
-                                open={showSliderDetails}
-                                onClose={() => setShowSliderDetails(false)}
-                            /> 
-                            <br />
-                            */}
+
 
                             <Delete
                                 Id={wisher.id.toString()}
@@ -219,7 +177,7 @@ export function WhoWeArePage() {
     ];
 
     const table = useReactTable({
-        data: whoWeAres as unknown as Data[],
+        data: tifSliders as unknown as Data[],
         columns,
         state: {
             sorting,
@@ -250,8 +208,6 @@ export function WhoWeArePage() {
 
     return (
 
-
-
         isLoading ? (
             <div className="flex justify-center items-center h-screen">
                 <Spinner >Loading...</Spinner>
@@ -264,7 +220,6 @@ export function WhoWeArePage() {
                     <Navbar />
 
                 </div>
-
 
                 <div className="flex flex-col lg:flex-row justify-between items-center mb-4 space-y-4 lg:space-y-0 lg:space-x-4">
                     <Input
@@ -290,11 +245,7 @@ export function WhoWeArePage() {
                     <Add />
                 </div>
                 {isError ? (
-                    <>Error: {error && <p>{error.errors}</p>}
-
-                        {console.log('error data', error)}
-                    </>
-
+                    <>Error: {error && <p>Error: {error.message}</p>}</>
                 ) : (
                     <div className="overflow-x-auto">
                         <Table>

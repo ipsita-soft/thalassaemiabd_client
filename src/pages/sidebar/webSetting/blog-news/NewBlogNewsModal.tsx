@@ -66,7 +66,7 @@ const NewBlogNewsModal: React.FC = () => {
       <DialogTrigger asChild>
         <Button variant="outline">Add New </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] md:max-w-[825px]">
         <DialogHeader>
           <DialogTitle>Add New Blog  News</DialogTitle>
         </DialogHeader>

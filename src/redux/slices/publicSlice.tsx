@@ -1,11 +1,19 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getPublicBlogNews, getPublicSlider, getDoctorSlider, getWishers, getPublicEvent, getSingleEvent, getSingleBlogNews, getGallery, getSetting, getMissionVision, getWhoWeArePage, getBtsHistory, getPublicOurProjects, getSingleProject, getPublicNotices, getPublicTifPages } from "../api/publicApi";
+import { getPublicBlogNews, getPublicSlider, getDoctorSlider, getWishers, getPublicEvent, getSingleEvent, getSingleBlogNews, getGallery, getSetting, getMissionVision, getWhoWeArePage, getBtsHistory, getPublicOurProjects, getSingleProject, getPublicNotices, getPublicTifPages, getPublicYear, getPublicPublication, getSinglePublication } from "../api/publicApi";
+
+
 
 
 // Define a type for the slider objects
 interface Slider {
     id: number;
     image: string;
+    sorting_index: number; // Added sorting_index
+    status: string;        // Added status
+}
+interface YearList {
+    id: number;
+    date: string;
     sorting_index: number; // Added sorting_index
     status: string;        // Added status
 }
@@ -57,6 +65,7 @@ interface TIFPages {
     created_at: string;
     updated_at: string;
     tif_slider: TIFSlider[]; // Array of TIFSlider items
+    yearList: YearList[]; // Array of TIFSlider items
     tif_attachment: TIFAttachment[]; // Array of TIFAttachment items
 }
 
@@ -112,8 +121,40 @@ interface BlogNews {
     status: string;        // Added status
 }
 
+interface Meta {
+    current_page: number;
+    from: number;
+    last_page: number;
+    links: {
+        url: string | null;
+        label: string;
+        active: boolean;
+    }[];
+    path: string;
+    per_page: number;
+    to: number;
+    total: number;
+}
+
+interface PubPublications {
+    id: number;
+    image: string;
+    title: string;
+    description: string;
+    sorting_index: number; // Added sorting_index
+    status: string;        // Added status
+}
+
+interface ApiResponse {
+    data: PubPublications[];
+    meta: Meta;
+}
+
 interface SingleBlogNewsResponse {
     data: BlogNews; // This is the structure of the response you receive
+}
+interface SinglepubPublicationsResponse {
+    data: PubPublications; // This is the structure of the response you receive
 }
 
 interface Event {
@@ -181,6 +222,7 @@ interface SingleProject {
 // Define a type for the slice state
 interface PublicState {
     sliders: { data: Slider[] };
+    yearList: { data: YearList[] };
     doctorSliders: { data: DoctorSliders[] };
     tifPage: TIFPages | null;
     project: { data: Project[] };
@@ -188,6 +230,9 @@ interface PublicState {
     whoWeArePage: { data: WhoWeArePage[] }
     blogNews: { data: BlogNews[] };
     singleBlogNews: BlogNews | null;
+    pubPublications: { data: PubPublications[] };
+    publicationDetail: PubPublications | null;
+    meta: Meta | null;
     wishers: { data: Wishers[] };
     events: { data: Event[] };
     notices: { data: Notices[] };
@@ -228,7 +273,11 @@ const initialState: PublicState = {
     blogNews: { data: [] },
     tifPage: null,
     singleBlogNews: null,
+    pubPublications: { data: [] as PubPublications[] },
+    publicationDetail: null,
+    meta: null as Meta | null,
     project: { data: [] },
+    yearList: { data: [] },
     singleProject: null,
     doctorSliders: { data: [] },
     whoWeArePage: { data: [] },
@@ -277,7 +326,7 @@ export const fetchDoctorSlider = createAsyncThunk(
 
 export const fetchWhoWeArePage = createAsyncThunk(
     'public/fetchWhoWeArePage',
-    async (params: string, { rejectWithValue }) => {
+    async (params: object = {}, { rejectWithValue }) => {
         try {
             const response = await getWhoWeArePage(params);
             return response.data.data;
@@ -306,6 +355,17 @@ export const fetchPublicBlogNews = createAsyncThunk(
         try {
             const response = await getPublicBlogNews(params);
             return response.data.data; // Assuming response.data contains the sliders array
+        } catch (error: any) {
+            return rejectWithValue(error.response ? error.response.data : new Error('Error fetching public Blog News'));
+        }
+    }
+);
+export const fetchPublicPublication = createAsyncThunk(
+    'public/fetchPublicPublication',
+    async (params: object = {}, { rejectWithValue }) => {
+        try {
+            const response = await getPublicPublication(params);
+            return response.data; // Assuming response.data contains the sliders array
         } catch (error: any) {
             return rejectWithValue(error.response ? error.response.data : new Error('Error fetching public Blog News'));
         }
@@ -360,11 +420,37 @@ export const fetchSingleBlogNews = createAsyncThunk(
     }
 );
 
+export const fetchPublicationDetail = createAsyncThunk(
+    'fetchPublicationDetail',
+    async (id: string | number, { rejectWithValue }) => {
+        try {
+            const response = await getSinglePublication(id);
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(error.response ? error.response.data : new Error('Error fetching single event'));
+        }
+    }
+
+)
+
 export const fetchPublicEvent = createAsyncThunk(
     'public/fetchPublicEvent',
     async (params: object = {}, { rejectWithValue }) => {
         try {
             const response = await getPublicEvent(params);
+            return response.data.data; // Assuming response.data contains the sliders array
+        } catch (error: any) {
+            return rejectWithValue(error.response ? error.response.data : new Error('Error fetching public Events'));
+        }
+    }
+);
+
+
+export const fetchPublicYearList = createAsyncThunk(
+    'public/fetchPublicYearList',
+    async (params: object = {}, { rejectWithValue }) => {
+        try {
+            const response = await getPublicYear(params);
             return response.data.data; // Assuming response.data contains the sliders array
         } catch (error: any) {
             return rejectWithValue(error.response ? error.response.data : new Error('Error fetching public Events'));
@@ -524,7 +610,23 @@ const publicSlice = createSlice({
             })
 
 
-            //events call 
+            //years call 
+            .addCase(fetchPublicYearList.pending, (state) => {
+                state.isLoading = true;
+                state.isError = false;
+                state.error = null;
+            })
+            .addCase(fetchPublicYearList.fulfilled, (state, action: PayloadAction<YearList[]>) => {
+                state.isLoading = false;
+                state.yearList = { data: action.payload };
+            })
+            .addCase(fetchPublicYearList.rejected, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.payload;
+            })
+
+
             .addCase(fetchPublicEvent.pending, (state) => {
                 state.isLoading = true;
                 state.isError = false;
@@ -693,6 +795,40 @@ const publicSlice = createSlice({
                 state.error = action.payload;
             })
 
+            //fetch Public Publication
+
+            .addCase(fetchPublicationDetail.pending, (state) => {
+                state.isLoading = true;
+                state.isError = false;
+                state.error = null;
+            })
+            .addCase(fetchPublicationDetail.fulfilled, (state, action: PayloadAction<SinglepubPublicationsResponse>) => {
+                state.isLoading = false;
+                state.publicationDetail = action.payload.data;
+            })
+            .addCase(fetchPublicationDetail.rejected, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.payload;
+            })
+
+
+
+            .addCase(fetchPublicPublication.pending, (state) => {
+                state.isLoading = true;
+                state.isError = false;
+                state.error = null;
+            })
+            .addCase(fetchPublicPublication.fulfilled, (state, action: PayloadAction<ApiResponse>) => {
+                state.isLoading = false;
+                state.pubPublications = { data: action.payload.data }; // Accessing the correct structure
+                state.meta = action.payload.meta; // Accessing meta directly
+            })
+            .addCase(fetchPublicPublication.rejected, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.payload;
+            })
             // single  OurProjects
 
             .addCase(fetchSingleEvent.pending, (state) => {

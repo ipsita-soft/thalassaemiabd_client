@@ -14,7 +14,10 @@ import btsHistoryReducers from './slices/btsHistorySlice';
 import ourProjectReducers from './slices/ourProjectSlice';
 import noticesReducers from './slices/noticesSlice';
 import pagesReducers from './slices/pagesSlice';
-import tifSliderReducers from './slices/tifSliderSlice'
+import tifSliderReducers from './slices/tifSliderSlice';
+import tifAttachmentPageReducers from './slices/pageAttachmentSlice';
+import yearsReducers from './slices/yearsSlice';
+import publicationReducers from './slices/publicationsSlice';
 
 export const store = configureStore({
   reducer: {
@@ -33,6 +36,9 @@ export const store = configureStore({
     notices: noticesReducers,
     pages: pagesReducers,
     tifSliders: tifSliderReducers,
+    tifAttachmentPages : tifAttachmentPageReducers,
+    years : yearsReducers,
+    publications : publicationReducers,
     //public reducer
     public: publicReducer,
   },

@@ -5,6 +5,7 @@ const api = axios.create({
   //baseURL: 'http://127.0.1:8000/api',
   headers: {
     'Content-Type': 'application/json',
+    'Accept': 'application/json',
   },
 });
 
@@ -16,7 +17,7 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  // (error) => Promise.reject(error)
 );
 
 api.interceptors.response.use(
@@ -29,6 +30,8 @@ api.interceptors.response.use(
       localStorage.removeItem('user');
       localStorage.removeItem('roles');
       localStorage.removeItem('permissions');
+    } else {
+      return Promise.reject(error);
     }
 
   }

@@ -1,19 +1,23 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store'; // Update path as necessary
 import { fetchSetting } from '@/redux/slices/publicSlice'; // Import the thunk
 import Marquee from "react-marquee-slider";
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
     const dispatch = useDispatch<AppDispatch>();
 
     const { setting } = useSelector((state: RootState) => state.public);
-
+    const [isMarqueeVisible, setMarqueeVisible] = useState(true);
     useEffect(() => {
         // Fetch settings without checking for id
         dispatch(fetchSetting({}));
     }, [dispatch]);
 
+    const handleCloseClick = () => {
+        setMarqueeVisible(!isMarqueeVisible);
+    };
 
 
 
@@ -52,29 +56,29 @@ const Footer = () => {
                                 <div className="row">
                                     <div className="col-lg-6 col-md-6 col-12">
                                         <ul>
-                                            <li><a href="about-us.html">About BTS</a></li>
-                                            <li><a href="mission&vision.html">Mission & Vision</a></li>
-                                            <li><a href="javascript:void(0)">Donate Blood</a></li>
-                                            <li><a href="javascript:void(0)">Donate Zakat</a></li>
-                                            <li><a href="javascript:void(0)">Sponsor a Child</a></li>
-                                            <li><a href="javascript:void(0)">Patient Management</a></li>
-                                            <li><a href="javascript:void(0)">Prevention</a></li>
-                                            <li><a href="javascript:void(0)">EC Committee</a></li>
-                                            <li><a href="javascript:void(0)">Zakat Board</a></li>
+                                            <li><a href="#">About BTS</a></li>
+                                            <li><Link to="mission-vision">Mission & Vision</Link></li>
+                                            <li><a href="#">Donate Blood</a></li>
+                                            <li><a href="#">Donate Zakat</a></li>
+                                            <li><a href="#">Sponsor a Child</a></li>
+                                            <li><a href="#">Patient Management</a></li>
+                                            <li><a href="#">Prevention</a></li>
+                                            <li><a href="#">EC Committee</a></li>
+                                            <li><a href="#">Zakat Board</a></li>
                                         </ul>
                                     </div>
                                     <div className="col-lg-6 col-md-6 col-12">
                                         <ul>
-                                            <li><a href="Committee.html">Publications</a></li>
-                                            <li><a href="javascript:void(0)">TIF</a></li>
-                                            <li><a href="javascript:void(0)">Appointment</a></li>
-                                            <li><a href="javascript:void(0)">Notices</a></li>
-                                            <li><a href="javascript:void(0)">Events</a></li>
-                                            <li><a href="javascript:void(0)">Blood Booking</a></li>
+                                            <li><a href="#">Publications</a></li>
+                                            <li><a href="#">TIF</a></li>
+                                            <li><a href="#">Appointment</a></li>
+                                            <li><a href="#">Notices</a></li>
+                                            <li><a href="#">Events</a></li>
+                                            <li><a href="#">Blood Booking</a></li>
                                             <li><a href="contact.html">Employee List</a></li>
-                                            <li><a href="javascript:void(0)">Buy Medicine</a></li>
-                                            <li><a href="javascript:void(0)">Gallery</a></li>
-                                            <li><a href="contact.html">Contact Us</a></li>
+                                            <li><a href="#">Buy Medicine</a></li>
+                                            <li><a href="#">Gallery</a></li>
+                                            <li><a href="#">Contact Us</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -149,9 +153,8 @@ const Footer = () => {
                             </div>
                             <div className="col-lg-6 col-md-6 col-12">
                                 <ul className="extra-link">
-                                    <li><a href="javascript:void(0)">Terms & Conditions</a></li>
-                                    <li><a href="faq.html">FAQ</a></li>
-                                    <li><a href="javascript:void(0)">Privacy Policy</a></li>
+                                    <li><a href="#">Terms & Conditions</a></li>
+                                    <li><a href="#">Privacy Policy</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -173,25 +176,38 @@ const Footer = () => {
                 <input type="checkbox" name="onoffswitch3" className="onoffswitch3-checkbox" id="myonoffswitch3" checked />
                 <label className="onoffswitch3-label" htmlFor="myonoffswitch3">
                     <span className="onoffswitch3-inner">
-                        <span className="onoffswitch3-active">
-                            <Marquee
-                                velocity={50}
-                                direction="rtl" 
-                                scatterRandomly={false} 
-                                resetAfterTries={100} 
-                                onInit={() => console.log("Marquee initialized")}
-                                onFinish={() => console.log("Marquee finished")}
-                            >
-                                <div></div>
-                                <div className='w-96'>{setting?.copyrighttext}</div>
-                            </Marquee>
-                            <span className="onoffswitch3-switch">BREAKING NEWS <i className="lni lni-close"></i></span>
-                        </span>
-                        <span className="onoffswitch3-inactive">
-                            <span className="onoffswitch3-switch">
-                                BREAKING NEWS <i className="lni lni-angle-double-right"></i>
+                        {isMarqueeVisible ? (
+                            <span className="onoffswitch3-active">
+                                <Marquee
+                                    velocity={50}
+                                    direction="rtl"
+                                    scatterRandomly={false}
+                                    resetAfterTries={100}
+                                    onInit={() => console.log("Marquee initialized")}
+                                    onFinish={() => console.log("Marquee finished")}
+                                >
+                                    <div></div>
+                                    <div className='w-96'>{setting?.copyrighttext}</div>
+                                </Marquee>
+                                <span className="onoffswitch3-switch">
+                                    BREAKING NEWS <i className="lni lni-close" onClick={handleCloseClick}></i>
+                                </span>
                             </span>
-                        </span>
+                        ) : (
+
+                            <div>
+                                <span className="onoffswitch3-inactive" style={{ backgroundColor: 'red', color: 'white' }}>
+                                    <span className="onoffswitch3-switch  text-red-600 ml-4" style={{fontWeight:"bolder"}} onClick={handleCloseClick}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-newspaper" viewBox="0 0 16 16">
+                                            <path d="M0 2.5A1.5 1.5 0 0 1 1.5 1h11A1.5 1.5 0 0 1 14 2.5v10.528c0 .3-.05.654-.238.972h.738a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 1 1 0v9a1.5 1.5 0 0 1-1.5 1.5H1.497A1.497 1.497 0 0 1 0 13.5zM12 14c.37 0 .654-.211.853-.441.092-.106.147-.279.147-.531V2.5a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0-.5.5v11c0 .278.223.5.497.5z" />
+                                            <path d="M2 3h10v2H2zm0 3h4v3H2zm0 4h4v1H2zm0 2h4v1H2zm5-6h2v1H7zm3 0h2v1h-2zM7 8h2v1H7zm3 0h2v1h-2zm-3 2h2v1H7zm3 0h2v1h-2zm-3 2h2v1H7zm3 0h2v1h-2z" />
+                                        </svg>
+                                        {/* <i className="lni lni-angle-double-right" onClick={handleCloseClick}></i> */}
+                                    </span>
+                                </span>
+                            </div>
+
+                        )}
                     </span>
                 </label>
             </div>

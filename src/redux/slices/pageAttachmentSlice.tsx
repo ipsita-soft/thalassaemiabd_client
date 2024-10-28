@@ -1,21 +1,18 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { addApi, deleteApi, getApi, showApi, updateApi } from '@/redux/api/whoWeAreApi';
+import { addApi, deleteApi, getApi, showApi, updateApi } from '@/redux/api/pageattachmentApi';
 
 type Data = {
-  id?: string | undefined;
-  image?: string;
-  name?: string;
-  designation?: string;
-  type?: string;
-  sorting_index?: number;
+  id: string;
+  title?: string;
+  file?: string;
   status?: string;
-}
+  type?: string;
+
+};
 
 type ErrorPayload = {
   success?: boolean;
   message?: string;
-  errors?:string;
-  phone?:string;
   data?: any;
 };
 
@@ -36,20 +33,19 @@ interface Meta {
 }
 
 export const add = createAsyncThunk(
-  'who-we-are/add',
+  'pageslider/add',
   async (Data: FormData, { rejectWithValue }) => {
     try {
       const response = await addApi(Data);
       return response;
     } catch (error: any) {
-      // console.log('slice err labib',error.errors )
-      return rejectWithValue(error.errors ? error.errors : new Error('Error adding Data slice '));
+      return rejectWithValue(error.response ? error.response.data : new Error('Error adding Data'));
     }
   }
 );
 
 export const get = createAsyncThunk(
-  'who-we-are/get',
+  'pageslider/get',
   async (params: object = {}, { rejectWithValue }) => {
     try {
       const response = await getApi(params);
@@ -61,7 +57,7 @@ export const get = createAsyncThunk(
 );
 
 export const update = createAsyncThunk(
-  'who-we-are/update',
+  'pageslider/update',
   async ({ id, data }: { id: string; data: FormData }, { rejectWithValue }) => {
     try {
       const response = await updateApi(id, data);
@@ -73,7 +69,7 @@ export const update = createAsyncThunk(
 );
 
 export const show = createAsyncThunk(
-  'who-we-are/show',
+  'pageslider/show',
   async (id: string, { rejectWithValue }) => {
     try {
       const data = await showApi(id);
@@ -85,7 +81,7 @@ export const show = createAsyncThunk(
 );
 
 export const deleteData = createAsyncThunk(
-  'who-we-are/delete',
+  'pageslider/delete',
   async (id: string, { rejectWithValue }) => {
     try {
       await deleteApi(id);
@@ -96,11 +92,11 @@ export const deleteData = createAsyncThunk(
   }
 );
 
-const whoWeAreSlice = createSlice({
-  name: 'who-we-are',
+const attachmentPagesSlice = createSlice({
+  name: 'pageslider',
   initialState: {
-    whoWeAres: [] as Data[],
-    whoWeAre: {} as Data,
+    tifAttachmentPages: [] as Data[],
+    tifAttachmentPage: {} as Data,
     meta: null as Meta | null,
     isLoading: false,
     isError: false,
@@ -116,7 +112,7 @@ const whoWeAreSlice = createSlice({
       })
       .addCase(add.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.whoWeAres.push(action.payload.data);
+        state.tifAttachmentPages.push(action.payload.data);
       })
       .addCase(add.rejected, (state, action) => {
         state.isLoading = false;
@@ -130,7 +126,7 @@ const whoWeAreSlice = createSlice({
       })
       .addCase(get.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.whoWeAres = action.payload?.data || [];
+        state.tifAttachmentPages = action.payload?.data || [];
         state.meta = action.payload?.meta || null;
       })
       .addCase(get.rejected, (state, action) => {
@@ -145,13 +141,13 @@ const whoWeAreSlice = createSlice({
       })
       .addCase(update.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.whoWeAres = state.whoWeAres.map((whoWeAre) =>
-          whoWeAre.id === action.payload.data.id
+        state.tifAttachmentPages = state.tifAttachmentPages.map((tifAttachmentPage) =>
+          tifAttachmentPage.id === action.payload.data.id
             ? {
               ...action.payload.data,
               image: `${action.payload.data.image}?v=${new Date().getTime()}`,
             }
-            : whoWeAre
+            : tifAttachmentPage
         );
         state.error = action.payload;
       })
@@ -165,7 +161,7 @@ const whoWeAreSlice = createSlice({
         state.error = null;
       })
       .addCase(show.fulfilled, (state, action) => {
-        state.whoWeAres = action.payload.data;
+        state.tifAttachmentPages = action.payload.data;
         state.isLoading = false;
       })
       .addCase(show.rejected, (state, action) => {
@@ -180,7 +176,7 @@ const whoWeAreSlice = createSlice({
       })
       .addCase(deleteData.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.whoWeAres = state.whoWeAres.filter(whoWeAre => whoWeAre.id !== action.payload);
+        state.tifAttachmentPages = state.tifAttachmentPages.filter(tifAttachmentPage => tifAttachmentPage.id !== action.payload);
         console.log('Deleted Data ID:', action.payload); // For debugging
       })
       .addCase(deleteData.rejected, (state, action) => {
@@ -191,4 +187,4 @@ const whoWeAreSlice = createSlice({
   },
 });
 
-export default whoWeAreSlice.reducer;
+export default attachmentPagesSlice.reducer;

@@ -27,18 +27,9 @@ const VideoGallery = () => {
     return (
         <section id="video-gallery" className="videos-gallery section">
 
-
-            <div className="">
-                <div className="col-12">
-                    <div className="section-title">
-                        <h2 className="wow fadeInUp" data-wow-delay=".5s">.</h2>
-                    </div>
-                </div>
-            </div>
-
-
-            <div className="container" data-aos="fade-up">
-                <div className="row">
+            <div className="container mt-14" >
+                
+                <div className="row" data-aos="fade-up">
                     <div className="col-12">
                         <div className="section-title align-center gray-bg">
                             <h2 className="wow fadeInUp" data-wow-delay=".4s">
@@ -51,15 +42,15 @@ const VideoGallery = () => {
                 <div className="row">
                     {galleriesData.map((video, index) => (
                         <div key={index} className="col-md-6 col-lg-6 mt-4 mb-3">
-                            <iframe
-                                width="100%"
-                                height="255px"
+
+                            <iframe width="560" height="315"
                                 src={video.video_url}
                                 title={video.type || "Video"}
                                 frameBorder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                allowFullScreen
-                            ></iframe>
+                                referrerPolicy="strict-origin-when-cross-origin" allowFullScreen>
+
+                            </iframe>
                         </div>
                     ))}
                 </div>
