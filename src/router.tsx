@@ -41,10 +41,12 @@ import { NoticesPage } from './pages/sidebar/webSetting/notices/NoticesPage.tsx'
 import TifMembership from './client/page/TifMembership.tsx';
 import { TifPage } from './pages/sidebar/webSetting/tifPage/TifPage.tsx';
 import { TifSliderPage } from './pages/sidebar/webSetting/tifSlider/TifSliderPage.tsx';
-import Notice from './client/userpanel/notice.tsx';
-import AnnualReports from './client/userpanel/annualreport.tsx';
+import Notice from './client/userpanel/Notice.tsx';
+import AnnualReports from './client/userpanel/Annualreport.tsx';
 import MyProfile from './client/userpanel/MyProfile.tsx';
 import UpdateProfile from './client/userpanel/UpdateProfile.tsx';
+import BloodDonationHistory from './client/userpanel/bloodDonationHistory.tsx';
+import HealthHistory from './client/userpanel/HealthHistory.tsx';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -345,6 +347,16 @@ const router = createBrowserRouter([
       {
         path: '/userpanel/update-profile',
         element: <UpdateProfile />
+      },
+
+      {
+        path: '/userpanel/blood-donation-history',
+        element: <BloodDonationHistory/>
+      },
+
+      {
+        path: '/userpanel/health-history',
+        element: <HealthHistory/>
       },
 
     ]
