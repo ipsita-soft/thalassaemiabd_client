@@ -57,11 +57,7 @@ const TifMembership = () => {
             selector: (row: TIFAttachment) => row.title,
             sortable: true,
         },
-        {
-            name: "Status",
-            selector: (row: TIFAttachment) => row.status,
-            sortable: true,
-        },
+       
         {
             name: "Download",
             cell: (row: TIFAttachment) => (
@@ -77,6 +73,9 @@ const TifMembership = () => {
 
     return (
         <section className="section tif-membership mt-14">
+
+
+            
             <div className="container">
                 <div className="row">
                     <div className="col-lg-12 col-md-12 col-12">

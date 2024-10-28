@@ -40,6 +40,14 @@ import { NoticesPage } from './pages/sidebar/webSetting/notices/NoticesPage.tsx'
 import TifMembership from './client/page/TifMembership.tsx';
 import { TifPage } from './pages/sidebar/webSetting/tifPage/TifPage.tsx';
 import { TifSliderPage } from './pages/sidebar/webSetting/tifSlider/TifSliderPage.tsx';
+import { TifAttachmentPage } from './pages/sidebar/webSetting/tifAttachment/TifAttachmentPage.tsx';
+import { YearsPage } from './pages/sidebar/webSetting/years/YearsPage.tsx';
+import Committee from './client/page/Committee.tsx';
+import Founder from './client/page/Founder.tsx';
+import Thalassemia from './client/page/Thalassaemia.tsx';
+import PublicationSection from './client/page/PublicationSection.tsx';
+import { PublicationPage } from './pages/sidebar/webSetting/publications/PublicationPage.tsx';
+import PublicationDetail from './client/page/publication-detail.tsx';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -64,7 +72,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'page/:TifType',
-        element: <TifMembership/>
+        element: <TifMembership />
       },
 
 
@@ -93,6 +101,28 @@ const router = createBrowserRouter([
         path: 'videos-gallery',
         element: <VideoGallery />
       },
+
+      {
+        path: 'thalassaemia',
+        element: <Thalassemia />
+      },
+
+
+      {
+        path: 'publications',
+        element: <PublicationSection />
+      },
+      {
+        path: 'publication-details/:id',
+        element: <PublicationDetail />
+      },
+
+      {
+        path: 'founder',
+        element: <Founder />
+      },
+
+
       {
         path: 'mission-vision',
         element: <VisionMission />
@@ -101,6 +131,12 @@ const router = createBrowserRouter([
         path: 'bts-history',
         element: <BtsHistory />
       },
+
+      {
+        path: 'ec-committee',
+        element: <Committee />
+      },
+
       {
         path: 'advisors',
         element: <AdvisorsCommittee />
@@ -152,6 +188,17 @@ const router = createBrowserRouter([
           requiredPermissions={['blogNews-all']}
         />,
       },
+
+      {
+        path: 'publications',
+        element: <ProtectedRoute
+          element={<PublicationPage />}
+          requiredPermissions={['publications-all']}
+        />,
+      },
+
+
+
       {
         path: 'events',
         element: <ProtectedRoute
@@ -163,10 +210,12 @@ const router = createBrowserRouter([
       {
         path: 'notices',
         element: <ProtectedRoute
-          element={<NoticesPage/>}
+          element={<NoticesPage />}
           requiredPermissions={['notice-all']}
         />,
       },
+
+
 
 
 
@@ -196,6 +245,16 @@ const router = createBrowserRouter([
         />,
       },
 
+
+      {
+        path: 'years',
+        element: <ProtectedRoute
+          element={<YearsPage />}
+          requiredPermissions={['years-all']}
+        />,
+      },
+
+
       {
         path: '/dashboard/who-we-are',
         element: <ProtectedRoute
@@ -203,6 +262,7 @@ const router = createBrowserRouter([
           requiredPermissions={['whoWeAre-all']}
         />,
       },
+
 
 
       {
@@ -268,6 +328,14 @@ const router = createBrowserRouter([
         path: 'tif-page-slider',
         element: <ProtectedRoute
           element={<TifSliderPage />}
+          requiredPermissions={['tif-member-all']}
+        />,
+      },
+
+      {
+        path: 'tif-page-attachment',
+        element: <ProtectedRoute
+          element={<TifAttachmentPage />}
           requiredPermissions={['tif-member-all']}
         />,
       },

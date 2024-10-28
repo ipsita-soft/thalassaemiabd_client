@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
-import { add } from '@/redux/slices/ourProjectSlice';
+import { add } from '@/redux/slices/pageAttachmentSlice';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,17 +9,16 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from 'lucide-react';
-import ReactQuill from 'react-quill';
 
 const Add: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
-    image: undefined as File | undefined,
-    sorting_index: null as number | null,
+    file: undefined as File | undefined,
     title: null as string | null,
-    description: null as string | null,
+    type: null as string | null,
+    sorting_index: null as number | null,
     status: 1,
   });
 
@@ -31,14 +30,14 @@ const Add: React.FC = () => {
     setLoading(true);
 
     const Data = new FormData();
-    if (formData.image) {
-      Data.append('image', formData.image);
+    if (formData.file) {
+      Data.append('file', formData.file);
     }
 
     Data.append('status', formData.status.toString());
-    Data.append('description', formData.status.toString());
-    Data.append('sorting_index', (formData.sorting_index ?? 0).toString());
     Data.append('title', (formData.title ?? '').toString());
+    Data.append('type', (formData.type ?? '').toString());
+    Data.append('sorting_index', (formData.sorting_index ?? 0).toString());
 
     try {
       await dispatch(add(Data));
@@ -47,11 +46,11 @@ const Add: React.FC = () => {
         description: "Data added successfully!",
       });
       setFormData({
-        image: undefined,
-        sorting_index: null,
-        description: null,
+        file: undefined,
         title: null,
+        type: null,
         status: 1,
+        sorting_index: null,
       });
       setOpen(false);
     } catch (error) {
@@ -74,42 +73,36 @@ const Add: React.FC = () => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] md:max-w-[825px]">
         <DialogHeader>
-          <DialogTitle>Add New</DialogTitle>
+          <DialogTitle>Add New Page Attachment</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
-          <div className="grid gap-4">
-
-
+          <div>
             <div>
-              <Label htmlFor="name">Title</Label>
-              <Input
-                type="text"
-                id="title"
-                value={formData.title !== null ? formData.title : ''}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                placeholder="Enter Name"
-                required
-              />
+              <Label htmlFor="type">Type</Label>
+              <Select
+                value={formData?.type || undefined} // Corrected here
+                onValueChange={(value) => setFormData({ ...formData, type: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="tif_member">Tif Member</SelectItem>
+                  <SelectItem value="awareness">Awareness</SelectItem>
+                  <SelectItem value="advertisements">Advertisements</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="..">
-              <Label htmlFor="image">Image</Label>
+              <Label htmlFor="file">PDF File</Label>
               <Input
                 type="file"
-                id="image"
-                onChange={(e) => setFormData({ ...formData, image: e.target.files ? e.target.files[0] : undefined })}
-                placeholder="Choose Image"
+                id="file"
+                accept='application/pdf'
+                onChange={(e) => setFormData({ ...formData, file: e.target.files ? e.target.files[0] : undefined })}
+                placeholder="Choose file"
                 required
-              />
-            </div>
-
-
-           <div className="mt-4">
-              <Label htmlFor="description">Description</Label>
-              <ReactQuill
-                value={formData.description !== null ? formData.description : ''}
-                onChange={(value) => setFormData({ ...formData, description: value })}
-
               />
             </div>
 
@@ -130,6 +123,18 @@ const Add: React.FC = () => {
             </div>
 
             <div>
+              <Label htmlFor="title">Sorting title</Label>
+              <Input
+                type="text"
+                id="title"
+                value={formData.title !== null ? formData.title : ''}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value ? e.target.value : null })}
+                placeholder="Enter title"
+                required
+              />
+            </div>
+
+            <div >
               <Label htmlFor="sorting_index">Sorting Index</Label>
               <Input
                 type="number"
@@ -140,6 +145,7 @@ const Add: React.FC = () => {
                 required
               />
             </div>
+
 
 
           </div>
@@ -160,8 +166,8 @@ const Add: React.FC = () => {
             </Button>
           </DialogFooter>
         </form>
-      </DialogContent>
-    </Dialog>
+      </DialogContent >
+    </Dialog >
   );
 };
 

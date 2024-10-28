@@ -99,14 +99,21 @@ const Header = () => {
                         </li>
                         <li className="nav-item">
 
-                        <Link to={`/page/tif_member`}>TIF Membership</Link>
+                          <Link to={`/page/tif_member`}>TIF Membership</Link>
                         </li>
                         <li className="nav-item">
                           <Link to="our-projects">Our Projects</Link>
                         </li>
 
+
+
                         <li className="nav-item">
-                          <a href="Committee.html">Executive Committee</a>
+                          <Link to="founder">Founder</Link>
+                        </li>
+
+
+                        <li className="nav-item">
+                          <Link to="ec-committee">Executive Committee</Link>
                         </li>
 
 
@@ -142,7 +149,7 @@ const Header = () => {
                       </a>
                       <ul className="sub-menu collapse" id="submenu-1-3">
                         <li className="nav-item">
-                          <a href="thalassaemia.html">What is thalassaemia</a>
+                          <Link to="thalassaemia">What is thalassaemia</Link>
                         </li>
                         <li className="nav-item">
                           <a href="treatment.html">Treatment</a>
@@ -163,13 +170,14 @@ const Header = () => {
                         data-bs-target="#submenu-1-3" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">Media</a>
                       <ul className="sub-menu collapse" id="submenu-1-3">
-                        <li className="nav-item"><a href="events-all">Events</a></li>
+                        <li className="nav-item"><Link to="events-all">Events</Link></li>
                         <li className="nav-item"><Link to="photo-gallery">Photos</Link></li>
                         <li className="nav-item"><Link to="videos-gallery">Videos</Link></li>
+                        <li className="nav-item"><Link to="publications">Publications</Link></li>
                         <li className="nav-item"><Link to="blog-news-all">Blogs & News</Link></li>
                         <li className="nav-item">
                           <Link to={`/page/advertisements`}>Advertisements</Link>
-                          </li>
+                        </li>
                       </ul>
                     </li>
 

@@ -34,6 +34,15 @@ export const getPublicBlogNews = async (params = {}) => {
 };
 
 
+export const getPublicPublication = async (params = {}) => {
+    try {
+        const response = await api.get('public/publications', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching Blog');
+    }
+};
+
 export const getPublicOurProjects = async (params = {}) => {
     try {
         const response = await api.get('public/projects', { params });
@@ -73,6 +82,15 @@ export const getPublicEvent = async (params = {}) => {
     }
 };
 
+export const getPublicYear = async (params = {}) => {
+    try {
+        const response = await api.get('public/years-list', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching years-list');
+    }
+};
+
 export const getSingleEvent = async (id: string | number) => {
     try {
         const response = await api.get(`public/event/${id}`);
@@ -92,9 +110,22 @@ export const getSingleBlogNews = async (id: string | number) => {
         const response = await api.get(`public/blog-news/${id}`);
         return response;
     } catch (error: any) {
-        throw error.response ? error.response.data : new Error('Error fetching events');
+        throw error.response ? error.response.data : new Error('Error fetching news');
     }
 };
+
+
+export const getSinglePublication = async (id: string | number) => {
+    try {
+        const response = await api.get(`public/publications/${id}`);
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching publications');
+    }
+};
+
+
+
 export const getSingleProject = async (id: string | number) => {
     try {
         const response = await api.get(`public/projects/${id}`);
@@ -144,9 +175,9 @@ export const getBtsHistory = async (params = {}) => {
 };
 
 
-export const getWhoWeArePage = async (params: string) => {
+export const getWhoWeArePage = async (params = {}) => {
     try {
-        const response = await api.get(`public/who-we-are-page/${params}`);
+        const response = await api.get(`public/who-we-are-page`, { params });
         return response;
     } catch (error: any) {
         throw error.response ? error.response.data : new Error('Error fetching who-we-are-page');

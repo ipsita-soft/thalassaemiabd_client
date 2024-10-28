@@ -13,12 +13,13 @@ interface WhoWeArePage {
     status: string;
 }
 
-const BloodCollectionCommittee = () => {
+const Committee = () => {
     const dispatch = useDispatch<AppDispatch>();
 
     // State to store selected year
     const [yearId, setYearId] = useState<number | null>(null);
     const [activeData, setActiveData] = useState<string | undefined>(undefined);
+
 
     // Select data from the Redux store
     const {
@@ -32,10 +33,12 @@ const BloodCollectionCommittee = () => {
     // Set yearId to the latest year when yearList is fetched
     useEffect(() => {
         if (yearList?.data) {
-            const activeYear = yearList.data.find((year: any) => year.status === 'Active');
+            const activeYear = yearList.data.find((year: any) => year.status == 'Active');
 
             if (activeYear) {
                 setYearId(activeYear.id);
+
+                // Set the active year ID to state
             }
         }
     }, [yearList])
@@ -43,8 +46,9 @@ const BloodCollectionCommittee = () => {
     // Fetch WhoWeArePage data when the year changes
     useEffect(() => {
         if (yearId !== null) {
-            dispatch(fetchWhoWeArePage({ type: 'blood-collection-committee', year_id: yearId }));
-          
+            dispatch(fetchWhoWeArePage({ type: 'ec-committee', year_id: yearId }));
+
+            // Find the selected year data from yearList.data
             const selectedYearData = yearList.data.find((year: any) => year.id === yearId);
 
             // Set the selected year 'date' to state
@@ -82,7 +86,7 @@ const BloodCollectionCommittee = () => {
                     <div className="col-12">
                         <div className="section-title">
                             <h2 className="wow fadeInUp" data-wow-delay=".4s">
-                                Blood Collection Committee
+                                Executive Committee
                             </h2>
                         </div>
                     </div>
@@ -91,7 +95,7 @@ const BloodCollectionCommittee = () => {
                 <div className="container-fluid">
                     <div className="row Management-header wow fadeInUp" data-wow-delay=".2s">
                         <div className="col-lg-9 col-md-9 col-sm-9">
-                            <h4 className="mt-2">Blood Collection Committee ({activeData})</h4>
+                            <h4 className="mt-2">Executive Committee ({activeData})</h4>
                         </div>
 
                         <div className="col-lg-3 col-md-3 col-sm-3">
@@ -129,4 +133,4 @@ const BloodCollectionCommittee = () => {
     );
 };
 
-export default BloodCollectionCommittee;
+export default Committee;

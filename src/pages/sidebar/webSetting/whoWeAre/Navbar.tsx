@@ -11,13 +11,17 @@ const Navbar = () => {
         <div className="mb-4">
             <Menubar>
                 <MenubarMenu>
-                    <MenubarTrigger>
-                        <Link className={isActive('/dashboard/tif-page')} to="/dashboard/tif-page">Tif Page</Link>
-                    </MenubarTrigger>
 
                     <MenubarTrigger>
-                        <Link className={isActive('/dashboard/tif-page-slider')} to="/dashboard/tif-page-slider">Tif Page Sliders</Link>
+                        <Link className={isActive('/dashboard/who-we-are')} to="/dashboard/who-we-are">Who We Are</Link>
                     </MenubarTrigger>
+
+
+                    <MenubarTrigger>
+                        <Link className={isActive('/dashboard/years')} to="/dashboard/years">Years</Link>
+                    </MenubarTrigger>
+
+
 
 
 

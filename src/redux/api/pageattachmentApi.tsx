@@ -1,24 +1,22 @@
 import api from '@/api';
 
-
-export const addApi = async (sliderData: FormData) => {
+export const addApi = async (Data: FormData) => {
   try {
-    const response = await api.post('web/pageslider', sliderData, {
+    const response = await api.post('web/pageattachment', Data, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
     return response.data;
   } catch (error: any) {
-    throw error.response ? error.response.data : new Error('Error adding slider');
+    throw error.response ? error.response.data : new Error('Error adding Data');
   }
 };
 
 
-
 export const getApi = async (params = {}) => {
   try {
-    const response = await api.get('web/pageslider', {
+    const response = await api.get('web/pageattachment', {
       params,
     });
     return response.data;
@@ -29,7 +27,7 @@ export const getApi = async (params = {}) => {
 
 export const updateApi = async (id: string, Data: FormData) => {
   try {
-    const response = await api.post(`web/pageslider/${id}`, Data, {
+    const response = await api.post(`web/pageattachment/${id}`, Data, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -46,7 +44,7 @@ export const updateApi = async (id: string, Data: FormData) => {
 
 export const showApi = async (id: string) => {
   try {
-    const response = await api.get(`web/pageslider/${id}`);
+    const response = await api.get(`web/pageattachment/${id}`);
     return response.data;
   } catch (error: any) {
     throw error.response ? error.response.data : new Error('Error fetching data');
@@ -56,7 +54,7 @@ export const showApi = async (id: string) => {
 
 export const deleteApi = async (id: string) => {
   try {
-    const response = await api.delete(`web/pageslider/${id}`);
+    const response = await api.delete(`web/pageattachment/${id}`);
     return response.data;
   } catch (error: any) {
     throw error.response ? error.response.data : new Error('Error fetching data');
