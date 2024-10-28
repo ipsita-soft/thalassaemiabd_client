@@ -13,9 +13,6 @@ interface WhoWeArePage {
     status: string;
 }
 
-const AdvisorsCommittee = () => {
-    const dispatch = useDispatch<AppDispatch>();
-
 
 const AdvisorsCommittee = () => {
 
