@@ -14,6 +14,8 @@ const UserPanelLayout = () => {
     setActiveTab(tab);
   };
 
+  console.log(activeTab);
+
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-50 via-white to-purple-50 py-4">
       <PanelHeader />

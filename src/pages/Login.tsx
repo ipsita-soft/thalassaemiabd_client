@@ -11,7 +11,7 @@ import { AppDispatch, RootState } from '@/redux/store';
 function Login() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { status, error, token } = useSelector((state: RootState) => state.auth);
+  const { roles, status, error, token } = useSelector((state: RootState) => state.auth);
 
   const [phone, setphone] = useState('');
   const [password, setPassword] = useState('');
@@ -22,8 +22,16 @@ function Login() {
   };
 
   useEffect(() => {
+
+
     if (status === 'succeeded' && token) {
-      navigate('/dashboard'); // Redirect to dashboard on successful login
+      if (roles.includes("admin")) {
+        navigate('/dashboard');
+      } else if (roles.includes("blood_donor")) {
+        navigate('/userpanel');
+      } else {
+        navigate('/unauthorized');
+      }
     }
   }, [status, token, navigate]);
 
