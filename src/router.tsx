@@ -167,7 +167,7 @@ const router = createBrowserRouter([
     path: '/dashboard',
     element: <ProtectedRoute
       element={<DashboardLayout />}
-      requiredRoles={['admin', 'patient']}
+      requiredRoles={['admin']}
     />,
     children: [
       {
@@ -362,6 +362,9 @@ const router = createBrowserRouter([
       },
     ],
   },
+
+
+
   {
     path: '/',
     element: <AuthLayout />,
@@ -370,7 +373,7 @@ const router = createBrowserRouter([
         path: 'login',
         element: <PublicRoute
           element={<Login />}
-          redirectTo="/dashboard/home"
+          // redirectTo="/dashboard/home"
         />,
       },
       {
@@ -382,25 +385,20 @@ const router = createBrowserRouter([
       },
     ],
   },
+
+
   {
     path: '/logout',
     element: <Logout />,
   },
-  {
-    path: '/unauthorized',
-    element: <Unauthorized />,
-  },
-
-  
-
-
-
-
 
 
   {
     path: '/userpanel',
-    element: <UserPanelLayout />,
+    element: <ProtectedRoute
+      element={<UserPanelLayout />}
+      requiredRoles={['blood_donor','admin']}
+    />,
     children: [
       {
         path: '/userpanel/notices',
@@ -421,19 +419,22 @@ const router = createBrowserRouter([
 
       {
         path: '/userpanel/blood-donation-history',
-        element: <BloodDonationHistory/>
+        element: <BloodDonationHistory />
       },
 
       {
         path: '/userpanel/health-history',
-        element: <HealthHistory/>
+        element: <HealthHistory />
       },
 
     ]
   },
 
 
-
+  {
+    path: '/unauthorized',
+    element: <Unauthorized />,
+  },
 
 ]);
 
