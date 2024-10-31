@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store"; // Adjust the import path as per your store location
 import { fetchWhoWeArePage, fetchPublicYearList } from "@/redux/slices/publicSlice";
+import { Link } from "react-router-dom";
 
 interface WhoWeArePage {
     id: number;
@@ -120,7 +121,7 @@ const Committee = () => {
                                 </div>
                                 <div className="content mt-2">
                                     <h3>
-                                        <a href="#">{advisor?.name}</a>
+                                        <Link to={`/committee-details/${advisor.id}`}>{advisor?.name}</Link>
                                     </h3>
                                     <h5>{advisor?.designation}</h5>
                                 </div>

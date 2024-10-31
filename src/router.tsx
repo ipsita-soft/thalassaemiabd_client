@@ -56,6 +56,8 @@ import Thalassemia from './client/page/Thalassaemia.tsx';
 import PublicationSection from './client/page/PublicationSection.tsx';
 import { PublicationPage } from './pages/sidebar/webSetting/publications/PublicationPage.tsx';
 import PublicationDetail from './client/page/publication-detail.tsx';
+import BloodDonorRegistration from './pages/BloodDonorRegistration.tsx';
+import CommitteeDetails from './client/page/CommitteeDetails.tsx';
 
 const router = createBrowserRouter([
   {
@@ -147,6 +149,12 @@ const router = createBrowserRouter([
       },
 
       {
+        path: 'committee-details/:id',
+        element: <CommitteeDetails />
+      },
+
+
+      {
         path: 'advisors',
         element: <AdvisorsCommittee />
       },
@@ -157,6 +165,14 @@ const router = createBrowserRouter([
       {
         path: 'zakat-board',
         element: <ZakatBoard />
+      },
+
+      {
+        path: 'blood-donor-registration',
+        element: <PublicRoute
+          element={<BloodDonorRegistration />}
+        // redirectTo="/dashboard/home"
+        />,
       },
     ]
   },
@@ -373,7 +389,7 @@ const router = createBrowserRouter([
         path: 'login',
         element: <PublicRoute
           element={<Login />}
-          // redirectTo="/dashboard/home"
+        // redirectTo="/dashboard/home"
         />,
       },
       {
@@ -383,6 +399,13 @@ const router = createBrowserRouter([
           redirectTo="/dashboard/home"
         />,
       },
+      // {
+      //   path: 'blood-donor-registration',
+      //   element: <PublicRoute
+      //     element={<BloodDonorRegistration />}
+      //     // redirectTo="/dashboard/home"
+      //   />,
+      // },
     ],
   },
 
@@ -397,7 +420,7 @@ const router = createBrowserRouter([
     path: '/userpanel',
     element: <ProtectedRoute
       element={<UserPanelLayout />}
-      requiredRoles={['blood_donor','admin']}
+      requiredRoles={['blood_donor', 'admin']}
     />,
     children: [
       {

@@ -191,11 +191,11 @@ const Header = () => {
                     {/* You can add more as needed */}
                   </ul>
 
-                  <div className="zakat_button add-list-buttons">
+                  {/* <div className="zakat_button add-list-buttons">
                     <a href="donate-zakat.html" className="btn">
                       DONATE ZAKAT
                     </a>
-                  </div>
+                  </div> */}
 
                   <div className="button donate-button">
                     <a href="donate.html" className="btn">
@@ -212,6 +212,28 @@ const Header = () => {
                         <li className="dnt-item">
                           <a href="general-donate.html">Financial Donation</a>
                         </li>
+                      </ul>
+                    </div>
+                  </div>
+
+
+
+
+                  <div className="user-button">
+
+                    <div className="zakat_button add-list-buttons ml-2">
+                      <a href="donate-zakat.html" className="btn">
+                        Registrations
+                      </a>
+                    </div>
+
+                    <div className="user-links">
+                      <ul className="donate-menu">
+                        <li className="dnt-item"><Link to="blood-donor-registration">Blood Donor Registration</Link></li>
+                        <li className="dnt-item">
+                          <a href="patient-registration.html">Patient Registration</a>
+                        </li>
+                        <li className="dnt-item"><a href="financial-donor-reg.html">Financial Donor Registration</a></li>
                       </ul>
                     </div>
                   </div>

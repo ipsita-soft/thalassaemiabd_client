@@ -1,4 +1,3 @@
-import React from "react";
 import {FileText} from "lucide-react";
 
 const AnnualReports = () => {
@@ -21,7 +20,7 @@ const AnnualReports = () => {
               </tr>
               </thead>
               <tbody>
-              {Array(10).fill().map((_, index) => (
+              {Array(10).fill(null).map((_, index) => (
                   <tr key={index}>
                   <td className="text-center align-middle">{index + 1}</td>
                   <td className="align-middle">Latest Notice {index + 1}</td>

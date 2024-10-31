@@ -11,6 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from 'lucide-react';
+import ReactQuill from 'react-quill';
 
 const Add: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -23,6 +24,7 @@ const Add: React.FC = () => {
     name: null as string | null,
     type: null as string | null,
     designation: null as string | null,
+    description: null as string | null,
     phone: null as string | null,
     year_id: null as string | null,
     status: 1,
@@ -71,6 +73,7 @@ const Add: React.FC = () => {
     Data.append('sorting_index', (formData.sorting_index ?? 0).toString());
     Data.append('name', (formData.name ?? '').toString());
     Data.append('designation', formData.designation?.toString() || '');
+    Data.append('description', (formData.description ?? '').toString());
     Data.append('type', formData.type?.toString() || '');
     Data.append('phone', formData.phone ?? '');
     Data.append('year_id', formData.year_id ?? '');
@@ -90,6 +93,7 @@ const Add: React.FC = () => {
         status: 1,
         type: null,
         designation: null,
+        description: null,
         year_id: null,
       });
       setOpen(false);
@@ -242,6 +246,17 @@ const Add: React.FC = () => {
                   required
                 />
               </div>
+            </div>
+
+
+
+            <div className="mb-2">
+              <Label htmlFor="description">Description</Label>
+              <ReactQuill
+                value={formData.description !== null ? formData.description : ''}
+                onChange={(value) => setFormData({ ...formData, description: value })}
+                className="react-quill-container "
+              />
             </div>
 
           </div>

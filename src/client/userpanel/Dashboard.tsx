@@ -1,32 +1,11 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import {
-  Home,
-  FileText,
-  Bell,
-  User,
-  Edit,
-  LogOut,
-} from "lucide-react";
+import React from "react";
+import { Home, FileText, Bell } from "lucide-react";
 
-const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState("dashboard");
-
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-  };
-
-  const getLinkClasses = (tab) =>
-    `nav-link px-3 py-2 rounded ${
-      activeTab === tab
-        ? "bg-red-100 text-red-600 font-bold"
-        : "text-gray-700 hover:bg-gray-100 hover:text-red-500"
-    }`;
-
+const Dashboard: React.FC = () => {
   return (
     <div>
       <div className="">
-      <div className="absolute inset-0 bg-gradient-to-r from-purple-300 via-transparent to-red-300 opacity-10 pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-300 via-transparent to-red-300 opacity-10 pointer-events-none"></div>
         <h5 className="text-2xl mt-2 font-extrabold d-flex text-red-600">
           <Home className="me-2" size={30} /> Hello, Apurbo!
         </h5>
@@ -50,7 +29,7 @@ const Dashboard = () => {
                   }}
                 >
                   {Array(5)
-                    .fill()
+                    .fill(null)
                     .map((_, index) => (
                       <li className="list-group-item border mb-1" key={index}>
                         <a
@@ -62,8 +41,12 @@ const Dashboard = () => {
                             color: "#C53030",
                             transition: "color 0.3s",
                           }}
-                          onMouseOver={(e) => (e.target.style.color = "red")}
-                          onMouseOut={(e) => (e.target.style.color = "green")}
+                          onMouseOver={(e) =>
+                            ((e.target as HTMLAnchorElement).style.color = "red")
+                          }
+                          onMouseOut={(e) =>
+                            ((e.target as HTMLAnchorElement).style.color = "green")
+                          }
                         >
                           <Bell className="me-2" size={15} /> {index + 1}. Download and review your latest report.
                         </a>
@@ -77,7 +60,6 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-
 
           {/* Annual Reports Card */}
           <div className="col-md-6 mt-2">
@@ -94,7 +76,7 @@ const Dashboard = () => {
                   }}
                 >
                   {Array(5)
-                    .fill()
+                    .fill(null)
                     .map((_, index) => (
                       <li className="list-group-item border mb-1" key={index}>
                         <a
@@ -106,10 +88,14 @@ const Dashboard = () => {
                             color: "#C53030",
                             transition: "color 0.3s",
                           }}
-                          onMouseOver={(e) => (e.target.style.color = "red")}
-                          onMouseOut={(e) => (e.target.style.color = "green")}
+                          onMouseOver={(e) =>
+                            ((e.target as HTMLAnchorElement).style.color = "red")
+                          }
+                          onMouseOut={(e) =>
+                            ((e.target as HTMLAnchorElement).style.color = "green")
+                          }
                         >
-                            <FileText className="me-2" size={15} /> {index + 1}. Download and review your latest report.
+                          <FileText className="me-2" size={15} /> {index + 1}. Download and review your latest report.
                         </a>
                       </li>
                     ))}
@@ -123,7 +109,6 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-     
     </div>
   );
 };

@@ -8,6 +8,28 @@ export const getPublicSlider = async (params = {}) => {
         throw error.response ? error.response.data : new Error('Error fetching sliders');
     }
 };
+
+
+export const getPublicCountries = async (params = {}) => {
+    try {
+        const response = await api.get('public/countries', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching countries');
+    }
+};
+
+export const getPublicCities = async (params = {}) => {
+    try {
+        const response = await api.get('public/cities', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching cities');
+    }
+}
+
+
+
 export const getDoctorSlider = async (params = {}) => {
     try {
         const response = await api.get('public/doctor-sliders', { params });
@@ -129,6 +151,14 @@ export const getSinglePublication = async (id: string | number) => {
 export const getSingleProject = async (id: string | number) => {
     try {
         const response = await api.get(`public/projects/${id}`);
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching data');
+    }
+};
+export const getCommitteeDetail = async (id: string | number) => {
+    try {
+        const response = await api.get(`public/who-we-are-page/${id}`);
         return response;
     } catch (error: any) {
         throw error.response ? error.response.data : new Error('Error fetching data');
