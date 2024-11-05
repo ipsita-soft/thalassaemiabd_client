@@ -7,6 +7,7 @@ import { Label } from '@radix-ui/react-label';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from '@/redux/slices/authSlice';
 import { AppDispatch, RootState } from '@/redux/store';
+import Swal from 'sweetalert2';
 
 function Login() {
   const dispatch = useDispatch<AppDispatch>();
@@ -16,14 +17,26 @@ function Login() {
   const [phone, setphone] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(loginUser({ phone, password })); // Ensure correct action type
+
+    try {
+      await dispatch(loginUser({ phone, password })).unwrap(); // Ensure correct action type
+      Swal.fire({
+        title: 'Success!',
+        text: 'Login Successful',
+        icon: 'success',
+        confirmButtonText: 'OK',
+        customClass: {
+          confirmButton: 'custom-confirm-button',
+        },
+      });
+    } catch (error: any) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
-
-
     if (status === 'succeeded' && token) {
       if (roles.includes("admin")) {
         navigate('/dashboard');

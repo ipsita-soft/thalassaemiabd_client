@@ -18,6 +18,11 @@ import tifSliderReducers from './slices/tifSliderSlice';
 import tifAttachmentPageReducers from './slices/pageAttachmentSlice';
 import yearsReducers from './slices/yearsSlice';
 import publicationReducers from './slices/publicationsSlice';
+import commonReducers from './slices/commonSlice';
+import bloodDonorRegReducers from "./slices/bloodDonorRegSlice";
+import VerifyPhoneSlice from "./slices/verifySlice";
+import rolesReducers from "./slices/RolesSlice";
+
 
 export const store = configureStore({
   reducer: {
@@ -39,6 +44,10 @@ export const store = configureStore({
     tifAttachmentPages : tifAttachmentPageReducers,
     years : yearsReducers,
     publications : publicationReducers,
+    commonData : commonReducers,
+    bloodDonorReg : bloodDonorRegReducers,
+    VerifyPhone : VerifyPhoneSlice,
+    rolesData : rolesReducers,
     //public reducer
     public: publicReducer,
   },

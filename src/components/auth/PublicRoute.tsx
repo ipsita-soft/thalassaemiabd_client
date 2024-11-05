@@ -13,16 +13,24 @@ interface PublicRouteProps {
 const getRedirectPath = (roles: string[]): string => {
   if (roles.includes('admin')) {
     return '/dashboard/home';
-  } else if (roles.includes('blood_donor')) {
+  }else if (roles.includes('blood_donor') || roles.includes('ec_committee')) {
+
     return '/userpanel';
   }
+  
   return '/unauthorized';
 };
 
 const PublicRoute: React.FC<PublicRouteProps> = ({ element, redirectTo }) => {
-  const { token, roles } = useSelector((state: RootState) => state.auth);
+  const { token, roles, user } = useSelector((state: RootState) => state.auth);
 
-  if (token) {
+  if (token && user) {
+
+    if(user.email_verified_at === null){
+      return <Navigate to='/verification-phone' replace/>
+    }
+    
+
     // Set dynamic redirect path based on roles if `redirectTo` is not explicitly passed
     const dynamicRedirect = redirectTo || getRedirectPath(roles);
     return <Navigate to={dynamicRedirect} replace />;

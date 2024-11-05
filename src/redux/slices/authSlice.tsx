@@ -18,7 +18,6 @@ export const loginUser = createAsyncThunk(
       const response = await API.post('/login', userData);
       return response.data;
     } catch (error) {
-      // Type assertion to AxiosError
       const axiosError = error as AxiosError;
       if (axiosError.response) {
         return rejectWithValue(axiosError.response.data.message);

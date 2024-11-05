@@ -39,12 +39,19 @@ import {
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import LogoutButton from '../components/auth/Logout';
+import { useSelector } from "react-redux";
+
+const hasPermissions = (requiredPermissions: string[], userPermissions: string[]) => {
+    return requiredPermissions.every(perm => userPermissions.includes(perm));
+};
 
 function DashboardLayout() {
     const location = useLocation();
     const id = 1;
 
     const isActive = (path: string) => location.pathname === path;
+    const { permissions } = useSelector((state: any) => state.auth);
+    // console.log(permissions);
 
     return (
         <div>
@@ -62,26 +69,35 @@ function DashboardLayout() {
                             </Button>
                         </div>
                         <div className="flex-1">
-                            <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-                                <Link
-                                    to="/dashboard/home"
-                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/home') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
-                                        }`}
-                                >
-                                    <Home className="h-4 w-4" />
-                                    Dashboard
-                                </Link>
-                                <Link
-                                    to="/dashboard/payments"
-                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/payments') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
-                                        }`}
-                                >
-                                    <ShoppingCart className="h-4 w-4" />
-                                    Payments
-                                    <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                                        6
-                                    </Badge>
-                                </Link>
+
+                            <nav className="grid items-start px-2 text-sm font-medium lg:px-4" style={{ maxHeight: '90vh', overflowY: 'auto' }}>
+
+
+                                {hasPermissions(['view_dashboard'], permissions) && (
+                                    <Link
+                                        to="/dashboard/home"
+                                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/home') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'}`}
+                                    >
+                                        <Home className="h-4 w-4" />
+                                        Dashboard
+                                    </Link>
+                                )}
+
+                                {/* Check for 'view_payments' permission */}
+                                {hasPermissions(['view_payments'], permissions) && (
+                                    <Link
+                                        to="/dashboard/payments"
+                                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/payments') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'}`}
+                                    >
+                                        <ShoppingCart className="h-4 w-4" />
+                                        Payments
+                                        <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
+                                            6
+                                        </Badge>
+                                    </Link>
+                                )}
+
+
 
 
                                 <Link
@@ -94,47 +110,53 @@ function DashboardLayout() {
                                 </Link>
 
 
-                                <Link
-                                    to="/dashboard/blog-news"
-                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/blog-news') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
-                                        }`}
-                                >
-                                    <Newspaper className="h-4 w-4" />
-                                    Blog & News
-                                </Link>
-
-                                <Link
-                                    to="/dashboard/events"
-                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/events') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
-                                        }`}
-                                >
-                                    <Calendar className="h-4 w-4" />
-                                    Events
-                                </Link>
-
-
-                                <Link
-                                    to="/dashboard/notices"
-                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/notices') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
-                                        }`}
-                                >
-                                    <CalendarClock className="h-4 w-4" />
-                                    Notices
-                                </Link>
+                                {hasPermissions(['blogNews-all'], permissions) && (
+                                    < Link
+                                        to="/dashboard/blog-news"
+                                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/blog-news') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                            }`}
+                                    >
+                                        <Newspaper className="h-4 w-4" />
+                                        Blog & News
+                                    </Link>
+                                )}
 
 
 
-                                <Link
-                                    to="/dashboard/publications"
-                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/publications') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
-                                        }`}
-                                >
-                                    <Book className="h-4 w-4" />
-                                    Publications
-                                </Link>
+                                {hasPermissions(['event-all'], permissions) && (
+                                    <Link
+                                        to="/dashboard/events"
+                                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/events') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                            }`}
+                                    >
+                                        <Calendar className="h-4 w-4" />
+                                        Events
+                                    </Link>
+                                )}
 
 
+                                {hasPermissions(['notice-all'], permissions) && (
+                                    <Link
+                                        to="/dashboard/notices"
+                                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/notices') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                            }`}
+                                    >
+                                        <CalendarClock className="h-4 w-4" />
+                                        Notices
+                                    </Link>
+                                )}
 
+                                {hasPermissions(['publications-all'], permissions) && (
+                                    <Link
+                                        to="/dashboard/publications"
+                                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/publications') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                            }`}
+                                    >
+                                        <Book className="h-4 w-4" />
+                                        Publications
+                                    </Link>
+
+                                )}
 
                                 <Link
                                     to="/dashboard/wishers"
@@ -145,94 +167,126 @@ function DashboardLayout() {
                                     Wishers
                                 </Link>
 
+                                {hasPermissions(['doctorSlider-all'], permissions) && (
 
-                                <Link
-                                    to="/dashboard/doctor-sliders"
-                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/doctor-sliders') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
-                                        }`}
-                                >
-                                    <AlignStartVertical className="h-4 w-4" />
-                                    Doctor Sliders
-                                </Link>
-
-                                <Link
-                                    to="/dashboard/our-projects"
-                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/our-projects') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
-                                        }`}
-                                >
-                                    <List className="h-4 w-4" />
-                                    Our Projects
-                                </Link>
+                                    <Link
+                                        to="/dashboard/doctor-sliders"
+                                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/doctor-sliders') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                            }`}
+                                    >
+                                        <AlignStartVertical className="h-4 w-4" />
+                                        Doctor Sliders
+                                    </Link>
+                                )}
 
 
-                                <Link
-                                    to="/dashboard/who-we-are"
-                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/who-we-are') || isActive('/dashboard/years') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
-                                        }`}
-                                >
-                                    <Users className="h-4 w-4" />
-                                    Who We Are
-                                </Link>
+                                {hasPermissions(['projects-all'], permissions) && (
+                                    <Link
+                                        to="/dashboard/our-projects"
+                                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/our-projects') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                            }`}
+                                    >
+                                        <List className="h-4 w-4" />
+                                        Our Projects
+                                    </Link>
+                                )}
 
 
-                                <Link
-                                    to="/dashboard/galleries"
-                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/galleries') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
-                                        }`}
-                                >
-                                    <GalleryVerticalEnd className="h-4 w-4" />
-                                    galleries
-                                </Link>
-
-                                <Link
-
-                                    to={`/dashboard/settings/${id}`}  // Dynamically insert the 'id'
-                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive(`/dashboard/settings/${id}`)
-                                        ? 'bg-muted text-primary'
-                                        : 'text-muted-foreground hover:text-primary'
-                                        }`}
-                                >
-                                    <Settings className="h-4 w-4" />
-                                    Settings
-                                </Link>
+                                {hasPermissions(['whoWeAre-all'], permissions) && (
+                                    <Link
+                                        to="/dashboard/who-we-are"
+                                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/who-we-are') || isActive('/dashboard/years') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                            }`}
+                                    >
+                                        <Users className="h-4 w-4" />
+                                        Who We Are
+                                    </Link>
+                                )}
 
 
+                                {hasPermissions(['galleries-all'], permissions) && (
 
-                                <Link
-
-                                    to={`/dashboard/mission-vision/${id}`}  // Dynamically insert the 'id'
-                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive(`/dashboard/mission-vision/${id}`)
-                                        ? 'bg-muted text-primary'
-                                        : 'text-muted-foreground hover:text-primary'
-                                        }`}
-                                >
-                                    <TargetIcon className="h-4 w-4" />
-                                    Mission vision
-                                </Link>
-
-
-                                <Link
-
-                                    to={`/dashboard/bts-history/${id}`}  // Dynamically insert the 'id'
-                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive(`/dashboard/bts-history/${id}`)
-                                        ? 'bg-muted text-primary'
-                                        : 'text-muted-foreground hover:text-primary'
-                                        }`}
-                                >
-                                    <HistoryIcon className="h-4 w-4" />
-                                    Bts History
-                                </Link>
+                                    <Link
+                                        to="/dashboard/galleries"
+                                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/galleries') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                            }`}
+                                    >
+                                        <GalleryVerticalEnd className="h-4 w-4" />
+                                        galleries
+                                    </Link>
+                                )}
 
 
+                                {hasPermissions(['settings-all'], permissions) && (
+                                    <Link
 
-                                <Link
-                                    to="/dashboard/tif-page"
-                                    className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/tif-page') || isActive('/dashboard/tif-page-slider') || isActive('/dashboard/tif-page-attachment') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
-                                        }`}
-                                >
-                                    <GalleryVerticalEnd className="h-4 w-4" />
-                                    Tif Page
-                                </Link>
+                                        to={`/dashboard/settings/${id}`}  // Dynamically insert the 'id'
+                                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive(`/dashboard/settings/${id}`)
+                                            ? 'bg-muted text-primary'
+                                            : 'text-muted-foreground hover:text-primary'
+                                            }`}
+                                    >
+                                        <Settings className="h-4 w-4" />
+                                        Settings
+                                    </Link>
+                                )}
+
+
+                                {hasPermissions(['mission-vision-all'], permissions) && (
+                                    <Link
+
+                                        to={`/dashboard/mission-vision/${id}`}  // Dynamically insert the 'id'
+                                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive(`/dashboard/mission-vision/${id}`)
+                                            ? 'bg-muted text-primary'
+                                            : 'text-muted-foreground hover:text-primary'
+                                            }`}
+                                    >
+                                        <TargetIcon className="h-4 w-4" />
+                                        Mission vision
+                                    </Link>
+                                )}
+
+
+                                {hasPermissions(['bts-history-all'], permissions) && (
+                                    <Link
+
+                                        to={`/dashboard/bts-history/${id}`}  // Dynamically insert the 'id'
+                                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive(`/dashboard/bts-history/${id}`)
+                                            ? 'bg-muted text-primary'
+                                            : 'text-muted-foreground hover:text-primary'
+                                            }`}
+                                    >
+                                        <HistoryIcon className="h-4 w-4" />
+                                        Bts History
+                                    </Link>
+                                )}
+
+
+                                {hasPermissions(['tif-member-all'], permissions) && (
+
+                                    <Link
+                                        to="/dashboard/tif-page"
+                                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/tif-page') || isActive('/dashboard/tif-page-slider') || isActive('/dashboard/tif-page-attachment') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                            }`}
+                                    >
+                                        <GalleryVerticalEnd className="h-4 w-4" />
+                                        Tif Page
+                                    </Link>
+                                )}
+
+
+                                {hasPermissions(['view_roles', 'create_role', 'edit_role', 'delete_user'], permissions) && (
+
+                                    <Link
+                                        to="/dashboard/roles"
+                                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all
+                                             ${isActive('/dashboard/roles') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                            }`}
+                                    >
+                                        <GalleryVerticalEnd className="h-4 w-4" />
+                                        Roles
+                                    </Link>
+                                )}
 
 
 
@@ -379,7 +433,7 @@ function DashboardLayout() {
                     </main>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 

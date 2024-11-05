@@ -6273,6 +6273,11 @@ End Patient Story Area
 }
 
 
+.custom-confirm-button {
+  background-color: #0c6c3f; /* Change this to your desired color */
+  color: #ffffff; /* Change the text color if needed */
+}
+
 /*======================================
   Start  Patient Registration CSS
 ========================================*/

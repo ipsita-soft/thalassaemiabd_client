@@ -1,22 +1,32 @@
 
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { fetchPublicCities, fetchPublicCities2, fetchPublicCountries } from '@/redux/slices/publicSlice';
+import { fetchBloodGroup, fetchGenders, fetchMaritalStatus } from '@/redux/slices/commonSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { useEffect } from 'react';
+import { bloodDonorRegister } from '@/redux/slices/bloodDonorRegSlice';
+import { setUser } from '@/redux/slices/authSlice';
+
+import Swal from 'sweetalert2';
+import SelectField from '@/components/common/SelectField';
+
 
 const BloodDonorRegistration = () => {
 
-
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
+  const { bloodGroups, genders, maritalStatus, isLoading: commonDataLoading } = useSelector((state: RootState) => state.commonData);
+  const { bloodDonorRegistrationData } = useSelector((state: RootState) => state.bloodDonorReg);
 
-
-  // Fetch countries on component mount
   useEffect(() => {
-    dispatch(fetchPublicCountries({}));
+    dispatch(fetchPublicCountries({ per_page: 250 }));
+    dispatch(fetchMaritalStatus({}));
+    dispatch(fetchGenders({}));
+    dispatch(fetchBloodGroup({}));
   }, [dispatch]);
 
 
@@ -28,7 +38,7 @@ const BloodDonorRegistration = () => {
 
     if (selectedCountryId) {
       try {
-        await dispatch(fetchPublicCities({ country_id: selectedCountryId }));
+        await dispatch(fetchPublicCities({ country_id: selectedCountryId, per_page: 1000 }));
       } catch (error) {
         console.error("Error fetching cities:", error);
       }
@@ -39,7 +49,7 @@ const BloodDonorRegistration = () => {
     const selectedCountryId = event.target.value;
     setFieldValue("permanent_address.country_id", selectedCountryId);
     if (selectedCountryId) {
-      await dispatch(fetchPublicCities2({ country_id: selectedCountryId }));
+      await dispatch(fetchPublicCities2({ country_id: selectedCountryId, per_page: 1000 }));
     }
   };
 
@@ -62,10 +72,16 @@ const BloodDonorRegistration = () => {
   const countriesLists = Array.isArray(countries?.data) ? countries.data : [];
   const citiesLists = Array.isArray(cities) ? cities : [];
   const citiesLists2 = Array.isArray(cities2) ? cities2 : [];
-  // const advisors: WhoWeArePage[] = Array.isArray(whoWeArePage?.data) ? whoWeArePage.data : [];
 
-  // console.log('country', countriesLists)
-  // console.log('city', cities)
+  const cityOptions = citiesLists.map((city: any) => ({
+    value: city?.id,
+    label: city?.name,
+  }));
+
+  const cityOptions2 = citiesLists2.map((city: any) => ({
+    value: city?.id,
+    label: city?.name,
+  }));
 
 
   const validationSchema = Yup.object().shape({
@@ -140,10 +156,41 @@ const BloodDonorRegistration = () => {
                   },
                 }}
                 validationSchema={validationSchema}
-                onSubmit={(values) => {
+                onSubmit={async (values: any, { setErrors }) => {
                   console.log('Form data:', values);
-                  // Handle form submission
+                  try {
+                    await dispatch(bloodDonorRegister(values)).unwrap();
+                    Swal.fire({
+                      title: 'Success!',
+                      text: 'Blood Donor registered successfully! Please Login',
+                      icon: 'success',
+                      confirmButtonText: 'OK',
+                      customClass: {
+                        confirmButton: 'custom-confirm-button', // Apply the custom class
+                      },
+                    });
+                    navigate('/login');
+                  } catch (error: any) {
+                    const formikErrors = Object.entries(error).reduce((acc: any, [key, value]) => {
+                      const keys = key.split('.');
+                      const lastKey = keys.pop();
+                      if (lastKey) {
+                        let nestedObj = acc;
+                        keys.forEach((k) => {
+                          if (!nestedObj[k]) nestedObj[k] = {};
+                          nestedObj = nestedObj[k];
+                        });
+                        nestedObj[lastKey] = value;
+                      }
+                      return acc;
+                    }, {});
+                    console.log('Transformed errors:', formikErrors);
+                    setErrors(formikErrors);
+                    console.log(error);
+                  }
                 }}
+
+
               >
                 {({ setFieldValue }) => (
 
@@ -187,29 +234,25 @@ const BloodDonorRegistration = () => {
 
                           {/* Gender Selection */}
                           <div className="gender">
-                            <h5 className='form-check-inline mb-2'>Gender &nbsp;</h5>
-                            <div className="form-check form-check-inline">
-                              <Field type="radio" name="gender_id" value="1" className="form-check-input" />
-                              <label className="form-check-label">Male</label>
-                            </div>
-                            <div className="form-check form-check-inline">
-                              <Field type="radio" name="gender_id" value="2" className="form-check-input" />
-                              <label className="form-check-label">Female</label>
-                            </div>
-                            <div className="form-check form-check-inline">
-                              <Field type="radio" name="gender_id" value="3" className="form-check-input" />
-                              <label className="form-check-label">Others</label>
-                            </div>
+                            <h5 className='form-check-inline mb-2'>Gender &nbsp;</h5> <br />
+
+                            {genders.map((gender: any) => (
+                              <div className="form-check form-check-inline">
+                                <label className="form-check-label">{gender.name}</label>
+                                <Field type="radio" name="gender_id" value={gender.id.toString()} className="form-check-input" />
+
+                              </div>
+                            ))}
+
+
                             <ErrorMessage name="gender_id" component="div" className="text-danger" />
                           </div>
 
                           {/* Birthday and Age */}
 
 
-
-
                           <div className="form-group">
-                            <h5 className="mb-2">Birthday</h5>
+                            <h5 className="my-2">Birthday</h5>
                             <Field
                               type="date"
                               id="date_of_birth"
@@ -259,11 +302,9 @@ const BloodDonorRegistration = () => {
                               {/* Blood Group */}
 
                               <div className="form-group">
-                                <Field as="select" name="blood_group_id" className="form-select">
+                                <Field as="select" name="blood_group_id" className="form-select ras">
                                   <option value="">Select Blood Group</option>
-                                  <option value="1">O+</option>
-                                  <option value="2">A+</option>
-                                  <option value="3">AB</option>
+                                  {!commonDataLoading && bloodGroups.map((group: any) => (<option value={group?.id}>{group?.name}</option>))}
                                 </Field>
                                 <ErrorMessage name="blood_group_id" component="div" className="text-danger" />
                               </div>
@@ -291,22 +332,17 @@ const BloodDonorRegistration = () => {
                           {/* Marital Status */}
                           <div className="marital-status">
                             <h5 className='mb-2'>Marital Status</h5>
-                            <div className="form-check form-check-inline">
-                              <Field type="radio" name="marital_status_id" value="1" className="form-check-input" />
-                              <label className="form-check-label">Single</label>
-                            </div>
-                            <div className="form-check form-check-inline">
-                              <Field type="radio" name="marital_status_id" value="2" className="form-check-input" />
-                              <label className="form-check-label">Married</label>
-                            </div>
-                            <div className="form-check form-check-inline">
-                              <Field type="radio" name="marital_status_id" value="3" className="form-check-input" />
-                              <label className="form-check-label">Widowed</label>
-                            </div>
-                            <div className="form-check form-check-inline">
-                              <Field type="radio" name="marital_status_id" value="4" className="form-check-input" />
-                              <label className="form-check-label">Divorced</label>
-                            </div>
+                            {!commonDataLoading && maritalStatus?.map((marital: any) => (
+                              <div className="form-check form-check-inline" key={marital.id}>
+                                <Field
+                                  type="radio"
+                                  name="marital_status_id"
+                                  value={marital.id.toString()}
+                                  className="form-check-input"
+                                />
+                                <label className="form-check-label">{marital.name}</label>
+                              </div>
+                            ))}
                             <ErrorMessage name="marital_status_id" component="div" className="text-danger" />
                           </div>
 
@@ -343,14 +379,23 @@ const BloodDonorRegistration = () => {
 
                             <div className="col-md-6">
                               <div className="form-group">
-                                <Field name="present_address.city_id" as="select" placeholder="City" className="form-select">
+                                {/* <Field name="present_address.city_id"
+                                  as="select" placeholder="City"
+                                  className="form-select ras">
                                   <option value="">Select City</option>
                                   {citiesLists.map((city: any) => (
                                     <option key={city.id} value={city.id}>
                                       {city.name}
                                     </option>
                                   ))}
-                                </Field>
+                                </Field> */}
+
+                                <Field
+                                  name="present_address.city_id"
+                                  component={SelectField}
+                                  options={cityOptions}
+                                  placeholder="Select City"
+                                />
                                 <ErrorMessage name="present_address.city_id" component="div" className="text-danger" />
                               </div>
                             </div>
@@ -374,14 +419,14 @@ const BloodDonorRegistration = () => {
                           <div className="row">
                             <div className="col-md-12">
                               <div className="permanent_address">
-                                <h5>Permanent Address</h5>
+                                <h5 className='mb-2'>Permanent Address</h5>
                               </div>
                             </div>
 
                             <div className="col-md-6">
                               <div className="form-group">
 
-                                
+
                                 <Field
                                   as="select"
                                   name="permanent_address.country_id"
@@ -399,14 +444,23 @@ const BloodDonorRegistration = () => {
 
                             <div className="col-md-6">
                               <div className="form-group">
-                                <Field name="permanent_address.city_id" as="select" placeholder="City" className="form-select">
+                                {/* <Field name="permanent_address.city_id" as="select"
+                                  placeholder="City" className="form-select ras">
                                   <option value="">Select City</option>
                                   {citiesLists2.map((city: any) => (
                                     <option key={city.id} value={city.id}>
                                       {city.name}
                                     </option>
                                   ))}
-                                </Field>
+                                </Field> */}
+
+
+                                <Field
+                                  name="permanent_address.city_id"
+                                  component={SelectField}
+                                  options={cityOptions2}
+                                  placeholder="Select City"
+                                />
                                 <ErrorMessage name="permanent_address.city_id" component="div" className="text-danger" />
                               </div>
                             </div>

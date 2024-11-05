@@ -58,6 +58,9 @@ import { PublicationPage } from './pages/sidebar/webSetting/publications/Publica
 import PublicationDetail from './client/page/publication-detail.tsx';
 import BloodDonorRegistration from './pages/BloodDonorRegistration.tsx';
 import CommitteeDetails from './client/page/CommitteeDetails.tsx';
+import VerifyPhone from './pages/VerifyPhone.tsx';
+import VerifySms from './pages/VerifySms.tsx';
+import { RolesPage } from './pages/sidebar/webSetting/roles/RolesPage.tsx';
 
 const router = createBrowserRouter([
   {
@@ -234,6 +237,15 @@ const router = createBrowserRouter([
         />,
       },
 
+
+      {
+        path: 'roles',
+        element: <ProtectedRoute
+          element={<RolesPage />}
+          requiredPermissions={['view_roles', 'create_role', 'edit_role', 'delete_user']}
+        />,
+      },
+
       {
         path: 'notices',
         element: <ProtectedRoute
@@ -393,6 +405,20 @@ const router = createBrowserRouter([
         />,
       },
       {
+        path: 'verification-phone',
+        element: <ProtectedRoute
+          element={<VerifyPhone />}
+        // requiredPermissions={['']}
+        />,
+      },
+      {
+        path: 'sms-verify',
+        element: <ProtectedRoute
+          element={<VerifySms />}
+        // requiredPermissions={['']}
+        />,
+      },
+      {
         path: 'register',
         element: <PublicRoute
           element={<Register />}
@@ -420,7 +446,7 @@ const router = createBrowserRouter([
     path: '/userpanel',
     element: <ProtectedRoute
       element={<UserPanelLayout />}
-      requiredRoles={['blood_donor', 'admin']}
+      requiredRoles={['blood_donor','ec_committee']}
     />,
     children: [
       {

@@ -159,17 +159,6 @@ const Add: React.FC = () => {
           </div>
 
 
-          <div >
-            <Label htmlFor="sorting_index">Sorting Index</Label>
-            <Input
-              type="number"
-              id="sorting_index"
-              value={formData.sorting_index !== null ? formData.sorting_index : ''}
-              onChange={(e) => setFormData({ ...formData, sorting_index: e.target.value ? +e.target.value : null })}
-              placeholder="Enter Sorting Index"
-              required
-            />
-          </div>
 
           {/* <div className="mt-4">
             <Label htmlFor="description">Description</Label>

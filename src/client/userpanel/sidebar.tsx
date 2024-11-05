@@ -10,10 +10,9 @@ const Sidebar: React.FC<SidebarProps> = ({ onTabClick }) => {
   const location = useLocation();
 
   const getLinkClasses = (path: string) =>
-    `nav-link px-3 py-2 rounded ${
-      location.pathname.includes(path)
-        ? "bg-red-100 text-red-600 font-bold"
-        : "text-gray-700 hover:bg-gray-100 hover:text-red-500"
+    `nav-link px-3 py-2 rounded ${location.pathname.includes(path)
+      ? "bg-red-100 text-red-600 font-bold"
+      : "text-gray-700 hover:bg-gray-100 hover:text-red-500"
     }`;
 
   return (
@@ -34,7 +33,19 @@ const Sidebar: React.FC<SidebarProps> = ({ onTabClick }) => {
               Dashboard
             </Link>
           </li>
-          
+
+
+          <li className="nav-item mb-3">
+            <Link
+              to="/userpanel/my-profile"
+              className={`d-flex align-items-center ${getLinkClasses("my-profile")}`}
+              onClick={() => onTabClick("profile")}
+            >
+              <User className="me-2" size={20} />
+              My Profile
+            </Link>
+          </li>
+
           <li className="nav-item mb-3">
             <Link
               to="/userpanel/notices"
@@ -57,16 +68,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onTabClick }) => {
             </Link>
           </li>
 
-          <li className="nav-item mb-3">
-            <Link
-              to="/userpanel/my-profile"
-              className={`d-flex align-items-center ${getLinkClasses("my-profile")}`}
-              onClick={() => onTabClick("profile")}
-            >
-              <User className="me-2" size={20} />
-              My Profile
-            </Link>
-          </li>
+
 
           <li className="nav-item mb-3">
             <Link
@@ -97,12 +99,12 @@ const Sidebar: React.FC<SidebarProps> = ({ onTabClick }) => {
               onClick={() => onTabClick("health-history")}
             >
               <Edit className="me-2" size={20} />
-                Health History
+              Health History
             </Link>
           </li>
         </ul>
 
-        <LogoutButton className="nav-link px-3 py-2 rounded bg-red-500 text-white mt-auto d-flex align-items-center gap-2"/>
+        <LogoutButton className="nav-link px-3 py-2 rounded bg-red-500 text-white mt-auto d-flex align-items-center gap-2" />
       </div>
     </div>
   );
