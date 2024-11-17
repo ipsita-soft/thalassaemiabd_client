@@ -12,16 +12,17 @@ import Swal from 'sweetalert2';
 function Login() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { roles, status, error, token } = useSelector((state: RootState) => state.auth);
+  const { roles, status, token } = useSelector((state: RootState) => state.auth);
 
-  const [phone, setphone] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
+  const [phoneErr, setPhoneErr] = useState('');
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      await dispatch(loginUser({ phone, password })).unwrap(); // Ensure correct action type
+      await dispatch(loginUser({ phone, password })).unwrap();
       Swal.fire({
         title: 'Success!',
         text: 'Login Successful',
@@ -32,7 +33,7 @@ function Login() {
         },
       });
     } catch (error: any) {
-      console.log(error);
+      setPhoneErr(error?.data?.phone || 'An error occurred');
     }
   };
 
@@ -46,7 +47,7 @@ function Login() {
         navigate('/unauthorized');
       }
     }
-  }, [status, token, navigate]);
+  }, [status, token, navigate, roles]);
 
   return (
     <section className="flex justify-center items-center h-screen">
@@ -67,8 +68,9 @@ function Login() {
                 placeholder="Phone Number"
                 required
                 value={phone}
-                onChange={(e) => setphone(e.target.value)}
+                onChange={(e) => setPhone(e.target.value)}
               />
+              {phoneErr && <p className="text-red-500 mt-2">{phoneErr}</p>}
             </div>
             <div className="grid gap-2">
               <Label htmlFor="password">Password</Label>
@@ -83,8 +85,6 @@ function Login() {
             <Button type="submit" className="w-full">
               Sign in
             </Button>
-            {/* Display error message */}
-            {status === 'failed' && <p className="text-red-500 mt-2">{error}</p>}
           </form>
         </CardContent>
         <CardFooter>

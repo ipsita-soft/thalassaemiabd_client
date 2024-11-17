@@ -10,15 +10,10 @@ import {
     useReactTable,
     flexRender,
 } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Spinner } from '@/components/ui/spinner';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuLabel,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import { Input } from "@/components/ui/input";
 import {
     Table,
@@ -28,53 +23,59 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import Edit from "./Edit";
+
 import Show from "./Show";
-import { get } from "@/redux/slices/rolesSlice";
+import { get } from "@/redux/slices/userRequestSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import Add from "./Add";
-
-
-
+import Navbar from "./Navbar";
+import { useLocation } from "react-router-dom";
 
 interface Data {
     id: number;
     name: string;
-
-    image: string;
-    sorting_index: number;
-    title: string;
-    description: string;
-    date: string;
-    status: "Active" | "Inactive";
+    profile_image: string;
+    phone: string;
+    email: string;
+    status: string;
+    role: any;
 }
 
-export function RolesPage() {
+export function RequestPage() {
     const dispatch: AppDispatch = useDispatch();
-    const { roles, meta, isLoading, isError, error } = useSelector(
-        (state: RootState) => state.rolesData
+
+    const location = useLocation();
+    const { requests, meta, isLoading, isError, error } = useSelector(
+        (state: RootState) => state.userRequestData
     );
 
     const [showSliderDetails, setShowSliderDetails] = useState(false);
-
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-    const [filterValue, setFilterValue] = useState("");
     const [perPage, setPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(meta?.current_page || 1);
-    const [isEditModalOpen, setEditModalOpen] = useState(false);
+
+
 
     useEffect(() => {
+        const routeName = location.pathname; // Get the current route name (path)
+        console.log("Current Route:", routeName);
+
         const params = {
             per_page: perPage,
             page: currentPage,
+            status:
+                routeName === '/dashboard/patients' ? 1 :
+                routeName === '/dashboard/user-request' ? 2 :
+                    routeName === '/dashboard/user-pending' ? 3 :
+                        routeName === '/dashboard/user-rejected' ? 4 :
+                            4
         };
+
         dispatch(get(params));
+    }, [dispatch, perPage, currentPage, location.pathname]); // Add location.pathname to dependencies
 
-
-    }, [dispatch, perPage, currentPage]);
 
     const columns = [
         {
@@ -84,7 +85,6 @@ export function RolesPage() {
                 <div>{row.index + 1}</div>
             ),
         },
-
         {
             id: "name",
             header: "Name",
@@ -92,50 +92,50 @@ export function RolesPage() {
                 <div className="text-left">{row.original.name}</div>
             ),
         },
-
-
+        {
+            id: "phone",
+            header: "Phone",
+            cell: ({ row }: { row: { original: Data } }) => (
+                <div className="text-left">{row.original.phone}</div>
+            ),
+        },
+        {
+            id: "status",
+            header: "Status",
+            cell: ({ row }: { row: { original: Data } }) => (
+                <div className="text-left">{row.original.status}</div>
+            ),
+        },
+        {
+            id: "roleName",
+            header: "Role Name",
+            cell: ({ row }: { row: { original: Data } }) => (
+                <div className="text-left">
+                    {row.original?.role.map((rol: any) => rol.name).join(", ")}
+                </div>
+            ),
+        },
         {
             id: "actions",
             header: "Actions",
             enableHiding: false,
             cell: ({ row }: { row: { original: Data } }) => {
                 const role = row.original;
-                console.log('inner data', role)
-
                 return (
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                                <span className="sr-only">Open menu</span>
-                                <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
-                            <Edit
-
-                                Id={role.id.toString()}
-                                open={isEditModalOpen}
-                                onClose={() => setEditModalOpen(false)}
-                            />
-                            <br />
-                            <Show
-                                Id={role.id.toString()}
-                                open={showSliderDetails}
-                                onClose={() => setShowSliderDetails(false)}
-                            />
-                            <br />
-
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    <Show
+                        Id={role.id.toString()}
+                        open={showSliderDetails}
+                        onClose={() => setShowSliderDetails(false)}
+                    />
                 );
             },
         },
     ];
 
     const table = useReactTable({
-        data: roles as unknown as Data[],
+        data: requests as unknown as Data[],
         columns,
+        pageCount: Math.ceil(requests.length / perPage),
         state: {
             sorting,
             columnFilters,
@@ -148,15 +148,20 @@ export function RolesPage() {
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
         onColumnVisibilityChange: setColumnVisibility,
+        initialState: {
+            pagination: {
+                pageSize: perPage,
+                pageIndex: 0,
+            }
+        }
+
     });
 
-    const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setFilterValue(event.target.value);
-        setColumnFilters([{ id: "status", value: event.target.value }]);
-    };
 
     const handlePerPageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setPerPage(parseInt(event.target.value, 10));
+        const newSize = parseInt(event.target.value, 10);
+        table.setPageSize(newSize);
+        setPerPage(newSize);
     };
 
     const handlePageChange = (page: number) => {
@@ -164,22 +169,26 @@ export function RolesPage() {
     };
 
     return (
-
         isLoading ? (
             <div className="flex justify-center items-center h-screen">
-                <Spinner >Loading...</Spinner>
+                <Spinner>Loading...</Spinner>
             </div>
-        ) :
-
+        ) : (
             <div className="p-4">
+
+
+
                 <div className="flex flex-col lg:flex-row justify-between items-center mb-4 space-y-4 lg:space-y-0 lg:space-x-4">
+
                     <Input
-                        type="text"
-                        placeholder="Filter by Status"
-                        value={filterValue}
-                        onChange={handleFilterChange}
-                        className="w-full lg:w-64"
+                        placeholder="Filter id..."
+                        value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+                        onChange={(event) =>
+                            table.getColumn("name")?.setFilterValue(event.target.value)
+                        }
+                        className="max-w-sm "
                     />
+
                     <div className="flex items-center">
                         <label className="text-slate-500" htmlFor="perPage">Per Page :</label>
                         <select
@@ -192,10 +201,14 @@ export function RolesPage() {
                             <option value={100}>100</option>
                             <option value={250}>250</option>
                         </select>
-
                     </div>
-                    <Add />
                 </div>
+
+                <div className="mb-4">
+                    <Navbar />
+
+                </div>
+
                 {isError ? (
                     <>Error: {error && <p>Error: {error.message}</p>}</>
                 ) : (
@@ -239,22 +252,16 @@ export function RolesPage() {
                                     ))
                                 )}
                             </TableBody>
-
                         </Table>
                     </div>
                 )}
-
                 <div className="mt-4 flex justify-between items-center">
-
-
                     <div className="font-medium">
                         Showing {meta?.from} to {meta?.to} of {meta?.total} entries
                     </div>
-
                     <div className="flex-right">
                         {meta?.links.map((link) => (
                             <Button
-
                                 key={link.label}
                                 onClick={() => {
                                     if (link.url) {
@@ -263,20 +270,14 @@ export function RolesPage() {
                                     }
                                 }}
                                 disabled={!link.url}
-                                className={`mr-1 ${link.active ? 'underline bg-slate-400' : ''
-                                    } ${!link.url ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                className={`mr-1 ${link.active ? 'underline bg-slate-400' : ''} ${!link.url ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
-                                {link.label
-                                    .replace(/&laquo;/g, '<<')
-                                    .replace(/&raquo;/g, '>>')
-                                    .trim()
-                                }
+                                {link.label.replace(/&laquo;/g, '<<').replace(/&raquo;/g, '>>').trim()}
                             </Button>
                         ))}
                     </div>
-
-
                 </div>
             </div>
+        )
     );
 }

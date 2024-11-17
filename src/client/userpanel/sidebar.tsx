@@ -1,14 +1,20 @@
 import { Link, useLocation } from "react-router-dom";
 import { Home, Bell, FileText, User, Edit } from "lucide-react";
 import LogoutButton from '@/components/auth/Logout';
+import { useSelector } from "react-redux";
 
 interface SidebarProps {
   onTabClick: (tabName: string) => void;
 }
 
+const hasPermissions = (requiredPermissions: string[], userPermissions: string[]) => {
+  return requiredPermissions.every(perm => userPermissions.includes(perm));
+};
+
+
 const Sidebar: React.FC<SidebarProps> = ({ onTabClick }) => {
   const location = useLocation();
-
+  const { permissions } = useSelector((state: any) => state.auth);
   const getLinkClasses = (path: string) =>
     `nav-link px-3 py-2 rounded ${location.pathname.includes(path)
       ? "bg-red-100 text-red-600 font-bold"
@@ -34,17 +40,18 @@ const Sidebar: React.FC<SidebarProps> = ({ onTabClick }) => {
             </Link>
           </li>
 
-
-          <li className="nav-item mb-3">
-            <Link
-              to="/userpanel/my-profile"
-              className={`d-flex align-items-center ${getLinkClasses("my-profile")}`}
-              onClick={() => onTabClick("profile")}
-            >
-              <User className="me-2" size={20} />
-              My Profile
-            </Link>
-          </li>
+          {hasPermissions(['profile_view'], permissions) && (
+            <li className="nav-item mb-3">
+              <Link
+                to="/userpanel/my-profile"
+                className={`d-flex align-items-center ${getLinkClasses("my-profile")}`}
+                onClick={() => onTabClick("profile")}
+              >
+                <User className="me-2" size={20} />
+                My Profile
+              </Link>
+            </li>
+          )}
 
           <li className="nav-item mb-3">
             <Link
@@ -69,17 +76,18 @@ const Sidebar: React.FC<SidebarProps> = ({ onTabClick }) => {
           </li>
 
 
-
-          <li className="nav-item mb-3">
-            <Link
-              to="/userpanel/update-profile"
-              className={`d-flex align-items-center ${getLinkClasses("update-profile")}`}
-              onClick={() => onTabClick("update-profile")}
-            >
-              <Edit className="me-2" size={20} />
-              Update Profile
-            </Link>
-          </li>
+          {hasPermissions(['profile_edit'], permissions) && (
+            <li className="nav-item mb-3">
+              <Link
+                to="/userpanel/update-profile"
+                className={`d-flex align-items-center ${getLinkClasses("update-profile")}`}
+                onClick={() => onTabClick("update-profile")}
+              >
+                <Edit className="me-2" size={20} />
+                Update Profile
+              </Link>
+            </li>
+          )}
 
           <li className="nav-item mb-3">
             <Link

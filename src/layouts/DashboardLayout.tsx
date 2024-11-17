@@ -22,7 +22,13 @@ import {
     HistoryIcon,
     List,
     CalendarClock,
-    Book
+    Book,
+    UserCog,
+    UserRoundSearch,
+    BookUser,
+    SquareUser,
+    UserRoundCheck,
+    Layers
 
 } from 'lucide-react';
 
@@ -269,7 +275,7 @@ function DashboardLayout() {
                                         className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/tif-page') || isActive('/dashboard/tif-page-slider') || isActive('/dashboard/tif-page-attachment') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
                                             }`}
                                     >
-                                        <GalleryVerticalEnd className="h-4 w-4" />
+                                        <Layers className="h-4 w-4" />
                                         Tif Page
                                     </Link>
                                 )}
@@ -283,21 +289,93 @@ function DashboardLayout() {
                                              ${isActive('/dashboard/roles') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
                                             }`}
                                     >
-                                        <GalleryVerticalEnd className="h-4 w-4" />
+                                        <UserCog className="h-4 w-4" />
                                         Roles
                                     </Link>
                                 )}
 
 
+                                {hasPermissions([
+                                    'user-request-list',
+                                    'user-request-show',
+                                    'user-request-update',
+                                ], permissions) && (
 
-                                <Link
-                                    to="#"
+                                        <Link
+                                            to="/dashboard/user-request"
+                                            className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all
+                                             ${isActive('/dashboard/user-request') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                                }`}
+                                        >
+
+                                            <UserRoundSearch className="h-4 w-4" />
+                                            Applications
+                                        </Link>
+                                    )}
+
+
+
+
+                                {hasPermissions([
+                                    'admin-blood-donor-all',
+                                ], permissions) && (
+
+                                        <Link
+                                            to="/dashboard/blood-donors"
+                                            className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all
+                                             ${isActive('/dashboard/blood-donors') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                                }`}
+                                        >
+                                            <BookUser className="h-4 w-4" />
+                                            Blood Donor
+                                        </Link>
+                                    )}
+
+                                {hasPermissions([
+                                    'admin-patient-all',
+                                ], permissions) && (
+
+                                        <Link
+                                            to="/dashboard/admin-patient"
+                                            className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all
+                                             ${isActive('/dashboard/admin-patient') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                                }`}
+                                        >
+                                            <SquareUser className="h-4 w-4" />
+                                            Patients
+                                        </Link>
+                                    )}
+
+                                {hasPermissions([
+                                    'admin-user-all',
+                                ], permissions) && (
+
+                                        <Link
+                                            to="/dashboard/admin-user"
+                                            className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all
+                                             ${isActive('/dashboard/admin-user') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                                }`}
+                                        >
+
+                                            <UserRoundCheck className="h-4 w-4" />
+                                            Users
+                                        </Link>
+                                    )}
+
+
+
+
+
+                                {/* <Link
+                                    to="test"
                                     className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('#') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
                                         }`}
                                 >
                                     <Users className="h-4 w-4" />
-                                    Patients
-                                </Link>
+                                    test
+                                </Link> */}
+
+
                                 <Link
                                     to="#"
                                     className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('#') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'

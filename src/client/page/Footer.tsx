@@ -186,8 +186,8 @@ const Footer = () => {
                                     onInit={() => console.log("Marquee initialized")}
                                     onFinish={() => console.log("Marquee finished")}
                                 >
-                                    <div></div>
-                                    <div className='w-96'>{setting?.copyrighttext}</div>
+                                    <div>{setting?.copyrighttext}</div>
+                                    <div className='w-96'></div>
                                 </Marquee>
                                 <span className="onoffswitch3-switch">
                                     BREAKING NEWS <i className="lni lni-close" onClick={handleCloseClick}></i>

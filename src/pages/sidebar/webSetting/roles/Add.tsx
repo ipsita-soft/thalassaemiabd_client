@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
-import { add } from '@/redux/slices/RolesSlice';
+import { add } from '@/redux/slices/rolesSlice';
 import {
   Dialog,
   DialogTrigger,
@@ -22,6 +22,8 @@ const Add: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [getApiError, setApiError] = useState('');
   const { permissions: allPermissions, isLoading: commonDataLoading } = useSelector((state: RootState) => state.commonData);
+
+  console.log(commonDataLoading);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -47,21 +49,49 @@ const Add: React.FC = () => {
     });
   };
 
+  // const handleSubmit = async (event: React.FormEvent) => {
+  //   event.preventDefault();
+  //   setLoading(true);
+
+  //   try {
+  //     await dispatch(add(formData)).unwrap();
+  //     toast({
+  //       title: "Success",
+  //       description: "Role added successfully!",
+  //     });
+  //     setFormData({ name: '', permissions: [] });
+  //     setOpen(false);
+  //   } catch (error: any) {
+  //     console.error("Failed to add role:", error);
+  //     setApiError(error.message || 'An error occurred while adding the role');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setLoading(true);
 
     try {
-      await dispatch(add(formData)).unwrap();
+      // Create a FormData object
+      const data = new FormData();
+      data.append("name", formData.name);
+      formData.permissions.forEach((permission) => {
+        data.append("permissions[]", permission); // Append each permission
+      });
+
+      // Dispatch the action with FormData
+      await dispatch(add(data)).unwrap();
+
       toast({
         title: "Success",
         description: "Role added successfully!",
       });
-      setFormData({ name: '', permissions: [] });
+      setFormData({ name: "", permissions: [] });
       setOpen(false);
     } catch (error: any) {
       console.error("Failed to add role:", error);
-      setApiError(error.message || 'An error occurred while adding the role');
+      setApiError(error.message || "An error occurred while adding the role");
     } finally {
       setLoading(false);
     }

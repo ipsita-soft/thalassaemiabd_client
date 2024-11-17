@@ -3,29 +3,30 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Link, useNavigate } from 'react-router-dom';
 import { fetchPublicCities, fetchPublicCities2, fetchPublicCountries } from '@/redux/slices/publicSlice';
-import { fetchBloodGroup, fetchGenders, fetchMaritalStatus } from '@/redux/slices/commonSlice';
+import { fetchBloodGroup, fetchDiseaseType, fetchGenders, fetchHeight, fetchMaritalStatus, fetchWeight } from '@/redux/slices/commonSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { useEffect } from 'react';
-import { bloodDonorRegister } from '@/redux/slices/bloodDonorRegSlice';
+import { subPatientRegistration } from '@/redux/slices/patientRegSlice';
 
 
 import Swal from 'sweetalert2';
 import SelectField from '@/components/common/SelectField';
-
-
-const BloodDonorRegistration = () => {
+const PatientRegistration = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const { bloodGroups, genders, maritalStatus, isLoading: commonDataLoading } = useSelector((state: RootState) => state.commonData);
+  const { bloodGroups, genders, maritalStatus, diseaseTypes, heights, weights, isLoading: commonDataLoading } = useSelector((state: RootState) => state.commonData);
 
   useEffect(() => {
     dispatch(fetchPublicCountries({ per_page: 250 }));
     dispatch(fetchMaritalStatus({}));
     dispatch(fetchGenders({}));
     dispatch(fetchBloodGroup({}));
+    dispatch(fetchDiseaseType({}));
+    dispatch(fetchHeight({}));
+    dispatch(fetchWeight({}));
   }, [dispatch]);
 
 
@@ -83,9 +84,50 @@ const BloodDonorRegistration = () => {
   }));
 
 
+
+  const bloodGroupsOption = bloodGroups.map((height: any) => ({
+    value: height?.id,
+    label: height?.name,
+  }));
+
+
+  const diseaseTypesOption = diseaseTypes.map((height: any) => ({
+    value: height?.id,
+    label: height?.name,
+  }));
+
+
+  const heightOption = heights.map((height: any) => ({
+    value: height?.id,
+    label: height?.name,
+  }));
+
+  const weightDataOption = weights.map((weightData: any) => ({
+    value: weightData?.id,
+    label: weightData?.name,
+  }));
+
+
+
+
   const validationSchema = Yup.object().shape({
+
+    electrophoresis_report: Yup
+      .mixed()
+      .required('The electrophoresis report is required.')
+      .test('fileType', 'The electrophoresis report must be a file of type: jpeg, png, jpg, or pdf.', (value) => {
+        return value && ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'].includes((value as File).type);
+      }),
+
     name: Yup.string().required('The name field is required.'),
     phone: Yup.string()
+      .required('The phone field is required.')
+      .matches(
+        /^[0-9]{11}$/,
+        'Phone number must be exactly 11 digits.'
+      ),
+
+    emergency_contact_number: Yup.string()
       .required('The phone field is required.')
       .matches(
         /^[0-9]{11}$/,
@@ -102,8 +144,14 @@ const BloodDonorRegistration = () => {
     age: Yup.number().required('The age field is required.'),
     marital_status_id: Yup.string().required('The marital status field is required.'),
     occupation: Yup.string().required('The occupation field is required.'),
-    father_or_mother_husband: Yup.string().required('The father/mother/husband name is required.'),
+    father_name: Yup.string().required('The father name is required.'),
+    mother_name: Yup.string().required('The mother is required.'),
+
     blood_group_id: Yup.string().required('The blood group field is required.'),
+
+    disease_type_id: Yup.string().required('The disease type field is required.'),
+    height_id: Yup.string().required('The height field is required.'),
+    weight_id: Yup.string().required('The weight field is required.'),
     present_address: Yup.object().shape({
       country_id: Yup.string().required('The country field in the present address is required.'),
       city_id: Yup.string().required('The city field in the present address is required.'),
@@ -116,8 +164,10 @@ const BloodDonorRegistration = () => {
       post_code: Yup.string().required('The postal code field in the permanent address is required.'),
       address: Yup.string().required('The permanent address field is required.'),
     }),
-    // previousBloodDonationDate: Yup.date().required('The previous blood donation date is required.'),
+
   });
+
+
 
   return (
     <section className="mt-5 blood-donor-registration section">
@@ -125,7 +175,7 @@ const BloodDonorRegistration = () => {
         <div className="row mt-14">
           <div className="col-lg-12 col-md-12 col-12">
             <div className="form-head">
-              <h4 className="title">Blood Donor Registration</h4>
+              <h4 className="title">Patient Registration</h4>
               <Formik
                 initialValues={{
                   name: '',
@@ -138,8 +188,15 @@ const BloodDonorRegistration = () => {
                   age: '',
                   marital_status_id: '',
                   occupation: '',
-                  father_or_mother_husband: '',
-                  previousBloodDonationDate: '',
+                  disease_type_id: '',
+                  height_id: '',
+                  weight_id: '',
+                  father_name: '',
+                  mother_name: '',
+                  husband_name: '',
+                  wife_name: '',
+                  electrophoresis_report: null,
+                  emergency_contact_number: '',
                   blood_group_id: '',
                   present_address: {
                     country_id: '',
@@ -158,10 +215,10 @@ const BloodDonorRegistration = () => {
                 onSubmit={async (values: any, { setErrors }) => {
                   console.log('Form data:', values);
                   try {
-                    await dispatch(bloodDonorRegister(values)).unwrap();
+                    await dispatch(subPatientRegistration(values)).unwrap();
                     Swal.fire({
                       title: 'Success!',
-                      text: 'Blood Donor registered successfully! Please Login',
+                      text: 'Patient registered successfully! Please Login',
                       icon: 'success',
                       confirmButtonText: 'OK',
                       customClass: {
@@ -276,10 +333,56 @@ const BloodDonorRegistration = () => {
                           </div>
 
 
+                          <div className='row'>
+                            <div className="col-md-4">
+
+                              <div className="form-group">
 
 
 
+                                <Field
+                                  name="height_id"
+                                  component={SelectField}
+                                  options={heightOption}
+                                  placeholder="Height"
+                                />
 
+                                <ErrorMessage name="height_id" component="div" className="text-danger" />
+                              </div>
+
+                            </div>
+
+                            <div className="col-md-4">
+                              {/* Blood Group */}
+
+                              <div className="form-group">
+                                <Field
+                                  name="weight_id"
+                                  component={SelectField}
+                                  options={weightDataOption}
+                                  placeholder="Weight"
+                                />
+
+                                <ErrorMessage name="weight_id" component="div" className="text-danger" />
+                              </div>
+                            </div>
+
+
+                            <div className="col-md-4">
+                              {/* Blood Group */}
+
+                              <div className="form-group">
+                                <Field
+                                  name="disease_type_id"
+                                  component={SelectField}
+                                  options={diseaseTypesOption}
+                                  placeholder="Disease Type"
+                                />
+                                <ErrorMessage name="disease_type_id" component="div" className="text-danger" />
+                              </div>
+                            </div>
+
+                          </div>
 
 
                           <div className='row'>
@@ -297,14 +400,19 @@ const BloodDonorRegistration = () => {
                               </div>
 
                             </div>
+
                             <div className="col-md-6">
                               {/* Blood Group */}
 
                               <div className="form-group">
-                                <Field as="select" name="blood_group_id" className="form-select ras">
-                                  <option value="">Select Blood Group</option>
-                                  {!commonDataLoading && bloodGroups.map((group: any) => (<option value={group?.id}>{group?.name}</option>))}
-                                </Field>
+
+                                <Field
+                                  name="blood_group_id"
+                                  component={SelectField}
+                                  options={bloodGroupsOption}
+                                  placeholder="Blood Group"
+                                />
+
                                 <ErrorMessage name="blood_group_id" component="div" className="text-danger" />
                               </div>
                             </div>
@@ -312,12 +420,25 @@ const BloodDonorRegistration = () => {
 
                           </div>
 
-                          <div className="form-group">
-                            <label htmlFor="previousBloodDonationDate"><h5 className="birth">Previous Blood Donation Date:</h5></label>
-                            <Field type="date" id="previousBloodDonationDate" name="previousBloodDonationDate" className="form-control" />
-                            <ErrorMessage name="previousBloodDonationDate" component="div" className="text-danger" />
-                          </div>
+
+
                         </div>
+
+                        {/* <input type="file" /> */}
+
+                        <div className="form-group">
+                          <input
+                            name="electrophoresis_report"
+                            type="file"
+                            className="form-control pt-2"
+                            onChange={(event: any) => {
+                              const file = event.currentTarget.files[0];
+                              setFieldValue("electrophoresis_report", file);
+                            }}
+                          />
+                          <ErrorMessage name="electrophoresis_report" component="div" className="text-danger" />
+                        </div>
+
                       </div>
 
                       {/* Right Column */}
@@ -345,11 +466,49 @@ const BloodDonorRegistration = () => {
                             <ErrorMessage name="marital_status_id" component="div" className="text-danger" />
                           </div>
 
-                          {/* Family Information */}
-                          <div className="form-group">
-                            <Field name="father_or_mother_husband" type="text" placeholder="Father/Mother/Husband Name" className="form-control" />
-                            <ErrorMessage name="father_or_mother_husband" component="div" className="text-danger" />
+
+
+                          <div className='row'>
+                            <div className="col-md-6">
+                              <div className="form-group">
+                                <Field name="father_name" type="text" placeholder="Father Name" className="form-control" />
+                                <ErrorMessage name="father_name" component="div" className="text-danger" />
+                              </div>
+                            </div>
+
+                            <div className="col-md-6">
+                              <div className="form-group">
+                                <Field name="mother_name" type="text" placeholder="Mother Name" className="form-control" />
+                                <ErrorMessage name="mother_name" component="div" className="text-danger" />
+                              </div>
+                            </div>
                           </div>
+
+                          <div className='row'>
+                            <div className="col-md-6">
+                              <div className="form-group">
+                                <Field name="husband_name" type="text" placeholder="Husband Name" className="form-control" />
+                                <ErrorMessage name="husband_name" component="div" className="text-danger" />
+                              </div>
+                            </div>
+
+                            <div className="col-md-6">
+                              <div className="form-group">
+                                <Field name="wife_name" type="text" placeholder="Wife Name" className="form-control" />
+                                <ErrorMessage name="wife_name" component="div" className="text-danger" />
+                              </div>
+                            </div>
+                          </div>
+
+
+                          <div> <div className="form-group">
+                            <Field name="emergency_contact_number" type="text" placeholder="Emergency Contact Number" className="form-control" />
+                            <ErrorMessage name="emergency_contact_number" component="div" className="text-danger" />
+                          </div></div>
+
+
+
+
 
                           {/* Present Address */}
                           <div className="row">
@@ -378,16 +537,7 @@ const BloodDonorRegistration = () => {
 
                             <div className="col-md-6">
                               <div className="form-group">
-                                {/* <Field name="present_address.city_id"
-                                  as="select" placeholder="City"
-                                  className="form-select ras">
-                                  <option value="">Select City</option>
-                                  {citiesLists.map((city: any) => (
-                                    <option key={city.id} value={city.id}>
-                                      {city.name}
-                                    </option>
-                                  ))}
-                                </Field> */}
+
 
                                 <Field
                                   name="present_address.city_id"
@@ -443,15 +593,6 @@ const BloodDonorRegistration = () => {
 
                             <div className="col-md-6">
                               <div className="form-group">
-                                {/* <Field name="permanent_address.city_id" as="select"
-                                  placeholder="City" className="form-select ras">
-                                  <option value="">Select City</option>
-                                  {citiesLists2.map((city: any) => (
-                                    <option key={city.id} value={city.id}>
-                                      {city.name}
-                                    </option>
-                                  ))}
-                                </Field> */}
 
 
                                 <Field
@@ -511,8 +652,8 @@ const BloodDonorRegistration = () => {
           </div>
         </div>
       </div>
-    </section>
+    </section >
   );
 };
 
-export default BloodDonorRegistration;
+export default PatientRegistration;

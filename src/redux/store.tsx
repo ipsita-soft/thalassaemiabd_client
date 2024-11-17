@@ -21,8 +21,11 @@ import publicationReducers from './slices/publicationsSlice';
 import commonReducers from './slices/commonSlice';
 import bloodDonorRegReducers from "./slices/bloodDonorRegSlice";
 import VerifyPhoneSlice from "./slices/verifySlice";
-import rolesReducers from "./slices/RolesSlice";
-
+import rolesReducers from "./slices/rolesSlice";
+import userRequestReducers from "./slices/userRequestSlice";
+import adminBloodDonorReg from './slices/adminBloodDonorReg';
+import adminPatientRegistration from './slices/adminPatientRegistration';
+import adminUsersReducers from './slices/adminUserSlice';
 
 export const store = configureStore({
   reducer: {
@@ -41,13 +44,17 @@ export const store = configureStore({
     notices: noticesReducers,
     pages: pagesReducers,
     tifSliders: tifSliderReducers,
-    tifAttachmentPages : tifAttachmentPageReducers,
-    years : yearsReducers,
-    publications : publicationReducers,
-    commonData : commonReducers,
-    bloodDonorReg : bloodDonorRegReducers,
-    VerifyPhone : VerifyPhoneSlice,
-    rolesData : rolesReducers,
+    tifAttachmentPages: tifAttachmentPageReducers,
+    years: yearsReducers,
+    publications: publicationReducers,
+    commonData: commonReducers,
+    bloodDonorReg: bloodDonorRegReducers,
+    adminBloodDonorReg: adminBloodDonorReg,
+    adminPatientReg: adminPatientRegistration,
+    VerifyPhone: VerifyPhoneSlice,
+    rolesData: rolesReducers,
+    userRequestData: userRequestReducers,
+    adminUsers: adminUsersReducers,
     //public reducer
     public: publicReducer,
   },

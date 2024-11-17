@@ -61,6 +61,12 @@ import CommitteeDetails from './client/page/CommitteeDetails.tsx';
 import VerifyPhone from './pages/VerifyPhone.tsx';
 import VerifySms from './pages/VerifySms.tsx';
 import { RolesPage } from './pages/sidebar/webSetting/roles/RolesPage.tsx';
+import { RequestPage } from './pages/sidebar/webSetting/userRequest/RequestPage.tsx';
+import PatientRegistration from './pages/PatientRegistration.tsx';
+import { TestPage } from './pages/sidebar/webSetting/roles/TestPage.tsx';
+import { BloodDonorPage } from './pages/sidebar/webSetting/bloodDonor/BloodDonorPage.tsx';
+import { PatientPage } from './pages/sidebar/webSetting/patient/PatientPage';
+import { UsersPage } from './pages/sidebar/webSetting/users/UsersPage.tsx';
 
 const router = createBrowserRouter([
   {
@@ -174,7 +180,13 @@ const router = createBrowserRouter([
         path: 'blood-donor-registration',
         element: <PublicRoute
           element={<BloodDonorRegistration />}
-        // redirectTo="/dashboard/home"
+        />,
+      },
+
+      {
+        path: 'patient-registration',
+        element: <PublicRoute
+          element={<PatientRegistration />}
         />,
       },
     ]
@@ -243,6 +255,87 @@ const router = createBrowserRouter([
         element: <ProtectedRoute
           element={<RolesPage />}
           requiredPermissions={['view_roles', 'create_role', 'edit_role', 'delete_user']}
+        />,
+      },
+
+      {
+        path: 'user-request',
+        element: <ProtectedRoute
+          element={<RequestPage />}
+          requiredPermissions={[
+            'user-request-list',
+            'user-request-show',
+            'user-request-update',
+          ]}
+        />,
+      },
+
+      {
+        path: 'blood-donors',
+        element: <ProtectedRoute
+          element={<BloodDonorPage />}
+          requiredPermissions={[
+            'admin-blood-donor-all',
+          ]}
+        />,
+      },
+
+      {
+        path: 'admin-patient',
+        element: <ProtectedRoute
+          element={<PatientPage />}
+          requiredPermissions={[
+            'admin-patient-all',
+          ]}
+        />,
+      },
+      
+      {
+        path: 'admin-user',
+        element: <ProtectedRoute
+          element={<UsersPage/>}
+          requiredPermissions={[
+            'admin-user-all',
+          ]}
+        />,
+      },
+
+
+
+      {
+        path: 'test',
+        element: <ProtectedRoute
+          element={<TestPage />}
+          requiredPermissions={[
+            'user-request-list',
+            'user-request-show',
+            'user-request-update',
+          ]}
+        />,
+      },
+
+
+      {
+        path: 'user-rejected',
+        element: <ProtectedRoute
+          element={<RequestPage />}
+          requiredPermissions={[
+            'user-request-list',
+            'user-request-show',
+            'user-request-update',
+          ]}
+        />,
+      },
+
+      {
+        path: 'user-pending',
+        element: <ProtectedRoute
+          element={<RequestPage />}
+          requiredPermissions={[
+            'user-request-list',
+            'user-request-show',
+            'user-request-update',
+          ]}
         />,
       },
 
@@ -446,9 +539,21 @@ const router = createBrowserRouter([
     path: '/userpanel',
     element: <ProtectedRoute
       element={<UserPanelLayout />}
-      requiredRoles={['blood_donor','ec_committee']}
+      requiredRoles={['blood_donor', 'ec_committee', 'financial_donor', 'voluntary', 'patient']}
     />,
     children: [
+      {
+        path: '/userpanel/my-profile',
+        element: (
+          <ProtectedRoute
+            element={
+              <MyProfile />
+            }
+            requiredPermissions={['profile_view']}
+          />
+        ),
+      },
+
       {
         path: '/userpanel/notices',
         element: <Notice />
@@ -457,13 +562,18 @@ const router = createBrowserRouter([
         path: '/userpanel/annual-reports',
         element: <AnnualReports />
       },
-      {
-        path: '/userpanel/my-profile',
-        element: <MyProfile />
-      },
+
       {
         path: '/userpanel/update-profile',
-        element: <UpdateProfile />
+        element: (
+          <ProtectedRoute
+            element={
+              <UpdateProfile />
+            }
+            requiredPermissions={['profile_edit']}
+          />
+        ),
+        // element: <UpdateProfile />
       },
 
       {

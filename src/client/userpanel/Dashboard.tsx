@@ -2,7 +2,6 @@ import React from "react";
 import { Home, FileText, Bell } from "lucide-react";
 import { useSelector } from "react-redux";
 
-
 const Dashboard: React.FC = () => {
   const { roles, user } = useSelector((state: any) => state.auth);
   return (
@@ -10,7 +9,7 @@ const Dashboard: React.FC = () => {
       <div className="">
         <div className="absolute inset-0 bg-gradient-to-r from-purple-300 via-transparent to-red-300 opacity-10 pointer-events-none"></div>
         <h5 className="text-2xl mt-2 font-extrabold d-flex text-red-600">
-          <Home className="me-2" size={30} /> Hello, {user.name}! 
+          <Home className="me-2" size={30} /> Hello, {user.name}!
           <br />
           Role - {roles}
         </h5>

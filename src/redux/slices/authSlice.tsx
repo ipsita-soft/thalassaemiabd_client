@@ -20,7 +20,7 @@ export const loginUser = createAsyncThunk(
     } catch (error) {
       const axiosError = error as AxiosError;
       if (axiosError.response) {
-        return rejectWithValue(axiosError.response.data.message);
+        return rejectWithValue(axiosError.response.data);
       }
       return rejectWithValue('An unknown error occurred');
     }

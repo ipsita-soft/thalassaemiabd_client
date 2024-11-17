@@ -80,7 +80,7 @@ function VerifySms() {
                 {...formik.getFieldProps('phone')}
               />
               {formik.touched.phone && formik.errors.phone ? (
-                <p className="text-red-500">{formik.errors.phone}</p>
+                <p className="text-red-500">Error Data</p>
               ) : null}
             </div>
             <Button type="submit" className="w-full">

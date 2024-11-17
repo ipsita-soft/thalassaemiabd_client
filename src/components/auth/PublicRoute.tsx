@@ -13,7 +13,7 @@ interface PublicRouteProps {
 const getRedirectPath = (roles: string[]): string => {
   if (roles.includes('admin')) {
     return '/dashboard/home';
-  }else if (roles.includes('blood_donor') || roles.includes('ec_committee')) {
+  }else if (roles.includes('blood_donor') || roles.includes('ec_committee') || roles.includes('patient')) {
 
     return '/userpanel';
   }

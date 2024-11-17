@@ -28,33 +28,23 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import Add from "./Add";
 import Edit from "./Edit";
 import Show from "./Show";
-import { get } from "@/redux/slices/rolesSlice";
+import Delete from "./Delete";
+import { get } from "@/redux/slices/adminBloodDonorReg";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
-import Add from "./Add";
+import { toast } from '@/hooks/use-toast';
 
 
-
-
-interface Data {
-    id: number;
-    name: string;
-
-    image: string;
-    sorting_index: number;
-    title: string;
-    description: string;
-    date: string;
-    status: "Active" | "Inactive";
-}
-
-export function RolesPage() {
+export function BloodDonorPage() {
     const dispatch: AppDispatch = useDispatch();
-    const { roles, meta, isLoading, isError, error } = useSelector(
-        (state: RootState) => state.rolesData
+    const { bloodDonorRegistrationData, meta, isLoading, isError, error } = useSelector(
+        (state: RootState) => state.adminBloodDonorReg
     );
+
+    console.log(bloodDonorRegistrationData);
 
     const [showSliderDetails, setShowSliderDetails] = useState(false);
 
@@ -72,8 +62,6 @@ export function RolesPage() {
             page: currentPage,
         };
         dispatch(get(params));
-
-
     }, [dispatch, perPage, currentPage]);
 
     const columns = [
@@ -81,26 +69,65 @@ export function RolesPage() {
             id: "serial",
             header: "SL No",
             cell: ({ row }: { row: { index: number } }) => (
-                <div>{row.index + 1}</div>
+                <div className="text-right">{row.index + 1}</div>
             ),
         },
 
         {
             id: "name",
             header: "Name",
-            cell: ({ row }: { row: { original: Data } }) => (
+            cell: ({ row }: { row: { original: any } }) => (
                 <div className="text-left">{row.original.name}</div>
             ),
         },
 
+        {
+            id: "role",
+            header: "Role",
+            cell: ({ row }: { row: { original: any } }) => (
+                <div className="text-left">{row.original.role[0].name}</div>
+            ),
+        },
+        
+        {
+            id: "phone",
+            header: "Phone",
+            cell: ({ row }: { row: { original: any } }) => (
+                <div className="text-left">{row.original.phone}</div>
+            ),
+        },
+        {
+            id: "email",
+            header: "Email",
+            cell: ({ row }: { row: { original: any } }) => (
+                <div className="text-left">{row.original.email}</div>
+            ),
+        },
+
+
 
         {
+            accessorKey: "status",
+            header: "Status",
+            cell: ({ row }: { row: { original: any } }) => (
+                <div className="text-center">{row.original.status}</div>
+            ),
+        },
+        {
             id: "actions",
-            header: "Actions",
             enableHiding: false,
-            cell: ({ row }: { row: { original: Data } }) => {
-                const role = row.original;
-                console.log('inner data', role)
+            cell: ({ row }: { row: { original: any } }) => {
+                const galleries = row.original;
+
+
+
+                const handleDeleteSuccess = () => {
+                    toast({
+                        title: 'Success',
+                        description: 'Galleries deleted successfully!',
+                    });
+                    dispatch(get({})); // Dispatch here
+                };
 
                 return (
                     <DropdownMenu>
@@ -114,17 +141,24 @@ export function RolesPage() {
                             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
                             <Edit
 
-                                Id={role.id.toString()}
+                                Id={galleries.id.toString()}
                                 open={isEditModalOpen}
                                 onClose={() => setEditModalOpen(false)}
                             />
                             <br />
                             <Show
-                                Id={role.id.toString()}
+                                Id={galleries.id.toString()}
                                 open={showSliderDetails}
                                 onClose={() => setShowSliderDetails(false)}
                             />
                             <br />
+
+                            <Delete
+                                Id={galleries.id.toString()}
+                                onSuccess={handleDeleteSuccess} // Pass the callback here
+                            />
+
+
 
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -134,8 +168,9 @@ export function RolesPage() {
     ];
 
     const table = useReactTable({
-        data: roles as unknown as Data[],
+        data: bloodDonorRegistrationData as unknown as [],
         columns,
+        pageCount: Math.ceil(bloodDonorRegistrationData.length / perPage),
         state: {
             sorting,
             columnFilters,
@@ -148,9 +183,19 @@ export function RolesPage() {
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
         onColumnVisibilityChange: setColumnVisibility,
+        initialState: {
+            pagination: {
+                pageSize: perPage,
+                pageIndex: 0,
+            }
+        }
+
     });
 
     const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFilterValue(event.target.value);
+        setColumnFilters([{ id: "status", value: event.target.value }]);
+
         setFilterValue(event.target.value);
         setColumnFilters([{ id: "status", value: event.target.value }]);
     };
@@ -192,12 +237,11 @@ export function RolesPage() {
                             <option value={100}>100</option>
                             <option value={250}>250</option>
                         </select>
-
                     </div>
                     <Add />
                 </div>
                 {isError ? (
-                    <>Error: {error && <p>Error: {error.message}</p>}</>
+                    <>Error: {error && <p>Error: {error}</p>}</>
                 ) : (
                     <div className="overflow-x-auto">
                         <Table>

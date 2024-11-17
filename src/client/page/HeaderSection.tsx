@@ -231,7 +231,7 @@ const Header = () => {
                       <ul className="donate-menu">
                         <li className="dnt-item"><Link to="blood-donor-registration">Blood Donor Registration</Link></li>
                         <li className="dnt-item">
-                          <a href="patient-registration.html">Patient Registration</a>
+                          <Link to="/patient-registration">Patient Registration</Link>
                         </li>
                         <li className="dnt-item"><a href="financial-donor-reg.html">Financial Donor Registration</a></li>
                       </ul>

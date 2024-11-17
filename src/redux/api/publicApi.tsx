@@ -55,14 +55,66 @@ export const getPublicCountries = async (params = {}) => {
         throw error.response ? error.response.data : new Error('Error fetching countries');
     }
 };
+
+
 export const getBloodGroup = async (params = {}) => {
     try {
         const response = await api.get('public/blood-groups', { params });
         return response;
     } catch (error: any) {
-        throw error.response ? error.response.data : new Error('Error fetching countries');
+        throw error.response ? error.response.data : new Error('Error fetching Data');
     }
 };
+
+
+export const getRoles = async (params = {}) => {
+    try {
+        const response = await api.get('public/roles-all', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching Data');
+    }
+};
+
+
+export const getDepartments = async (params = {}) => {
+    try {
+        const response = await api.get('public/departments-all', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching Data');
+    }
+};
+
+
+
+
+export const diseaseType = async (params = {}) => {
+    try {
+        const response = await api.get('public/disease-type', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching Data');
+    }
+};
+export const height = async (params = {}) => {
+    try {
+        const response = await api.get('public/height', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching Data');
+    }
+};
+export const weight = async (params = {}) => {
+    try {
+        const response = await api.get('public/weight', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching Data');
+    }
+};
+
+
 
 export const getPublicCities = async (params = {}) => {
     try {
