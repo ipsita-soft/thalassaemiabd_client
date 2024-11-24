@@ -91,7 +91,7 @@ export const getDepartments = async (params = {}) => {
 
 export const diseaseType = async (params = {}) => {
     try {
-        const response = await api.get('public/disease-type', { params });
+        const response = await api.get('public/thalassemia-type', { params });
         return response;
     } catch (error: any) {
         throw error.response ? error.response.data : new Error('Error fetching Data');

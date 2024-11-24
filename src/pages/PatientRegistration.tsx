@@ -195,7 +195,13 @@ const PatientRegistration = () => {
                   mother_name: '',
                   husband_name: '',
                   wife_name: '',
+                  father_occupation: '',
+                  father_income_status: '',
+                  old_bts_id: '',
+                  number_of_siblings: '',
+                  siblings_status: '',
                   electrophoresis_report: null,
+                  profile_image: null,
                   emergency_contact_number: '',
                   blood_group_id: '',
                   present_address: {
@@ -417,6 +423,29 @@ const PatientRegistration = () => {
                               </div>
                             </div>
 
+                            <div className='row'>
+                              <div className="col-md-6">
+                                <div className=" form-group mb-2">
+                                  <Field name="old_bts_id" type="text" placeholder="Old BTS Id" className="form-control" />
+                                  <ErrorMessage name="old_bts_id" component="div" className="text-danger" />
+                                </div>
+                              </div>
+                              <div className="col-md-6">
+                                <div className=" form-group mb-2">
+                                  <Field name="number_of_siblings" type="number_of_siblings" placeholder="Number of Siblings" className="form-control" />
+                                  <ErrorMessage name="number_of_siblings" component="div" className="text-danger" />
+                                </div>
+                              </div>
+                            </div>
+
+
+                            <div className=" form-group mb-2">
+                              <label htmlFor="siblings_status"><h5 className="birth">Siblings Status</h5></label>
+                              <Field type="text" id="siblings_status" name="siblings_status" className="form-control" />
+                              <ErrorMessage name="siblings_status" component="div" className="text-danger" />
+                            </div>
+
+
 
                           </div>
 
@@ -427,6 +456,8 @@ const PatientRegistration = () => {
                         {/* <input type="file" /> */}
 
                         <div className="form-group">
+
+                          <label htmlFor="siblings_status"><h5 className="birth">Electrophoresis Report</h5></label>
                           <input
                             name="electrophoresis_report"
                             type="file"
@@ -480,6 +511,34 @@ const PatientRegistration = () => {
                               <div className="form-group">
                                 <Field name="mother_name" type="text" placeholder="Mother Name" className="form-control" />
                                 <ErrorMessage name="mother_name" component="div" className="text-danger" />
+                              </div>
+                            </div>
+                          </div>
+
+
+                          <div className='row'>
+                            <div className="col-md-6">
+                              <div className="form-group mb-2">
+                                <Field name="father_occupation" type="text" placeholder="Father Occupation" className="form-control" />
+                                <ErrorMessage name="father_occupation" component="div" className="text-danger" />
+                              </div>
+                            </div>
+
+                            <div className="col-md-6">
+                              <div className="form-group mb-2">
+                                <Field
+                                  as="select"
+                                  name="father_income_status"
+                                  className="form-select ras"
+                                >
+                                  <option value="">Father Income Status</option>
+                                  <option value="1">High</option>
+                                  <option value="2">Middle</option>
+                                  <option value="3">Low</option>
+
+                                </Field>
+
+                                <ErrorMessage name="father_income_status" component="div" className="text-danger" />
                               </div>
                             </div>
                           </div>
@@ -618,6 +677,25 @@ const PatientRegistration = () => {
                                 <ErrorMessage name="permanent_address.address" component="div" className="text-danger" />
                               </div>
                             </div>
+
+
+                            <div className="form-group">
+
+                              <label htmlFor="profile_image"><h5 className="birth">Profile Picture</h5></label>
+                              <input
+                                name="profile_image"
+                                type="file"
+                                className="form-control pt-2"
+                                onChange={(event: any) => {
+                                  const file = event.currentTarget.files[0];
+                                  setFieldValue("profile_image", file);
+                                }}
+                              />
+                              <ErrorMessage name="profile_image" component="div" className="text-danger" />
+                            </div>
+
+
+
                           </div>
 
 

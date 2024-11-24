@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
-import { adminPatientAdd } from '@/redux/slices/adminPatientRegistration';
 import { fetchBloodGroup, fetchDiseaseType, fetchGenders, fetchHeight, fetchMaritalStatus, fetchWeight } from '@/redux/slices/commonSlice';
 import { fetchPublicCities, fetchPublicCities2, fetchPublicCountries } from '@/redux/slices/publicSlice';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -12,7 +11,7 @@ import * as Yup from 'yup';
 import { Loader2 } from 'lucide-react';
 import SelectField from '@/components/common/SelectField';
 
-import { get } from "@/redux/slices/adminPatientRegistration"
+import { useCreatePatientMutation } from '@/api/patientApi';
 
 
 const Add: React.FC = () => {
@@ -20,17 +19,18 @@ const Add: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
 
+  const [createPatient] = useCreatePatientMutation();
 
   const { bloodGroups, genders, maritalStatus, diseaseTypes, heights, weights, isLoading: commonDataLoading } = useSelector((state: RootState) => state.commonData);
 
   useEffect(() => {
     dispatch(fetchPublicCountries({ per_page: 250 }));
     dispatch(fetchMaritalStatus({}));
-    dispatch(fetchGenders({}));
-    dispatch(fetchBloodGroup({}));
-    dispatch(fetchDiseaseType({}));
-    dispatch(fetchHeight({}));
-    dispatch(fetchWeight({}));
+    dispatch(fetchGenders({ per_page: 250 }));
+    dispatch(fetchBloodGroup({ per_page: 250 }));
+    dispatch(fetchDiseaseType({ per_page: 250 }));
+    dispatch(fetchHeight({ per_page: 250 }));
+    dispatch(fetchWeight({ per_page: 250 }));
   }, [dispatch]);
 
 
@@ -87,11 +87,12 @@ const Add: React.FC = () => {
   }));
 
 
-
-  const diseaseTypesOption = diseaseTypes.map((height: any) => ({
-    value: height?.id,
-    label: height?.name,
+  const diseaseTypesOption = diseaseTypes.map((digt: any) => ({
+    value: digt?.id,
+    label: digt?.name,
   }));
+
+
 
 
   const heightOption = heights.map((height: any) => ({
@@ -109,85 +110,93 @@ const Add: React.FC = () => {
 
   const validationSchema = Yup.object().shape({
 
-    // electrophoresis_report: Yup
-    //   .mixed()
-    //   .required('The electrophoresis report is required.')
-    //   .test('fileType', 'The electrophoresis report must be a file of type: jpeg, png, jpg, or pdf.', (value) => {
-    //     return value && ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'].includes(value.type);
-    //   }),
+    disease_type_id: Yup.string().required('The disease type field is required.'),
+    height_id: Yup.string().required('The height field is required.'),
+    weight_id: Yup.string().required('The weight field is required.'),
 
-    // disease_type_id: Yup.string().required('The disease type field is required.'),
-    // height_id: Yup.string().required('The height field is required.'),
-    // weight_id: Yup.string().required('The weight field is required.'),
-
-    // father_name: Yup.string().required('The father name is required.'),
-    // mother_name: Yup.string().required('The mother is required.'),
+    father_name: Yup.string().required('The father name is required.'),
+    mother_name: Yup.string().required('The mother is required.'),
 
 
-    // name: Yup.string().required('The name field is required.'),
-    // phone: Yup.string().required('The phone field is required.').matches(/^[0-9]{11}$/, 'Phone number must be exactly 11 digits.'),
-    // email: Yup.string().email('Invalid email format').required('The email field is required.'),
-    // password: Yup.string().min(6, 'Password must be at least 6 characters long').required('The password field is required.'),
-    // password_confirmation: Yup.string().oneOf([Yup.ref('password'), ''], 'Passwords must match').required('The password confirmation field is required.'),
-    // gender_id: Yup.string().required('The gender field is required.'),
-    // date_of_birth: Yup.date().required('The date of birth is required.'),
-    // age: Yup.number().required('The age field is required.'),
-    // marital_status_id: Yup.string().required('The marital status field is required.'),
-    // occupation: Yup.string().required('The occupation field is required.'),
-    // father_or_mother_husband: Yup.string().required('The father/mother/husband name is required.'),
-    // blood_group_id: Yup.string().required('The blood group field is required.'),
-    // present_address: Yup.object().shape({
-    //   country_id: Yup.string().required('The country field in the present address is required.'),
-    //   city_id: Yup.string().required('The city field in the present address is required.'),
-    //   post_code: Yup.string().required('The postal code field in the present address is required.'),
-    //   address: Yup.string().required('The present address field is required.'),
-    // }),
+    name: Yup.string().required('The name field is required.'),
+    phone: Yup.string().required('The phone field is required.').matches(/^[0-9]{11}$/, 'Phone number must be exactly 11 digits.'),
+    email: Yup.string().email('Invalid email format').required('The email field is required.'),
+    password: Yup.string().min(6, 'Password must be at least 6 characters long').required('The password field is required.'),
+    password_confirmation: Yup.string().oneOf([Yup.ref('password'), ''], 'Passwords must match').required('The password confirmation field is required.'),
+    gender_id: Yup.string().required('The gender field is required.'),
+    date_of_birth: Yup.date().required('The date of birth is required.'),
+    age: Yup.number().required('The age field is required.'),
+    marital_status_id: Yup.string().required('The marital status field is required.'),
+    occupation: Yup.string().required('The occupation field is required.'),
+    blood_group_id: Yup.string().required('The blood group field is required.'),
 
-    // emergency_contact_number: Yup.string()
-    //   .required('The phone field is required.')
-    //   .matches(
-    //     /^[0-9]{11}$/,
-    //     'Phone number must be exactly 11 digits.'
-    //   ),
-    // permanent_address: Yup.object().shape({
-    //   country_id: Yup.string().required('The country field in the permanent address is required.'),
-    //   city_id: Yup.string().required('The city field in the permanent address is required.'),
-    //   post_code: Yup.string().required('The postal code field in the permanent address is required.'),
-    //   address: Yup.string().required('The permanent address field is required.'),
-    // }),
+    father_occupation: Yup.string().required('The father occupation field is required.'),
+    father_income_status: Yup.string().required('The father income status field is required.'),
+
+    electrophoresis_report: Yup
+      .mixed()
+      .required('The electrophoresis report is required.')
+      .test('fileType', 'The electrophoresis report must be a file of type: jpeg, png, jpg, or pdf.', (value) => {
+        return value && ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'].includes((value as File).type);
+      }),
+
+
+    present_address: Yup.object().shape({
+      country_id: Yup.string().required('The country field in the present address is required.'),
+      city_id: Yup.string().required('The city field in the present address is required.'),
+      post_code: Yup.string().required('The postal code field in the present address is required.'),
+      address: Yup.string().required('The present address field is required.'),
+    }),
+
+    emergency_contact_number: Yup.string()
+      .required('The phone field is required.')
+      .matches(
+        /^[0-9]{11}$/,
+        'Phone number must be exactly 11 digits.'
+      ),
+    permanent_address: Yup.object().shape({
+      country_id: Yup.string().required('The country field in the permanent address is required.'),
+      city_id: Yup.string().required('The city field in the permanent address is required.'),
+      post_code: Yup.string().required('The postal code field in the permanent address is required.'),
+      address: Yup.string().required('The permanent address field is required.'),
+    }),
   });
 
   const handleSubmit = async (values: any, setErrors: any) => {
     setLoading(true);
     try {
-      await dispatch(adminPatientAdd(values)).unwrap();
+      await createPatient(values).unwrap();
+      setOpen(false);
       Swal.fire({
         title: 'Success!',
-        text: 'Patient registered successfully! Please Login',
+        text: 'Patient registered successfully!',
         icon: 'success',
         confirmButtonText: 'OK',
       });
-      dispatch(get({}));
 
-    } catch (error: any) {
-      const formikErrors = Object.entries(error).reduce((acc: any, [key, value]) => {
-        const keys = key.split('.');
-        const lastKey = keys.pop();
-        if (lastKey) {
-          let nestedObj = acc;
+
+    }
+    catch (error: any) {
+      try {
+        const formikErrors = JSON.parse(JSON.stringify(error.data.data));
+        Object.entries(formikErrors).forEach(([key, value]) => {
+          const keys = key.split('.');
+          const lastKey = keys.pop();
+          let nestedObj = formikErrors;
           keys.forEach((k) => {
-            if (!nestedObj[k]) nestedObj[k] = {};
+            if (!nestedObj[k]) {
+              nestedObj[k] = {}; 
+            }
             nestedObj = nestedObj[k];
           });
-          nestedObj[lastKey] = value;
-        }
-        return acc;
-
-
-      }, {});
-      console.log('Transformed errors:', formikErrors);
-      setErrors(formikErrors);
-      console.log(error);
+          if (lastKey) {
+            nestedObj[lastKey] = value;
+          }
+        });
+        setErrors(formikErrors);
+      } catch (e) {
+        console.error('Error transforming validation errors:', e);
+      }
     } finally {
       setLoading(false);
     }
@@ -207,6 +216,8 @@ const Add: React.FC = () => {
         </DialogHeader>
         <Formik
           initialValues={{
+
+
             name: '',
             phone: '',
             email: '',
@@ -217,15 +228,22 @@ const Add: React.FC = () => {
             age: '',
             marital_status_id: '',
             occupation: '',
-            disease_type_id: '',
+            disease_type_id: '1',
             height_id: '',
             weight_id: '',
             father_name: '',
             mother_name: '',
             husband_name: '',
             wife_name: '',
-            electrophoresis_report: null,
+            father_occupation: '',
+            father_income_status: '',
+            old_bts_id: '',
+            number_of_siblings: '',
+            siblings_status: '',
             emergency_contact_number: '',
+
+            profile_image: null,
+            electrophoresis_report: null,
             blood_group_id: '',
             present_address: {
               country_id: '',
@@ -253,6 +271,7 @@ const Add: React.FC = () => {
                       <ErrorMessage name="name" component="div" className="text-danger" />
 
                     </div>
+
                     <div className='row'>
                       <div className="col-md-6">
                         <div className=" form-group mb-2">
@@ -265,9 +284,9 @@ const Add: React.FC = () => {
                           <Field name="email" type="email" placeholder="Email" className="form-control" />
                           <ErrorMessage name="email" component="div" className="text-danger" />
                         </div>
-
                       </div>
                     </div>
+
                     <div className=" form-group mb-2">
                       <Field name="password" type="password" placeholder="Password" className="form-control" />
                       <ErrorMessage name="password" component="div" className="text-danger" />
@@ -398,12 +417,45 @@ const Add: React.FC = () => {
 
                     </div>
 
-                    <div className=" form-group mb-2">
-                      <label htmlFor="previousBloodDonationDate"><h5 className="birth">Previous Blood Donation Date:</h5></label>
-                      <Field type="date" id="previousBloodDonationDate" name="previousBloodDonationDate" className="form-control" />
-                      <ErrorMessage name="previousBloodDonationDate" component="div" className="text-danger" />
+
+
+                    <div className='row'>
+                      <div className="col-md-6">
+                        <div className=" form-group mb-2">
+                          <Field name="old_bts_id" type="text" placeholder="Old BTS Id" className="form-control" />
+                          <ErrorMessage name="old_bts_id" component="div" className="text-danger" />
+                        </div>
+                      </div>
+                      <div className="col-md-6">
+                        <div className=" form-group mb-2">
+                          <Field name="number_of_siblings" type="number_of_siblings" placeholder="Number of Siblings" className="form-control" />
+                          <ErrorMessage name="number_of_siblings" component="div" className="text-danger" />
+                        </div>
+                      </div>
                     </div>
 
+
+                    <div className=" form-group mb-2">
+                      <label htmlFor="siblings_status"><h5 className="birth">Siblings Status</h5></label>
+                      <Field type="text" id="siblings_status" name="siblings_status" className="form-control" />
+                      <ErrorMessage name="siblings_status" component="div" className="text-danger" />
+                    </div>
+
+
+                    <div className="form-group">
+
+                      <label htmlFor="profile_image"><h5 className="birth">Profile Picture</h5></label>
+                      <input
+                        name="profile_image"
+                        type="file"
+                        className="form-control pt-2"
+                        onChange={(event: any) => {
+                          const file = event.currentTarget.files[0];
+                          setFieldValue("profile_image", file);
+                        }}
+                      />
+                      <ErrorMessage name="profile_image" component="div" className="text-danger" />
+                    </div>
 
 
                   </div>
@@ -457,6 +509,35 @@ const Add: React.FC = () => {
                         </div>
                       </div>
                     </div>
+
+
+                    <div className='row'>
+                      <div className="col-md-6">
+                        <div className="form-group mb-2">
+                          <Field name="father_occupation" type="text" placeholder="Father Occupation" className="form-control" />
+                          <ErrorMessage name="father_occupation" component="div" className="text-danger" />
+                        </div>
+                      </div>
+
+                      <div className="col-md-6">
+                        <div className="form-group mb-2">
+                          <Field
+                            as="select"
+                            name="father_income_status"
+                            className="form-select ras"
+                          >
+                            <option value="">Father Income Status</option>
+                            <option value="1">High</option>
+                            <option value="2">Middle</option>
+                            <option value="3">Low</option>
+
+                          </Field>
+
+                          <ErrorMessage name="father_income_status" component="div" className="text-danger" />
+                        </div>
+                      </div>
+                    </div>
+
 
                     <div className='row'>
                       <div className="col-md-6">
@@ -582,17 +663,28 @@ const Add: React.FC = () => {
 
 
                       <div className="form-group mb-2">
+                        <label htmlFor="electrophoresis_report">Electrophoresis Report</label>
+
                         <input
                           name="electrophoresis_report"
                           type="file"
                           className="form-control pt-2"
                           onChange={(event: any) => {
                             const file = event.currentTarget.files[0];
+                            console.log(file);
+
                             setFieldValue("electrophoresis_report", file);
                           }}
+
+                        // required
                         />
+
+
                         <ErrorMessage name="electrophoresis_report" component="div" className="text-danger" />
                       </div>
+
+
+
                     </div>
                   </div>
                 </div>

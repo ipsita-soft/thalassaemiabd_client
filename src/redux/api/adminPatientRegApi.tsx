@@ -23,3 +23,11 @@ export const getApi = async (params = {}) => {
     }
 };
 
+export const showApi = async (id: string) => {
+    try {
+      const response = await api.get(`management/admin-patient/${id}`);
+      return response.data;
+    } catch (error: any) {
+      throw error.response ? error.response.data : new Error('Error fetching data');
+    }
+  };

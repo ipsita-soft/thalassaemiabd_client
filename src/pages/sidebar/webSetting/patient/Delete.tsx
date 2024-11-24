@@ -1,5 +1,3 @@
-
-import { deleteApi } from '@/redux/api/galleryApi';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,6 +10,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from '@/components/ui/button';
+import { useDeletePatientMutation } from '@/api/patientApi';
 
 interface DeleteSliderProps {
   Id: string;
@@ -20,12 +19,15 @@ interface DeleteSliderProps {
 
 const Delete: React.FC<DeleteSliderProps> = ({ Id, onSuccess }) => {
 
+  const [deletePatient] = useDeletePatientMutation(); // RTK মিউটেশন হুক
+
   const handleDelete = async () => {
     try {
-      await deleteApi(Id);
-      onSuccess(); // Call the success handler after deletion
+      await deletePatient(Id).unwrap(); 
+      onSuccess(); 
     } catch (error) {
       console.error('Error deleting data:', error);
+
     }
   };
 

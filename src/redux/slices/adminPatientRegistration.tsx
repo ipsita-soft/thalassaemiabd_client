@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { addApi, getApi } from "../api/adminPatientRegApi";
+import { addApi, getApi, showApi } from "../api/adminPatientRegApi";
 
 const initialState = {
     isLoading: false,
     isError: false,
     patientRegistrationData: [],
+    patientRegistrationDataSing: [],
     meta: null as Meta | null,
     genders: [],
     bloodGroups: [],
@@ -39,7 +40,7 @@ export const adminPatientAdd = createAsyncThunk(
 );
 
 export const get = createAsyncThunk(
-    'adminBloodDonor/get',
+    'adminPatientGet',
     async (params: object = {}, { rejectWithValue }) => {
         try {
             const response = await getApi(params);
@@ -49,6 +50,21 @@ export const get = createAsyncThunk(
         }
     }
 );
+
+
+
+export const show = createAsyncThunk(
+    'adminPatientShow',
+    async (id: string, { rejectWithValue }) => {
+        try {
+            const data = await showApi(id);
+            return data;
+        } catch (error: any) {
+            return rejectWithValue(error.message || 'Failed to fetch data');
+        }
+    }
+);
+
 
 const adminPatientRegistration = createSlice({
     name: 'adminBloodDonorRegister',
@@ -71,7 +87,7 @@ const adminPatientRegistration = createSlice({
             })
 
             .addCase(get.pending, (state) => {
-                state.isLoading = true;
+                state.isLoading = false;
                 state.isError = false;
             })
             .addCase(get.fulfilled, (state, action) => {
@@ -83,7 +99,23 @@ const adminPatientRegistration = createSlice({
                 state.isLoading = false;
                 state.isError = true;
                 state.error = action.payload || "Failed to fetch data";
-            });
+            })
+
+            .addCase(show.pending, (state) => {
+                state.isLoading = false;
+            })
+            .addCase(show.fulfilled, (state, action) => {
+                state.patientRegistrationDataSing = action.payload?.data || action.payload; 
+                state.isLoading = false;
+            })
+            .addCase(show.rejected, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.payload || "Failed to fetch data";
+            })
+
+
+            ;
     }
 });
 

@@ -241,7 +241,7 @@ export function BloodDonorPage() {
                     <Add />
                 </div>
                 {isError ? (
-                    <>Error: {error && <p>Error: {error}</p>}</>
+                    <>Error: {error && <p>Error</p>}</>
                 ) : (
                     <div className="overflow-x-auto">
                         <Table>
