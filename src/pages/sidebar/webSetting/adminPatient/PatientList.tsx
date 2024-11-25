@@ -9,7 +9,9 @@ export type Payment = any;
 const PatientList: React.FC = () => {
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState('');
-    const { data, isLoading, error } = useFetchPatientsQuery({ page, search });
+    const perPage = 10;
+    const { data, isLoading, error } = useFetchPatientsQuery({ page, search, perPage });
+
 
 
 
@@ -18,7 +20,7 @@ const PatientList: React.FC = () => {
     const [deletePatient] = useDeletePatientMutation();
 
 
-    
+
 
 
 
@@ -55,7 +57,7 @@ const PatientList: React.FC = () => {
         getCoreRowModel: getCoreRowModel(),
     });
 
-    const handleDelete = async (id: number) => {
+    const handleDelete = async (id: string) => {
         if (window.confirm('Are you sure you want to delete this patient?')) {
             await deletePatient(id);
         }

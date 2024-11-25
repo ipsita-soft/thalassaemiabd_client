@@ -27,6 +27,7 @@ import adminBloodDonorReg from './slices/adminBloodDonorReg';
 import adminPatientRegistration from './slices/adminPatientRegistration';
 import adminUsersReducers from './slices/adminUserSlice';
 import { patientApi } from '@/api/patientApi';
+import { medicalHistoryApi } from '@/api/medicalHistoryApi';
 
 export const store = configureStore({
   reducer: {
@@ -59,9 +60,12 @@ export const store = configureStore({
     //public reducer
     public: publicReducer,
     [patientApi.reducerPath]: patientApi.reducer,
+    [medicalHistoryApi.reducerPath]: medicalHistoryApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(patientApi.middleware),
+    getDefaultMiddleware()
+      .concat(patientApi.middleware)
+      .concat(medicalHistoryApi.middleware),
 });
 
 export type AppDispatch = typeof store.dispatch;

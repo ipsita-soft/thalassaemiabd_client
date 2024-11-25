@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useFetchPatientsQuery } from "@/api/patientApi";
+import { useFetchMedicalHistoriesQuery } from "@/api/medicalHistoryApi";
 import {
     SortingState,
     ColumnFiltersState,
@@ -28,37 +28,28 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import Add from "./Add";
+import Add from "@/pages/sidebar/webSetting/medicalHistory/Add";
 import Edit from "./Edit";
 import Show from "./Show";
-import Delete from "@/pages/sidebar/webSetting/patient/Delete";
+import Delete from "@/pages/sidebar/webSetting/medicalHistory/Delete";
 
 import Swal from "sweetalert2";
 
-export function PatientPage() {
+export function MedicalHistoryPage() {
     const [perPage, setPerPage] = useState(10);
     const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-
-    const { data, isLoading, error } = useFetchPatientsQuery({
+    const { data, isLoading, error } = useFetchMedicalHistoriesQuery({
         perPage,
         search,
         page: currentPage,
     });
-
     const meta = data?.meta;
     const patientRegistrationData = data?.data;
-    
-
-    // const dispatch: AppDispatch = useDispatch();
-
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [filterValue, setFilterValue] = useState("");
-
-    const [isEditModalOpen, setEditModalOpen] = useState(false);
-
     const columns = [
         {
             id: "serial",
@@ -68,33 +59,21 @@ export function PatientPage() {
             ),
         },
         {
-            id: "name",
-            header: "Name",
+            id: "title",
+            header: "Title",
             cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.name}</div>
+                <div className="text-left">{row.original.title}</div>
             ),
         },
+
         {
-            id: "bts-id",
-            header: "BTS ID",
+            id: "sorting_index",
+            header: "Sorting Index",
             cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.bts_id}</div>
+                <div className="text-left">{row.original.sorting_index}</div>
             ),
         },
-        {
-            id: "phone",
-            header: "Phone",
-            cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.phone}</div>
-            ),
-        },
-        {
-            id: "email",
-            header: "Email",
-            cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.email}</div>
-            ),
-        },
+        
         {
             accessorKey: "status",
             header: "Status",
@@ -130,11 +109,7 @@ export function PatientPage() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
-                            <Edit
-                                Id={data.id.toString()}
-                                open={isEditModalOpen}
-                                onClose={() => setEditModalOpen(false)}
-                            />
+                            <Edit Id={data.id.toString()} open={false} onClose={() => { }} />
                             <br />
                             <Show Id={data.id.toString()} open={false} onClose={() => { }} />
                             <br />
@@ -292,9 +267,6 @@ export function PatientPage() {
                     ))}
                 </div>
             </div>
-
-
-
 
 
 

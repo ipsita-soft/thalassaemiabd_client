@@ -37,13 +37,11 @@ export const patientApi = createApi({
             if (token) {
                 headers.set('Authorization', `Bearer ${token}`);
             }
-            // headers.set('Content-Type', 'application/json');
             return headers;
         },
     }),
     tagTypes: ['Patient'],
     endpoints: (builder) => ({
-        // Fetch patients with pagination and search
         fetchPatients: builder.query<
             PatientListResponse,
             { perPage: number; page: number; search?: string }
@@ -63,19 +61,10 @@ export const patientApi = createApi({
         // Fetch single patient
         fetchPatient: builder.query<Patient, string>({
             query: (id) => `management/admin-patient/${id}`,
-            providesTags: (result, error, id) => [{ type: 'Patient', id }],
+            providesTags: (_, __, id) => [{ type: 'Patient', id }],
         }),
 
-        // Create patient
-        // createPatient: builder.mutation<Patient, Partial<Patient>>({
-        //     query: (newPatient) => ({
-        //         url: 'management/admin-patient',
-        //         method: 'POST',
-        //         body: newPatient,
-        //     }),
-        //     invalidatesTags: [{ type: 'Patient', id: 'LIST' }],
-        // }),
-
+     
         createPatient: builder.mutation<Patient, Partial<Patient>>({
             query: (newPatient) => {
                 const formData = new FormData();
@@ -88,7 +77,6 @@ export const patientApi = createApi({
                         formData.append(key, value as File);
                     }
                     else if (typeof value === 'object' && value !== null) {
-                        // Nested object (e.g., present_address, permanent_address)
                         Object.entries(value).forEach(([nestedKey, nestedValue]) => {
                             if (nestedValue !== undefined && nestedValue !== null) {
                                 formData.append(`${key}[${nestedKey}]`, nestedValue as string);
@@ -109,29 +97,26 @@ export const patientApi = createApi({
         }),
 
 
-
-        // Update patient
         updatePatient: builder.mutation<Patient, { id: number; patientData: Partial<Patient> }>({
             query: ({ id, patientData }) => ({
                 url: `management/admin-patient/${id}`,
                 method: 'PUT',
                 body: patientData,
             }),
-            invalidatesTags: (result, error, { id }) => [{ type: 'Patient', id }],
+            invalidatesTags: (_,error, { id }) =>
+                error ? [] : [{ type: 'Patient', id }],
         }),
 
-        // Delete patient
         deletePatient: builder.mutation<{ success: boolean; id: string }, string>({
             query: (id) => ({
                 url: `management/admin-patient/${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: (result, error, id) => [{ type: 'Patient', id }, { type: 'Patient', id: 'LIST' }],
+            invalidatesTags: (_, __, id) => [{ type: 'Patient', id }, { type: 'Patient', id: 'LIST' }],
         }),
     }),
 });
 
-// Export hooks
 export const {
     useFetchPatientsQuery,
     useFetchPatientQuery,

@@ -10,20 +10,19 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from '@/components/ui/button';
-import { useDeletePatientMutation } from '@/api/patientApi';
+import { useDeleteMedicalHistoryMutation } from '@/api/medicalHistoryApi';
 
 interface DeleteSliderProps {
   Id: string;
   onSuccess: () => void;
 }
-
 const Delete: React.FC<DeleteSliderProps> = ({ Id, onSuccess }) => {
-
-  const [deletePatient] = useDeletePatientMutation(); 
+  const [deleteMedicalHistory, { isLoading }] = useDeleteMedicalHistoryMutation();
+ 
 
   const handleDelete = async () => {
     try {
-      await deletePatient(Id).unwrap(); 
+      await deleteMedicalHistory(Id).unwrap(); 
       onSuccess(); 
     } catch (error) {
       console.error('Error deleting data:', error);
@@ -33,14 +32,12 @@ const Delete: React.FC<DeleteSliderProps> = ({ Id, onSuccess }) => {
 
   return (
     <AlertDialog>
-      {/* Trigger the dialog when the delete button is clicked */}
       <AlertDialogTrigger asChild>
-        <Button variant="destructive" className="mr-2 mt-1 w-40">
-          Delete
+        <Button variant="destructive" className="mr-2 mt-1 w-40" disabled={isLoading}>
+          {isLoading ? 'Deleting...' : 'Delete'}
         </Button>
       </AlertDialogTrigger>
 
-      {/* Dialog Content */}
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -50,8 +47,10 @@ const Delete: React.FC<DeleteSliderProps> = ({ Id, onSuccess }) => {
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogAction className='bg-black text-white mt-2' onClick={handleDelete}>Yes, Delete</AlertDialogAction>
-          <AlertDialogCancel>No</AlertDialogCancel>
+          <AlertDialogAction className='bg-black text-white mt-2' onClick={handleDelete} disabled={isLoading}>
+            Yes, Delete
+          </AlertDialogAction>
+          <AlertDialogCancel disabled={isLoading}>No</AlertDialogCancel>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

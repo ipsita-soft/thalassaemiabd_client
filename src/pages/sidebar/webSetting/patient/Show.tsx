@@ -7,8 +7,8 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { AppDispatch, RootState } from '@/redux/store';
-import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
+import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { update } from '@/redux/slices/userRequestSlice';
 import { useToast } from '@/hooks/use-toast';
@@ -23,18 +23,6 @@ type ShowData = {
 
 
 const Show: React.FC<ShowData> = ({ Id }) => {
-
-  const [formData, setFormData] = useState<{
-    status: string | null;
-  }>({
-    status: null,
-  });
-
-
-
-
-
-
 
 
   const { refetch } = useFetchPatientsQuery({
@@ -277,8 +265,6 @@ const Show: React.FC<ShowData> = ({ Id }) => {
   const renderValue = (value: any) => (value ? value : 'N/A');
 
   const handleApprovedOrReject = async (status: any) => {
-
-    setFormData((prev) => ({ ...prev, status: status.toString() }));
     const reqData = new FormData();
     reqData.append("status", status.toString());
 

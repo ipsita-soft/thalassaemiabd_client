@@ -28,7 +28,8 @@ import {
     BookUser,
     SquareUser,
     UserRoundCheck,
-    Layers
+    Layers,
+    History
 
 } from 'lucide-react';
 
@@ -331,6 +332,10 @@ function DashboardLayout() {
                                         </Link>
                                     )}
 
+
+
+                                <hr className="mx-2 my-2"/>
+
                                 {hasPermissions([
                                     'admin-patient-all',
                                 ], permissions) && (
@@ -345,6 +350,24 @@ function DashboardLayout() {
                                             Patients
                                         </Link>
                                     )}
+
+
+
+                                {hasPermissions([
+                                    'medical-history-all',
+                                ], permissions) && (
+
+                                        <Link
+                                            to="/dashboard/medical-history"
+                                            className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all
+                                             ${isActive('/dashboard/medical-history') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                                }`}
+                                        >
+                                            <History className="h-4 w-4" />
+                                            Medical History
+                                        </Link>
+                                    )}
+
 
                                 {hasPermissions([
                                     'admin-user-all',

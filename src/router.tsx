@@ -67,6 +67,7 @@ import { TestPage } from './pages/sidebar/webSetting/roles/TestPage.tsx';
 import { BloodDonorPage } from './pages/sidebar/webSetting/bloodDonor/BloodDonorPage.tsx';
 import { PatientPage } from './pages/sidebar/webSetting/patient/PatientPage';
 import { UsersPage } from './pages/sidebar/webSetting/users/UsersPage.tsx';
+import { MedicalHistoryPage } from './pages/sidebar/webSetting/medicalHistory/MedicalHistoryPage.tsx';
 
 const router = createBrowserRouter([
   {
@@ -286,6 +287,17 @@ const router = createBrowserRouter([
           element={<PatientPage />}
           requiredPermissions={[
             'admin-patient-all',
+          ]}
+        />,
+      },
+
+
+      {
+        path: 'medical-history',
+        element: <ProtectedRoute
+          element={<MedicalHistoryPage />}
+          requiredPermissions={[
+            'medical-history-all',
           ]}
         />,
       },
