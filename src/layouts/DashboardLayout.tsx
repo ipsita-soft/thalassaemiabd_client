@@ -29,7 +29,8 @@ import {
     SquareUser,
     UserRoundCheck,
     Layers,
-    History
+    History,
+    Library
 
 } from 'lucide-react';
 
@@ -334,7 +335,7 @@ function DashboardLayout() {
 
 
 
-                                <hr className="mx-2 my-2"/>
+                                <hr className="mx-2 my-2" />
 
                                 {hasPermissions([
                                     'admin-patient-all',
@@ -365,6 +366,23 @@ function DashboardLayout() {
                                         >
                                             <History className="h-4 w-4" />
                                             Medical History
+                                        </Link>
+                                    )}
+
+
+
+                                {hasPermissions([
+                                    'medical-history-item-all',
+                                ], permissions) && (
+
+                                        <Link
+                                            to="/dashboard/medical-history-item"
+                                            className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all
+                                             ${isActive('/dashboard/medical-history-item') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                                }`}
+                                        >
+                                            <Library className="h-4 w-4" />
+                                            Medical History Item
                                         </Link>
                                     )}
 

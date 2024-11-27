@@ -26,9 +26,9 @@ export interface DataListResponse {
     };
 }
 
-export const medicalHistoryApi = createApi({
+export const medicalHistoryItemApi = createApi({
 
-    reducerPath: 'medicalHistoryApi',
+    reducerPath: 'medicalHistoryItemApi',
 
     baseQuery: fetchBaseQuery({
         baseUrl: API_BASE_URL,
@@ -41,65 +41,67 @@ export const medicalHistoryApi = createApi({
         },
     }),
 
-    tagTypes: ['MedicalHistory'],
+    tagTypes: ['MedicalHistoryItem'],
 
     endpoints: (builder) => ({
+       
         fetchMedicalHistories: builder.query<
             DataListResponse,
-            { perPage: number; page: number; search?: string, status?: string }
+            { perPage: number; page: number; search?: string }
         >({
-            query: ({ perPage, page, search, status }) =>
-                `web/medical-history?per_page=${perPage}&page=${page}&status=${status || ''}&search=${search || ''}`,
+            query: ({ perPage, page, search }) =>
+                `web/medical-history-item?per_page=${perPage}&page=${page}&search=${search || ''}`,
             providesTags: (result) =>
                 result
                     ? [
-                        ...result.data.map(({ id }) => ({ type: 'MedicalHistory', id } as const)),
-                        { type: 'MedicalHistory', id: 'LIST' },
+                        ...result.data.map(({ id }) => ({ type: 'MedicalHistoryItem', id } as const)),
+                        { type: 'MedicalHistoryItem', id: 'LIST' },
                     ]
-                    : [{ type: 'MedicalHistory', id: 'LIST' }],
+                    : [{ type: 'MedicalHistoryItem', id: 'LIST' }],
+        }),
+        
+
+        MedicalHistoryItem: builder.query<Data, string>({
+            query: (id) => `web/medical-history-item/${id}`,
+            providesTags: (_, __, id) => [{ type: 'MedicalHistoryItem', id }],
         }),
 
-        MedicalHistory: builder.query<Data, string>({
-            query: (id) => `web/medical-history/${id}`,
-            providesTags: (_, __, id) => [{ type: 'MedicalHistory', id }],
-        }),
 
 
-
-        createMedicalHistory: builder.mutation<Data, Partial<Data>>({
-            query: (newMedicalHistory) => {
+        createMedicalHistoryItem: builder.mutation<Data, Partial<Data>>({
+            query: (newData) => {
                 const formData = new FormData();
-                Object.entries(newMedicalHistory).forEach(([key, value]) => {
+                Object.entries(newData).forEach(([key, value]) => {
                     formData.append(key, value as string);
                 });
                 return {
-                    url: 'web/medical-history',
+                    url: 'web/medical-history-item',
                     method: 'POST',
                     body: formData,
                 };
             },
-            invalidatesTags: [{ type: 'MedicalHistory', id: 'LIST' }],
+            invalidatesTags: [{ type: 'MedicalHistoryItem', id: 'LIST' }],
         }),
 
 
-        updateMedicalHistory: builder.mutation<Data, { id: string; historyData: Partial<Data> }>({
+        updateMedicalHistoryItem: builder.mutation<Data, { id: string; historyData: Partial<Data> }>({
             query: ({ id, historyData }) => ({
-                url: `web/medical-history/${id}`,
+                url: `web/medical-history-item/${id}`,
                 method: 'PUT',
                 body: historyData,
             }),
             invalidatesTags: (_, error, { id }) =>
-                error ? [] : [{ type: 'MedicalHistory', id }],
+                error ? [] : [{ type: 'MedicalHistoryItem', id }],
         }),
 
 
         // Delete patient
-        deleteMedicalHistory: builder.mutation<{ success: boolean; id: string }, string>({
+        deleteMedicalHistoryItem: builder.mutation<{ success: boolean; id: string }, string>({
             query: (id) => ({
-                url: `web/medical-history/${id}`,
+                url: `web/medical-history-item/${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: (_, __, id) => [{ type: 'MedicalHistory', id }, { type: 'MedicalHistory', id: 'LIST' }],
+            invalidatesTags: (_, __, id) => [{ type: 'MedicalHistoryItem', id }, { type: 'MedicalHistoryItem', id: 'LIST' }],
         }),
     }),
 });
@@ -107,8 +109,8 @@ export const medicalHistoryApi = createApi({
 // Export hooks
 export const {
     useFetchMedicalHistoriesQuery,
-    useMedicalHistoryQuery,
-    useCreateMedicalHistoryMutation,
-    useUpdateMedicalHistoryMutation,
-    useDeleteMedicalHistoryMutation,
-} = medicalHistoryApi;
+    useMedicalHistoryItemQuery,
+    useCreateMedicalHistoryItemMutation,
+    useUpdateMedicalHistoryItemMutation,
+    useDeleteMedicalHistoryItemMutation
+} = medicalHistoryItemApi;

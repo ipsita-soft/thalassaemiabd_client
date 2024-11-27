@@ -68,6 +68,7 @@ import { BloodDonorPage } from './pages/sidebar/webSetting/bloodDonor/BloodDonor
 import { PatientPage } from './pages/sidebar/webSetting/patient/PatientPage';
 import { UsersPage } from './pages/sidebar/webSetting/users/UsersPage.tsx';
 import { MedicalHistoryPage } from './pages/sidebar/webSetting/medicalHistory/MedicalHistoryPage.tsx';
+import { MedicalHistoryItemPage } from './pages/sidebar/webSetting/medicalHistoryItem/MedicalHistoryItemPage.tsx';
 
 const router = createBrowserRouter([
   {
@@ -298,6 +299,15 @@ const router = createBrowserRouter([
           element={<MedicalHistoryPage />}
           requiredPermissions={[
             'medical-history-all',
+          ]}
+        />,
+      },
+      {
+        path: 'medical-history-item',
+        element: <ProtectedRoute
+          element={<MedicalHistoryItemPage/>}
+          requiredPermissions={[
+            'medical-history-item-all',
           ]}
         />,
       },
