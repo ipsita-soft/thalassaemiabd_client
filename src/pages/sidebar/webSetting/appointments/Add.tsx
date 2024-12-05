@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   Dialog,
@@ -16,63 +15,54 @@ import {
   useCreateAppointmentsItemMutation,
   useFetchUsersWithRoleQuery,
 } from '@/api/appointmentsApi';
-import {
-  useFetchMedicalHistoriesQuery,
-} from '@/api/medicalHistoryApi'
+import { useFetchMedicalHistoriesQuery } from '@/api/medicalHistoryApi';
 import SelectField from '@/components/common/SelectField';
+import { useSelector } from 'react-redux';
 
 const Add: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [createMedical] = useCreateAppointmentsItemMutation();
+  const [createAppointment] = useCreateAppointmentsItemMutation();
+  const { user } = useSelector((state: any) => state.auth);
 
-  const [perPage] = useState(250);
-  const search = '';
-  const currentPage = 1;
-  const status = '1';
-  const { data: medicalHistories } =
-    useFetchMedicalHistoriesQuery({
-      perPage,
-      search,
-      page: currentPage,
-      status
-    });
-
-  const { data: usersWithRole} = useFetchUsersWithRoleQuery({
+  const { data: usersWithRole } = useFetchUsersWithRoleQuery({
     roleId: 9,
     perPage: 250,
     page: 1,
   });
 
-  const { data: getpetient} = useFetchUsersWithRoleQuery({
+  const { data: getPatient } = useFetchUsersWithRoleQuery({
     roleId: 8,
     perPage: 250,
     page: 1,
   });
 
-console.log(medicalHistories);
+  const DocOption =
+    usersWithRole?.data?.map((doc: any) => ({
+      value: doc.id,
+      label: doc.name,
+    })) || [];
 
-  const DocOption = usersWithRole?.data.map((digt: any) => ({
-    value: digt?.id,
-    label: digt?.name,
-  }));
-  const PetOption = getpetient?.data.map((digt: any) => ({
-    value: digt?.id,
-    label: digt?.name,
-  }));
+  const PatientOption =
+    getPatient?.data?.map((patient: any) => ({
+      value: patient.id,
+      label: patient.name,
+    })) || [];
 
   const validationSchema = Yup.object().shape({
-    title: Yup.string().required('The title field is required.'),
-    sorting_index: Yup.string().required('The sorting index field is required.'),
+    date: Yup.string().required('The date field is required.'),
+    appointment_type: Yup.string().required(
+      'The appointment type field is required.'
+    ),
     status: Yup.string().required('The status field is required.'),
-    doctor_id: Yup.string().required('The Doctor  field is required.'),
+    doctor_id: Yup.string().required('The Doctor field is required.'),
     patient_id: Yup.string().required('The Patient field is required.'),
   });
 
   const handleSubmit = async (values: any, { setErrors }: any) => {
     setLoading(true);
     try {
-      await createMedical(values).unwrap();
+      await createAppointment(values).unwrap();
       setOpen(false);
       Swal.fire({
         title: 'Success!',
@@ -81,7 +71,7 @@ console.log(medicalHistories);
         confirmButtonText: 'OK',
       });
     } catch (error: any) {
-      setErrors(error?.data?.data || {});
+      setErrors(error?.data?.errors || {});
     } finally {
       setLoading(false);
     }
@@ -101,11 +91,12 @@ console.log(medicalHistories);
         </DialogHeader>
         <Formik
           initialValues={{
-            title: '',
-            sorting_index: '',
+            date: '',
+            appointment_type: '',
             status: '',
             doctor_id: '',
             patient_id: '',
+            created_by: user?.id || '',
           }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
@@ -115,25 +106,24 @@ console.log(medicalHistories);
               <div className="row">
                 <div className="col-md-6 mb-4">
                   <Field
-                    name="title"
-                    type="text"
-                    placeholder="Title"
+                    name="date"
+                    type="date"
                     className="form-control"
                   />
-                  <ErrorMessage name="title" component="div" className="text-danger" />
+                  <ErrorMessage name="date" component="div" className="text-danger" />
                 </div>
                 <div className="col-md-6 mb-4">
                   <Field
-                    name="sorting_index"
-                    type="text"
-                    placeholder="Sorting Index"
+                    as="select"
+                    name="appointment_type"
                     className="form-control"
-                  />
-                  <ErrorMessage
-                    name="sorting_index"
-                    component="div"
-                    className="text-danger"
-                  />
+                  >
+                    <option value="" label="Select Appointment Type" />
+                    <option value="1" label="Approved" />
+                    <option value="2" label="Pending" />
+                    <option value="3" label="Rejected" />
+                  </Field>
+                  <ErrorMessage name="appointment_type" component="div" className="text-danger" />
                 </div>
                 <div className="col-md-6 mb-4">
                   <Field
@@ -141,13 +131,12 @@ console.log(medicalHistories);
                     name="status"
                     className="form-control"
                   >
-                    <option value="" label="Select status" />
+                    <option value="" label="Select Status" />
                     <option value="1" label="Active" />
                     <option value="2" label="Inactive" />
                   </Field>
                   <ErrorMessage name="status" component="div" className="text-danger" />
                 </div>
-
                 <div className="col-md-6 mb-4">
                   <Field
                     name="doctor_id"
@@ -155,26 +144,16 @@ console.log(medicalHistories);
                     options={DocOption}
                     placeholder="Select Doctor"
                   />
-                  <ErrorMessage
-                    name="doctor_id"
-                    component="div"
-                    className="text-danger"
-                  />
+                  <ErrorMessage name="doctor_id" component="div" className="text-danger" />
                 </div>
-
-
                 <div className="col-md-6 mb-4">
                   <Field
                     name="patient_id"
                     component={SelectField}
-                    options={PetOption}
-                    placeholder="Select Doctor"
+                    options={PatientOption}
+                    placeholder="Select Patient"
                   />
-                  <ErrorMessage
-                    name="patient_id"
-                    component="div"
-                    className="text-danger"
-                  />
+                  <ErrorMessage name="patient_id" component="div" className="text-danger" />
                 </div>
               </div>
               <div className="flex justify-end mt-6">
