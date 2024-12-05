@@ -1,16 +1,17 @@
-// src/layouts/UserPanelLayout.js
-import React, { useState } from "react";
+
+
 import { Outlet, useOutlet } from "react-router-dom";
 import PanelHeader from "@/client/userpanel/Panelheader";
 import PanelFooter from "@/client/userpanel/PanelFooter";
 import Sidebar from "@/client/userpanel/sidebar";
 import Dashboard from "@/client/userpanel/Dashboard";
+import { useState } from "react";
 
 const UserPanelLayout = () => {
   const outlet = useOutlet();
   const [activeTab, setActiveTab] = useState("dashboard");
 
-  const handleTabClick = (tab) => {
+  const handleTabClick = (tab:any) => {
     setActiveTab(tab);
   };
 

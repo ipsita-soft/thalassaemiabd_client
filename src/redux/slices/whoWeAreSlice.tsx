@@ -6,6 +6,7 @@ type Data = {
   image?: string;
   name?: string;
   designation?: string;
+  description?: string;
   type?: string;
   sorting_index?: number;
   status?: string;

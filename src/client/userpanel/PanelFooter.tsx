@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store'; // Update path as necessary
 import { fetchSetting } from '@/redux/slices/publicSlice'; // Import the thunk
-import Marquee from "react-marquee-slider";
+
 
 const PanelFooter = () => {
     const dispatch = useDispatch<AppDispatch>();

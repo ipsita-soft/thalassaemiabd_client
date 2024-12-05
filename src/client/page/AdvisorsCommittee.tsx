@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store"; // Adjust the import path as per your store location
 import { fetchWhoWeArePage, fetchPublicYearList } from "@/redux/slices/publicSlice";
+import { Link } from "react-router-dom";
 
 interface WhoWeArePage {
     id: number;
@@ -13,13 +14,12 @@ interface WhoWeArePage {
     status: string;
 }
 
-
 const AdvisorsCommittee = () => {
+    const dispatch = useDispatch<AppDispatch>(); // Correctly define dispatch with AppDispatch type
 
     // State to store selected year
     const [yearId, setYearId] = useState<number | null>(null);
     const [activeData, setActiveData] = useState<string | undefined>(undefined);
-
 
     // Select data from the Redux store
     const {
@@ -34,34 +34,25 @@ const AdvisorsCommittee = () => {
     useEffect(() => {
         if (yearList?.data) {
             const activeYear = yearList.data.find((year: any) => year.status === 'Active');
-
             if (activeYear) {
                 setYearId(activeYear.id);
-
-                // Set the active year ID to state
             }
         }
-    }, [yearList])
+    }, [yearList]);
 
     // Fetch WhoWeArePage data when the year changes
     useEffect(() => {
         if (yearId !== null && yearList?.data?.length > 0) {
-            // Fetch the page data based on the selected year
             dispatch(fetchWhoWeArePage({ type: 'advisors', year_id: yearId }));
 
-            // Find the selected year data from yearList.data
             const selectedYearData = yearList.data.find((year: any) => year.id === yearId);
-
-            // Set the selected year 'date' to state
             if (selectedYearData) {
-                setActiveData(selectedYearData.date);  // Assuming you want to store 'date'
+                setActiveData(selectedYearData.date);
             } else {
                 console.error('No matching year found');
             }
         }
     }, [dispatch, yearId, yearList?.data]);
-
-
 
     // Fetch Year List data
     useEffect(() => {
@@ -79,7 +70,7 @@ const AdvisorsCommittee = () => {
     // Function to handle year change
     const handleYearChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const selectedYearId = Number(event.target.value);
-        setYearId(selectedYearId);  // Update the yearId state
+        setYearId(selectedYearId);
     };
 
     return (
@@ -123,7 +114,7 @@ const AdvisorsCommittee = () => {
                                 </div>
                                 <div className="content mt-2">
                                     <h3>
-                                        <a href="#">{advisor?.name}</a>
+                                        <Link to={`/committee-details/${advisor.id}`}>{advisor?.name}</Link>
                                     </h3>
                                     <h5>{advisor?.designation}</h5>
                                 </div>

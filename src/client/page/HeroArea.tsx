@@ -14,7 +14,7 @@ const HeroArea = () => {
     const dispatch = useDispatch<AppDispatch>();
 
     // Adjust the selector to properly match the state structure
-    const { sliders, isLoading, isError, error } = useSelector((state: RootState) => state.public);
+    const { sliders, isLoading, isError } = useSelector((state: RootState) => state.public);
 
     useEffect(() => {
         dispatch(fetchPublicSlider({}));  // Fetch sliders on mount
@@ -25,13 +25,13 @@ const HeroArea = () => {
     }
 
     if (isError) {
-        return <p>Error: {error}</p>;  // Show error message if any
+        return <p>Error</p>;  // Show error message if any
     }
 
     // Access the data array from sliders
     const sliderData: Slider[] = Array.isArray(sliders.data) ? sliders.data : [];
     
-    console.log(sliders); // This will log the actual slider data
+   
 
     return (
         <div id="carouselExampleFade" className="carousel slide carousel-fade" data-bs-ride="carousel">

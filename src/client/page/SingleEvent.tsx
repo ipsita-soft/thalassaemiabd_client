@@ -12,6 +12,8 @@ const SingleEvent = () => {
 
   // Access event data from Redux state
   const { singleEvent, isLoading, isError, error } = useSelector((state: RootState) => state.public);
+
+  console.log('asfasdf ',id);
   
   useEffect(() => {
     if (id) {
