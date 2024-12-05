@@ -35,7 +35,7 @@ import Delete from "@/pages/sidebar/webSetting/medicalHistoryItem/Delete";
 
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
-import { DialogTrigger } from "@/components/ui/dialog";
+
 
 export function AppointmentsPage() {
     const [perPage, setPerPage] = useState(10);
