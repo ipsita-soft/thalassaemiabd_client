@@ -6,7 +6,7 @@ import { fetchPublicGallery } from "@/redux/slices/publicSlice";
 const VideoGallery = () => {
     const dispatch = useDispatch<AppDispatch>();
 
-    const { galleries, isLoading, isError, error } = useSelector(
+    const { galleries, isLoading, isError } = useSelector(
         (state: RootState) => state.public
     );
 
@@ -19,7 +19,7 @@ const VideoGallery = () => {
     }
 
     if (isError) {
-        return <p>Error: {error}</p>; // Show error message if any
+        return <p>Error: </p>; // Show error message if any
     }
 
     const galleriesData = Array.isArray(galleries.data) ? galleries.data : [];

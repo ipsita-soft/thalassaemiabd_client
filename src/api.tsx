@@ -25,7 +25,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       // store.dispatch(logout());
-      window.location.href = '/login';
+      // window.location.href = '/login';
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       localStorage.removeItem('roles');

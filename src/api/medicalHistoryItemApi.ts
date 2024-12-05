@@ -44,13 +44,13 @@ export const medicalHistoryItemApi = createApi({
     tagTypes: ['MedicalHistoryItem'],
 
     endpoints: (builder) => ({
-       
+
         fetchMedicalHistories: builder.query<
             DataListResponse,
-            { perPage: number; page: number; search?: string }
+            { perPage: number; page: number; search?: string; mhid?: string }
         >({
-            query: ({ perPage, page, search }) =>
-                `web/medical-history-item?per_page=${perPage}&page=${page}&search=${search || ''}`,
+            query: ({ perPage, page, search, mhid }) =>
+                `web/medical-history-item?per_page=${perPage}&page=${page}&search=${search || ''}&medical_history_id=${mhid || ''}`,
             providesTags: (result) =>
                 result
                     ? [
@@ -59,7 +59,7 @@ export const medicalHistoryItemApi = createApi({
                     ]
                     : [{ type: 'MedicalHistoryItem', id: 'LIST' }],
         }),
-        
+
 
         MedicalHistoryItem: builder.query<Data, string>({
             query: (id) => `web/medical-history-item/${id}`,

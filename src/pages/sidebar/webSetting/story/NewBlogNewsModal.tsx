@@ -1,111 +1,80 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
-import { update } from '@/redux/slices/blogNewsSlice'; // Ensure this action exists
+import { add } from '@/redux/slices/storySlice';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useToast } from '@/hooks/use-toast';
-import { RootState } from '@/redux/store'; // Import RootState to use selector
+import { useToast } from "@/hooks/use-toast";
 import ReactQuill from 'react-quill';
-type MyData = {
-  id: string;
-  sorting_index: number;
-  status: 'Active' | 'Inactive';
-  title: string;
-  description: string;
-};
 
-type EditSliderProps = {
-  BlogNewsId: string;
-  open: boolean;
-  onClose: () => void;
-};
-
-const EditModal: React.FC<EditSliderProps> = ({ BlogNewsId }) => {
+const NewBlogNewsModal: React.FC = () => {
 
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState<{
-    image: File | null;
-    sorting_index: number | null;
-    title: string | null;
-    description: string | null;
-    status: number;
-  }>({
-    image: null,
-    sorting_index: null,
-    title: null,
-    description: null,
-    status: 2,
+  const [formData, setFormData] = useState({
+    image: undefined as File | undefined,
+    title: null as string | null,
+    description: null as string | null,
+    sorting_index: null as number | null,
+    status: 1,
   });
   const { toast } = useToast();
   const dispatch = useDispatch<AppDispatch>();
 
-  const blogNews = useSelector((state: RootState) => state.blogNews.blogNews);
-
-  const blogNewsError = useSelector((state: RootState) => state.blogNews.error);
-
-  const blogNewsToEdit = blogNews.find((blogNew) => blogNew.id.toString() === BlogNewsId) as MyData | undefined;
-
-
-  useEffect(() => {
-    if (blogNewsToEdit) {
-
-
-      setFormData({
-        image: null,
-        sorting_index: blogNewsToEdit.sorting_index,
-        title: blogNewsToEdit.title,
-        description: blogNewsToEdit.description,
-        status: blogNewsToEdit.status === 'Active' ? 1 : 2,
-      });
-    }
-  }, [blogNewsToEdit]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    const Data = new FormData();
-    Data.append('image', formData.image || '');
-    Data.append('sorting_index', formData.sorting_index?.toString() || '');
-    Data.append('title', formData.title?.toString() || '');
-    Data.append('description', formData.description?.toString() || '');
-    Data.append('status', formData.status.toString());
-    console.log(blogNewsError);
-    try {
-      await dispatch(update({ id: BlogNewsId, data: Data }));
+    const sliderData = new FormData();
+    if (formData.image) {
+      sliderData.append('image', formData.image);
+    }
+    sliderData.append('title', (formData.title ?? '').toString());
+    sliderData.append('description', (formData.description ?? '').toString());
+    sliderData.append('sorting_index', (formData.sorting_index ?? 0).toString());
+    sliderData.append('status', formData.status.toString());
 
+    try {
+      await dispatch(add(sliderData));
       toast({
-        title: 'Success',
-        description: 'Data updated successfully!',
+        title: "Success",
+        description: "Blog News added successfully!",
       });
-      setOpen(true);
+
+
+      setFormData({
+        image: undefined,
+        title: null,
+        description: null,
+        sorting_index: null,
+        status: 1,
+      });
+
+      setOpen(false);
     } catch (error) {
-      console.error('Data to update :', error);
+      console.error("Failed to data News:", error);
       toast({
-        title: 'Error',
-        description: 'Failed to update Data. Please try again.',
-        variant: 'destructive',
+        title: "Error",
+        description: "Failed to data News. Please try again.",
+        variant: "destructive",
       });
     }
   };
 
-  if (!blogNewsToEdit) {
-    return null; // Or render a loading state
-  }
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="mr-2 mt-1 w-40 bg-slate-300 text-white hover:bg-slate-400 transition">Edit </Button>
+        <Button variant="outline">Add New </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] md:max-w-[600px] lg:max-w-[700px] xl:max-w-[800px] w-full">
+      <DialogContent className="sm:max-w-[425px] md:max-w-[825px]">
         <DialogHeader>
-          <DialogTitle>Edit </DialogTitle>
+          <DialogTitle>Add New </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4">
+
+
             <div className="grid gap-2">
               <Label htmlFor="title"> Title</Label>
               <Input
@@ -118,15 +87,6 @@ const EditModal: React.FC<EditSliderProps> = ({ BlogNewsId }) => {
               />
             </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="image">Image</Label>
-              <Input
-                type="file"
-                id="image"
-                onChange={(e) => setFormData({ ...formData, image: e.target.files?.[0] || null })}
-                placeholder="Choose Image"
-              />
-            </div>
 
             {/* <div className="grid gap-2">
               <Label htmlFor="description"> Description</Label>
@@ -138,7 +98,9 @@ const EditModal: React.FC<EditSliderProps> = ({ BlogNewsId }) => {
                 placeholder="Enter description"
                 required
               />
+
             </div> */}
+
 
             <div className="mb-2">
               <Label htmlFor="description">Description</Label>
@@ -151,20 +113,32 @@ const EditModal: React.FC<EditSliderProps> = ({ BlogNewsId }) => {
 
 
             <div className="grid gap-2">
+              <Label htmlFor="image">Image </Label>
+              <Input
+                type="file"
+                id="image"
+                onChange={(e) => setFormData({ ...formData, image: e.target.files ? e.target.files[0] : undefined })}
+                placeholder="Choose Image"
+                required
+              />
+            </div>
+
+
+            <div className="grid gap-2">
               <Label htmlFor="sorting_index">Sorting Index</Label>
               <Input
                 type="number"
                 id="sorting_index"
-                value={formData.sorting_index || ''}
+                value={formData.sorting_index !== null ? formData.sorting_index : ''}
                 onChange={(e) => setFormData({ ...formData, sorting_index: e.target.value ? +e.target.value : null })}
                 placeholder="Enter Sorting Index"
+                required
               />
             </div>
-
             <div className="grid gap-2">
               <Label htmlFor="status">Status</Label>
               <Select
-                value={formData.status.toString()}
+                defaultValue={formData.status.toString()}
                 onValueChange={(value) => setFormData({ ...formData, status: +value })}
               >
                 <SelectTrigger>
@@ -179,15 +153,12 @@ const EditModal: React.FC<EditSliderProps> = ({ BlogNewsId }) => {
           </div>
           <DialogFooter className="mt-4">
             <Button type="submit">Submit</Button>
-            <p className="btn bg-gray-300 text-gray-800 hover:bg-gray-400 transition" onClick={() => setOpen(false)}>
-              Cancel
-            </p>
+            <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
-
   );
 };
 
-export default EditModal;
+export default NewBlogNewsModal;

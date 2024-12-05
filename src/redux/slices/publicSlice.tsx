@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getPublicBlogNews, getPublicSlider, getDoctorSlider, getWishers, getPublicEvent, getSingleEvent, getSingleBlogNews, getGallery, getSetting, getMissionVision, getWhoWeArePage, getBtsHistory, getPublicOurProjects, getSingleProject, getPublicNotices, getPublicTifPages, getPublicYear, getPublicPublication, getSinglePublication, getPublicCountries, getPublicCities, getCommitteeDetail } from "../api/publicApi";
+import { getPublicBlogNews, getPublicSlider, getDoctorSlider, getWishers, getPublicEvent, getSingleEvent, getSingleBlogNews, getGallery, getSetting, getMissionVision, getWhoWeArePage, getBtsHistory, getPublicOurProjects, getSingleProject, getPublicNotices, getPublicTifPages, getPublicYear, getPublicPublication, getSinglePublication, getPublicCountries, getPublicCities, getCommitteeDetail, getStory, getPublicStory } from "../api/publicApi";
 
 
 
@@ -249,7 +249,9 @@ interface PublicState {
     committeeDetail:  null;
     whoWeArePage: { data: WhoWeArePage[] }
     blogNews: { data: BlogNews[] };
+    storys: { data: BlogNews[] };
     singleBlogNews: BlogNews | null;
+    singleStory: BlogNews | null;
     pubPublications: { data: PubPublications[] };
     publicationDetail: PubPublications | null;
     meta: Meta | null;
@@ -294,8 +296,10 @@ const initialState: PublicState = {
     cities:[],
     cities2:[],
     blogNews: { data: [] },
+    storys: { data: [] },
     tifPage: null,
     singleBlogNews: null,
+    singleStory: null,
     pubPublications: { data: [] as PubPublications[] },
     publicationDetail: null,
     meta: null as Meta | null,
@@ -422,6 +426,21 @@ export const fetchPublicBlogNews = createAsyncThunk(
         }
     }
 );
+
+
+export const fetchStory = createAsyncThunk(
+    'public/fetchStory',
+    async (params: object = {}, { rejectWithValue }) => {
+        try {
+            const response = await getPublicStory(params);
+            return response.data.data; // Assuming response.data contains the sliders array
+        } catch (error: any) {
+            return rejectWithValue(error.response ? error.response.data : new Error('Error fetching public Blog News'));
+        }
+    }
+);
+
+
 export const fetchPublicPublication = createAsyncThunk(
     'public/fetchPublicPublication',
     async (params: object = {}, { rejectWithValue }) => {
@@ -495,6 +514,21 @@ export const fetchSingleBlogNews = createAsyncThunk(
     }
 );
 
+
+export const fetchSingleStory = createAsyncThunk(
+    'public/fetchSingleStory',
+    async (id: string | number, { rejectWithValue }) => {
+        try {
+            const response = await getStory(id);
+            return response.data; // Assuming response contains event data
+        } catch (error: any) {
+            return rejectWithValue(error.response ? error.response.data : new Error('Error fetching single data'));
+        }
+    }
+);
+
+
+
 export const fetchPublicationDetail = createAsyncThunk(
     'fetchPublicationDetail',
     async (id: string | number, { rejectWithValue }) => {
@@ -566,6 +600,7 @@ export const fetchSingleEvent = createAsyncThunk(
         try {
             const response = await getSingleEvent(id);
             return response.data; // Assuming response contains event data
+            console.log('inner',response.data);
         } catch (error: any) {
             return rejectWithValue(error.response ? error.response.data : new Error('Error fetching single event'));
         }
@@ -803,7 +838,7 @@ const publicSlice = createSlice({
                 state.isError = false;
                 state.error = null;
             })
-            .addCase(fetchSingleProject.fulfilled, (state, action: PayloadAction<SingleEventResponse>) => {
+            .addCase(fetchSingleProject.fulfilled, (state, action: PayloadAction<SingleProject>) => {
                 state.isLoading = false;
                 state.singleProject = action.payload.data;
             })
@@ -932,6 +967,48 @@ const publicSlice = createSlice({
                 state.error = action.payload;
             })
 
+
+
+
+
+
+             //single blog & news 
+
+             .addCase(fetchSingleStory.pending, (state) => {
+                state.isLoading = true;
+                state.isError = false;
+                state.error = null;
+            })
+            .addCase(fetchSingleStory.fulfilled, (state, action: PayloadAction<SingleBlogNewsResponse>) => {
+                state.isLoading = false;
+                state.singleStory = action.payload.data;
+            })
+            .addCase(fetchSingleStory.rejected, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.payload;
+            })
+
+
+            //blog & news
+            .addCase(fetchStory.pending, (state) => {
+                state.isLoading = true;
+                state.isError = false;
+                state.error = null;
+            })
+            .addCase(fetchStory.fulfilled, (state, action: PayloadAction<BlogNews[]>) => {
+                state.isLoading = false;
+                state.storys = { data: action.payload };
+            })
+            .addCase(fetchStory.rejected, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.payload;
+            })
+
+
+
+
             //fetch Public Publication
 
             .addCase(fetchPublicationDetail.pending, (state) => {
@@ -973,9 +1050,9 @@ const publicSlice = createSlice({
                 state.isError = false;
                 state.error = null;
             })
-            .addCase(fetchSingleEvent.fulfilled, (state, action: PayloadAction<SingleProject>) => {
+            .addCase(fetchSingleEvent.fulfilled, (state, action: PayloadAction<SingleEventResponse>) => {
                 state.isLoading = false;
-                state.singleProject = action.payload.data;
+                state.singleEvent = action.payload.data;
             })
             .addCase(fetchSingleEvent.rejected, (state, action: PayloadAction<any>) => {
                 state.isLoading = false;

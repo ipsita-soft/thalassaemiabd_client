@@ -1,95 +1,86 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
-import { update } from '@/redux/slices/eventsSlice';
+import { update } from '@/redux/slices/storySlice'; // Ensure this action exists
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { RootState } from '@/redux/store';
+import { RootState } from '@/redux/store'; // Import RootState to use selector
 import ReactQuill from 'react-quill';
-// import { DateTimePicker } from '@/components/ui/datetime-picker';
-
 type MyData = {
   id: string;
   sorting_index: number;
   status: 'Active' | 'Inactive';
   title: string;
-  date: string;
   description: string;
 };
 
 type EditSliderProps = {
-  Id: string;
+  BlogNewsId: string;
   open: boolean;
   onClose: () => void;
 };
 
-const Edit: React.FC<EditSliderProps> = ({ Id }) => {
+const EditModal: React.FC<EditSliderProps> = ({ BlogNewsId }) => {
+
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState<{
     image: File | null;
     sorting_index: number | null;
     title: string | null;
     description: string | null;
-    date: Date | undefined;
     status: number;
   }>({
     image: null,
     sorting_index: null,
     title: null,
     description: null,
-    date: undefined,
     status: 2,
   });
-
   const { toast } = useToast();
   const dispatch = useDispatch<AppDispatch>();
-  const events = useSelector((state: RootState) => state.events.events);
-  // const eventsError = useSelector((state: RootState) => state.events.error);
-  // console.log(eventsError)
 
-  const eventsToEdit = events.find((event) => event.id.toString() === Id) as MyData | undefined;
+  const blogNews = useSelector((state: RootState) => state.story.blogNews);
+
+  const blogNewsError = useSelector((state: RootState) => state.story.error);
+
+  const blogNewsToEdit = blogNews.find((blogNew) => blogNew.id.toString() === BlogNewsId) as MyData | undefined;
+
 
   useEffect(() => {
-    if (eventsToEdit) {
+    if (blogNewsToEdit) {
+
+
       setFormData({
         image: null,
-        sorting_index: eventsToEdit.sorting_index,
-        title: eventsToEdit.title,
-        description: eventsToEdit.description,
-        date: new Date(eventsToEdit.date), // Convert string to Date
-        status: eventsToEdit.status === 'Active' ? 1 : 2,
+        sorting_index: blogNewsToEdit.sorting_index,
+        title: blogNewsToEdit.title,
+        description: blogNewsToEdit.description,
+        status: blogNewsToEdit.status === 'Active' ? 1 : 2,
       });
     }
-  }, [eventsToEdit]);
+  }, [blogNewsToEdit]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const Data = new FormData();
-    if (formData.image) {
-      Data.append('image', formData.image);
-    }
+    Data.append('image', formData.image || '');
     Data.append('sorting_index', formData.sorting_index?.toString() || '');
-    Data.append('title', formData.title || '');
-    Data.append('description', formData.description || '');
+    Data.append('title', formData.title?.toString() || '');
+    Data.append('description', formData.description?.toString() || '');
     Data.append('status', formData.status.toString());
-    const formattedDate = formData.date
-      ? new Date(formData.date.getTime() + 6 * 60 * 60 * 1000)
-        .toISOString()
-        .split('T')[0]
-      : '';
-    Data.append('date', formattedDate);
+    console.log(blogNewsError);
     try {
-      await dispatch(update({ id: Id, data: Data }));
+      await dispatch(update({ id: BlogNewsId, data: Data }));
 
       toast({
         title: 'Success',
         description: 'Data updated successfully!',
       });
-      setOpen(false);
+      setOpen(true);
     } catch (error) {
       console.error('Data to update :', error);
       toast({
@@ -100,7 +91,7 @@ const Edit: React.FC<EditSliderProps> = ({ Id }) => {
     }
   };
 
-  if (!eventsToEdit) {
+  if (!blogNewsToEdit) {
     return null; // Or render a loading state
   }
 
@@ -111,16 +102,16 @@ const Edit: React.FC<EditSliderProps> = ({ Id }) => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] md:max-w-[600px] lg:max-w-[700px] xl:max-w-[800px] w-full">
         <DialogHeader>
-          <DialogTitle>Edit Event</DialogTitle>
+          <DialogTitle>Edit </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="title">Title</Label>
+              <Label htmlFor="title"> Title</Label>
               <Input
                 type="text"
                 id="title"
-                value={formData.title || ''}
+                value={formData.title !== null ? formData.title : ''}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value || null })}
                 placeholder="Enter title"
                 required
@@ -138,17 +129,16 @@ const Edit: React.FC<EditSliderProps> = ({ Id }) => {
             </div>
 
             {/* <div className="grid gap-2">
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description"> Description</Label>
               <Input
                 type="textarea"
                 id="description"
-                value={formData.description || ''}
+                value={formData.description !== null ? formData.description : ''}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value || null })}
                 placeholder="Enter description"
                 required
               />
             </div> */}
-
 
             <div className="mb-2">
               <Label htmlFor="description">Description</Label>
@@ -159,22 +149,6 @@ const Edit: React.FC<EditSliderProps> = ({ Id }) => {
               />
             </div>
 
-            <div className="grid gap-2">
-              <Label htmlFor="date">Date</Label> <br />
-
-              <Input
-                type="date"
-                id="date"
-                value={formData.date ? formData.date.toISOString().split('T')[0] : ''}
-                onChange={(e) => setFormData({ ...formData, date: e.target.value ? new Date(e.target.value) : undefined })}
-                required
-              />
-
-              {/* <DateTimePicker
-                value={formData.date || undefined}
-                onChange={(date) => setFormData({ ...formData, date: date || undefined })}
-              /> */}
-            </div>
 
             <div className="grid gap-2">
               <Label htmlFor="sorting_index">Sorting Index</Label>
@@ -212,7 +186,8 @@ const Edit: React.FC<EditSliderProps> = ({ Id }) => {
         </form>
       </DialogContent>
     </Dialog>
+
   );
 };
 
-export default Edit;
+export default EditModal;

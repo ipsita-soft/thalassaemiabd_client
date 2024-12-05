@@ -1,6 +1,38 @@
 
-
+import { CSSProperties, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store"; // Adjust the import path as per your store location
+import { fetchStory } from "@/redux/slices/publicSlice";
+import { Link } from "react-router-dom";
+const lineClamp = (lines: number): CSSProperties => ({
+  display: '-webkit-box',
+  WebkitLineClamp: lines.toString(),
+  WebkitBoxOrient: 'vertical',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+});
 const LatestNews = () => {
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  // Adjust the selector to properly match the state structure
+  const { storys, isLoading, isError } = useSelector((state: RootState) => state.public);
+
+  useEffect(() => {
+    dispatch(fetchStory({ per_page: 3 })); // Fetch blog news on mount
+  }, [dispatch]);
+
+  if (isLoading) {
+    return <p>Loading...</p>; // Show loading state
+  }
+
+  if (isError) {
+    return <p>Error:</p>; // Show error message if any
+  }
+
+  const data = Array.isArray(storys.data) ? storys.data : [];
+
+
   return (
     <div className="latest-news-area section">
       <div className="container">
@@ -8,68 +40,28 @@ const LatestNews = () => {
           <div className="col-lg-12 col-md-12 col-12 mb-3">
             <div className="single-news wow fadeInUp" data-wow-delay=".2s">
               <div className="row">
-                <div className="col-lg-4 col-md-6 col-12 pb-2">
-                  <div className="card shadow-sm">
-                    <img
-                      src="client/assets/images/patient/patient1.jpg"
-                      className="card-img-top"
-                      alt="Patient's Story"
-                    />
-                    <div className="card-body">
-                      <h5 className="card-title">
-                        <a href="">Patient's Story</a>
-                      </h5>
-                      <p className="card-text">
-                        Lorem ipsum dolor sit amet, consectetur elit, sed do
-                        eiusmod. Lorem ipsum dolor sit amet, consectetur elit,
-                        sed do eiusmod.
-                        <a href="blog-single.html">Read More</a>
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                {data.map((story) => (
+                  <div className="col-lg-4 col-md-6 col-12 pb-2">
+                    <div className="card shadow-sm">
+                      <img src={story.image} alt={story.title} className="card-img-top" />
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <Link style={lineClamp(2)} to={`/story/${story.id}`}>{story.title}</Link>
+                        </h5>
 
-                <div className="col-lg-4 col-md-6 col-12 pb-2">
-                  <div className="card shadow-sm">
-                    <img
-                      src="client/assets/images/patient/donor2.jpg"
-                      className="card-img-top"
-                      alt="Blood Donor's Story"
-                    />
-                    <div className="card-body">
-                      <h5 className="card-title">
-                        <a href="">Blood Donor's Story</a>
-                      </h5>
-                      <p className="card-text">
-                        Lorem ipsum dolor sit amet, consectetur elit, sed do
-                        eiusmod. Lorem ipsum dolor sit amet, consectetur elit,
-                        sed do eiusmod.
-                        <a href="blog-single.html">Read More</a>
-                      </p>
-                    </div>
-                  </div>
-                </div>
 
-                <div className="col-lg-4 col-md-6 col-12">
-                  <div className="card shadow-sm">
-                    <img
-                      src="client/assets/images/about-boxes-1.jpg"
-                      className="card-img-top"
-                      alt="Sponsor's Story"
-                    />
-                    <div className="card-body">
-                      <h5 className="card-title">
-                        <a href="">Sponsor's Story</a>
-                      </h5>
-                      <p className="card-text">
-                        Lorem ipsum dolor sit amet, consectetur elit, sed do
-                        eiusmod. Lorem ipsum dolor sit amet, consectetur elit,
-                        sed do eiusmod.
-                        <a href="blog-single.html">Read More</a>
-                      </p>
+                        <p className="card-text" style={{ ...lineClamp(5), textAlign: "justify" }} dangerouslySetInnerHTML={{ __html: story.description }}>
+                        </p>
+
+                        <div className="more d-flex justify-content-between">
+
+                          <Link to={`/story/${story.id}`}>Read More</Link>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                ))}
+
               </div>
             </div>
             {/* End Single News */}

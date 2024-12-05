@@ -56,29 +56,27 @@ const Footer = () => {
                                 <div className="row">
                                     <div className="col-lg-6 col-md-6 col-12">
                                         <ul>
-                                            <li><a href="#">About BTS</a></li>
+                                            <li><Link to="bts-history">About BTS</Link></li>
                                             <li><Link to="mission-vision">Mission & Vision</Link></li>
-                                            <li><a href="#">Donate Blood</a></li>
-                                            <li><a href="#">Donate Zakat</a></li>
-                                            <li><a href="#">Sponsor a Child</a></li>
-                                            <li><a href="#">Patient Management</a></li>
-                                            <li><a href="#">Prevention</a></li>
-                                            <li><a href="#">EC Committee</a></li>
-                                            <li><a href="#">Zakat Board</a></li>
+                                            <li><Link to="/page/tif_member">TIF Membership</Link></li>
+                                            <li><Link to="our-projects">our Projects</Link></li>
+                                            <li><Link to="founder">Founder</Link></li>
+                                            <li><Link to="ec-committee">Executive Committee</Link></li>
+                                            <li><Link to="zakat-board">Zakat Board</Link></li>
+                                           
+                                           
                                         </ul>
                                     </div>
                                     <div className="col-lg-6 col-md-6 col-12">
                                         <ul>
-                                            <li><a href="#">Publications</a></li>
-                                            <li><a href="#">TIF</a></li>
-                                            <li><a href="#">Appointment</a></li>
-                                            <li><a href="#">Notices</a></li>
-                                            <li><a href="#">Events</a></li>
-                                            <li><a href="#">Blood Booking</a></li>
-                                            <li><a href="contact.html">Employee List</a></li>
-                                            <li><a href="#">Buy Medicine</a></li>
-                                            <li><a href="#">Gallery</a></li>
-                                            <li><a href="#">Contact Us</a></li>
+                                        <li><Link to="/page/awareness">Awareness</Link></li>
+                                        <li><Link to="events-all">Events</Link></li>
+                                        <li><Link to="photo-gallery">Photos</Link></li>
+                                        <li><Link to="videos-gallery">Videos</Link></li>
+                                        <li><Link to="publications">Publications</Link></li>
+                                        <li><Link to="blog-news-all">Blogs & News</Link></li>
+                                         
+                                         
                                         </ul>
                                     </div>
                                 </div>

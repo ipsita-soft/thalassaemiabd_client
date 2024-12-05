@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from 'lucide-react';
+import ReactQuill from 'react-quill';
 // import { DateTimePicker } from '@/components/ui/datetime-picker';
 
 const Add: React.FC = () => {
@@ -160,28 +161,9 @@ const Add: React.FC = () => {
 
 
 
-          {/* <div className="mt-4">
-            <Label htmlFor="description">Description</Label>
-            <CKEditor
-              editor={ClassicEditor}
-              data={formData.description ?? ''}
-              onChange={(event, editor) => {
-                const data = editor.getData();
-                setFormData({ ...formData, description: data });
-              }}
-              config={{
-                toolbar: ['heading', '|', 'bold', 'italic', '|', 'numberedList', 'bulletedList', '|', 'blockQuote',],
-                // Add additional configuration if necessary
-              }}
-            />
-            <style >{`
-    .ck-editor {
-      min-height: 300px;
-    }
-  `}</style>
-          </div> */}
 
-          <div className='mt-2'>
+
+          {/* <div className='mt-2'>
             <Label htmlFor="description"> Description</Label>
             <Input
               type="textarea"
@@ -190,6 +172,15 @@ const Add: React.FC = () => {
               onChange={(e) => setFormData({ ...formData, description: e.target.value || null })}
               placeholder="Enter description"
               required
+            />
+          </div> */}
+
+          <div className="mb-2">
+            <Label htmlFor="description">Description</Label>
+            <ReactQuill
+              value={formData.description !== null ? formData.description : ''}
+              onChange={(value) => setFormData({ ...formData, description: value })}
+              className="react-quill-container "
             />
           </div>
 

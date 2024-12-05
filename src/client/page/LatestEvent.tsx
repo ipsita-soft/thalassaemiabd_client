@@ -16,15 +16,15 @@ const lineClamp = (lines: number): CSSProperties => ({
 const LatestEvent = () => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const { events, isLoading, isError, error } = useSelector((state: RootState) => state.public);
+  const { events, isLoading, isError } = useSelector((state: RootState) => state.public);
 
   useEffect(() => {
-    dispatch(fetchPublicEvent({ per_page: 6 })); // Fetch events on component mount
+    dispatch(fetchPublicEvent({ per_page: 3 })); // Fetch events on component mount
   }, [dispatch]);
 
   if (isLoading) return <p>Loading...</p>;
 
-  if (isError) return <p>Error: {error}</p>;
+  if (isError) return <p>Error</p>;
 
   const eventsData = Array.isArray(events?.data) ? events.data : [];
 
@@ -57,8 +57,7 @@ const LatestEvent = () => {
                   <h5 className="card-title text-start" >
                     <Link style={lineClamp(2)} to={`/events/${event.id}`}>{event.title}</Link>
                   </h5>
-                  <p className="card-text" style={{ ...lineClamp(5), textAlign: "justify" }}>
-                    {event.description}
+                  <p className="card-text" style={{ ...lineClamp(5), textAlign: "justify" }} dangerouslySetInnerHTML={{ __html: event.description }}>
                   </p>
                   <div className="more d-flex justify-content-between">
                     <span className="post-date">

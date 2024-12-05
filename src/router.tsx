@@ -69,6 +69,11 @@ import { PatientPage } from './pages/sidebar/webSetting/patient/PatientPage';
 import { UsersPage } from './pages/sidebar/webSetting/users/UsersPage.tsx';
 import { MedicalHistoryPage } from './pages/sidebar/webSetting/medicalHistory/MedicalHistoryPage.tsx';
 import { MedicalHistoryItemPage } from './pages/sidebar/webSetting/medicalHistoryItem/MedicalHistoryItemPage.tsx';
+import { AppointmentsPage } from './pages/sidebar/webSetting/appointments/AppointmentsPage.tsx';
+import { StoryListPage } from './pages/sidebar/webSetting/story/StoryListPage.tsx';
+import SingleStory from './client/page/SingleStory.tsx';
+import StoryAll from './client/page/StoryAll.tsx';
+import { PatientMedicalHistory } from './pages/sidebar/webSetting/PatientMedicalHistory/PatientMedicalHistory';
 
 const router = createBrowserRouter([
   {
@@ -88,6 +93,10 @@ const router = createBrowserRouter([
         element: <BlogNewsAll />
       },
 
+      {
+        path: 'story-all',
+        element: <StoryAll />
+      },
       {
         path: 'our-projects',
         element: <OurProjects />
@@ -114,6 +123,12 @@ const router = createBrowserRouter([
         path: 'blog-news/:id',
         element: <SingleBlogNews />
       },
+
+      {
+        path: 'story/:id',
+        element: <SingleStory />
+      },
+
       {
         path: 'photo-gallery',
         element: <Gallery />
@@ -234,6 +249,15 @@ const router = createBrowserRouter([
       },
 
       {
+        path: 'story',
+        element: <ProtectedRoute
+          element={<StoryListPage />}
+          requiredPermissions={['blogNews-all']}
+        />,
+      },
+
+
+      {
         path: 'publications',
         element: <ProtectedRoute
           element={<PublicationPage />}
@@ -302,26 +326,49 @@ const router = createBrowserRouter([
           ]}
         />,
       },
+
       {
         path: 'medical-history-item',
         element: <ProtectedRoute
-          element={<MedicalHistoryItemPage/>}
+          element={<MedicalHistoryItemPage />}
           requiredPermissions={[
             'medical-history-item-all',
           ]}
         />,
       },
-      
+
+
+      {
+        path: 'appointments',
+        element: <ProtectedRoute
+          element={<AppointmentsPage />}
+          requiredPermissions={[
+            'appointment-all',
+          ]}
+        />,
+      },
+
       {
         path: 'admin-user',
         element: <ProtectedRoute
-          element={<UsersPage/>}
+          element={<UsersPage />}
           requiredPermissions={[
             'admin-user-all',
           ]}
         />,
       },
 
+
+
+      {
+        path: 'patient-medical-history/:id',
+        element: <ProtectedRoute
+          element={<PatientMedicalHistory/>}
+          requiredPermissions={[
+            'medical-history-item-all',
+          ]}
+        />,
+      },
 
 
       {

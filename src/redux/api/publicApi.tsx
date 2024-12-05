@@ -176,6 +176,14 @@ export const getPublicBlogNews = async (params = {}) => {
         throw error.response ? error.response.data : new Error('Error fetching Blog');
     }
 };
+export const getPublicStory = async (params = {}) => {
+    try {
+        const response = await api.get('public/story', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching Blog');
+    }
+};
 
 
 export const getPublicPublication = async (params = {}) => {
@@ -257,6 +265,18 @@ export const getSingleBlogNews = async (id: string | number) => {
         throw error.response ? error.response.data : new Error('Error fetching news');
     }
 };
+
+
+export const getStory = async (id: string | number) => {
+    try {
+        const response = await api.get(`public/story/${id}`);
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching data');
+    }
+};
+
+
 
 
 export const getSinglePublication = async (id: string | number) => {

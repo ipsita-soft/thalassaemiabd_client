@@ -130,6 +130,18 @@ function DashboardLayout() {
                                 )}
 
 
+                                {hasPermissions(['blogNews-all'], permissions) && (
+                                    < Link
+                                        to="/dashboard/story"
+                                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive('/dashboard/story') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                            }`}
+                                    >
+                                        <Newspaper className="h-4 w-4" />
+                                        Story
+                                    </Link>
+                                )}
+
+
 
                                 {hasPermissions(['event-all'], permissions) && (
                                     <Link
@@ -337,6 +349,26 @@ function DashboardLayout() {
 
                                 <hr className="mx-2 my-2" />
 
+
+
+                                {/* {hasPermissions([
+                                    'medical-history-all',
+                                ], permissions) && (
+
+                                        <Link
+                                            to="/dashboard/patient-medical-history"
+                                            className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all
+                                             ${isActive('/dashboard/medical-history') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                                }`}
+                                        >
+                                            <History className="h-4 w-4" />
+                                            Patient Medical History
+                                        </Link>
+                                    )} */}
+
+
+
+
                                 {hasPermissions([
                                     'admin-patient-all',
                                 ], permissions) && (
@@ -351,6 +383,8 @@ function DashboardLayout() {
                                             Patients
                                         </Link>
                                     )}
+
+
 
 
 
@@ -371,6 +405,8 @@ function DashboardLayout() {
 
 
 
+
+
                                 {hasPermissions([
                                     'medical-history-item-all',
                                 ], permissions) && (
@@ -388,6 +424,24 @@ function DashboardLayout() {
 
 
                                 {hasPermissions([
+                                    'appointment-all',
+                                ], permissions) && (
+
+                                        <Link
+                                            to="/dashboard/appointments"
+                                            className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all
+                                             ${isActive('/dashboard/appointments') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                                }`}
+                                        >
+
+                                            <UserRoundCheck className="h-4 w-4" />
+                                            Appointments
+                                        </Link>
+                                    )}
+
+
+
+                                {hasPermissions([
                                     'admin-user-all',
                                 ], permissions) && (
 
@@ -402,6 +456,7 @@ function DashboardLayout() {
                                             Users
                                         </Link>
                                     )}
+
 
 
 

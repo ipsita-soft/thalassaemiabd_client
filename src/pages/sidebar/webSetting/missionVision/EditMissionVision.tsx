@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import ReactQuill from 'react-quill';
 
 type EditSettingProps = {
   Id: string;
@@ -101,13 +102,23 @@ const EditMissionVision: React.FC<EditSettingProps> = ({ Id }) => {
 
       <div className="grid gap-2">
         <Label htmlFor="mission_description">Mission Description</Label>
-        <Input
+        {/* <Input
           type="text"
           id="mission_description"
           value={formData.mission_description}
           onChange={(e) => setFormData({ ...formData, mission_description: e.target.value })}
           required
-        />
+        /> */}
+
+
+        <div className="mb-2">
+          <Label htmlFor="mission_description">Description</Label>
+          <ReactQuill
+            value={formData.mission_description !== null ? formData.mission_description : ''}
+            onChange={(value) => setFormData({ ...formData, mission_description: value })}
+            className="react-quill-container "
+          />
+        </div>
       </div>
 
       <div className="grid gap-2">
@@ -133,13 +144,17 @@ const EditMissionVision: React.FC<EditSettingProps> = ({ Id }) => {
 
       <div className="grid gap-2">
         <Label htmlFor="vision_description">Vision Description</Label>
-        <Input
-          type="text"
-          id="vision_description"
-          value={formData.vision_description}
-          onChange={(e) => setFormData({ ...formData, vision_description: e.target.value })}
-          required
-        />
+     
+
+
+        <div className="mb-2">
+          <Label htmlFor="vision_description">Description</Label>
+          <ReactQuill
+            value={formData.vision_description !== null ? formData.vision_description : ''}
+            onChange={(value) => setFormData({ ...formData, vision_description: value })}
+            className="react-quill-container "
+          />
+        </div>
       </div>
 
       <div className="grid gap-2">

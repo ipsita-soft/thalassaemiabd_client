@@ -155,7 +155,7 @@ const Header = () => {
                           <a href="treatment.html">Treatment</a>
                         </li>
                         <li className="nav-item">
-                          <a href="prevention.html">Prevention</a>
+                          <a href="/">Prevention</a>
                         </li>
                         <li className="nav-item">
                           <Link to={`/page/awareness`}>Awareness</Link>
@@ -175,6 +175,7 @@ const Header = () => {
                         <li className="nav-item"><Link to="videos-gallery">Videos</Link></li>
                         <li className="nav-item"><Link to="publications">Publications</Link></li>
                         <li className="nav-item"><Link to="blog-news-all">Blogs & News</Link></li>
+                        <li className="nav-item"><Link to="story-all">Story</Link></li>
                         <li className="nav-item">
                           <Link to={`/page/advertisements`}>Advertisements</Link>
                         </li>

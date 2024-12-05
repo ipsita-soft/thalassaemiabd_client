@@ -3,6 +3,7 @@ import authReducer from './slices/authSlice';
 import sliderReducer from './slices/sliderSlice';
 import publicReducer from './slices/publicSlice';
 import blogNewsReducer from './slices/blogNewsSlice';
+import storyReducer from './slices/storySlice';
 import eventsReducers from './slices/eventsSlice';
 import wishersReducers from './slices/wishersSlice';
 import doctorSliderReducers from './slices/doctorSliderSlice';
@@ -29,12 +30,14 @@ import adminUsersReducers from './slices/adminUserSlice';
 import { patientApi } from '@/api/patientApi';
 import { medicalHistoryApi } from '@/api/medicalHistoryApi';
 import { medicalHistoryItemApi } from '@/api/medicalHistoryItemApi';
+import { appointmentsApi } from '@/api/appointmentsApi';
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     sliders: sliderReducer,
     blogNews: blogNewsReducer,
+    story: storyReducer,
     events: eventsReducers,
     wishers: wishersReducers,
     doctorSliders: doctorSliderReducers,
@@ -63,12 +66,14 @@ export const store = configureStore({
     [patientApi.reducerPath]: patientApi.reducer,
     [medicalHistoryApi.reducerPath]: medicalHistoryApi.reducer,
     [medicalHistoryItemApi.reducerPath]: medicalHistoryItemApi.reducer,
+    [appointmentsApi.reducerPath]: appointmentsApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(patientApi.middleware)
       .concat(medicalHistoryApi.middleware)
-      .concat(medicalHistoryItemApi.middleware),
+      .concat(medicalHistoryItemApi.middleware)
+      .concat(appointmentsApi.middleware),
 });
 
 export type AppDispatch = typeof store.dispatch;
