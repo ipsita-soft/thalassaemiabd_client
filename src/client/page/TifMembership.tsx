@@ -84,7 +84,7 @@ const TifMembership = () => {
                                 <img src={tifPage?.image} alt="TIF Membership" />
                             </div>
                             <div className="post-details">
-                                <div className="detail-inner">
+                                <div className="detail-inner mb-0">
                                     <div className="row">
                                         <div className="col-lg-7 col-md-7 col-12">
                                             <div className="tif-article">
@@ -184,7 +184,7 @@ const TifMembership = () => {
 
                                     {/* Attachment Section */}
 
-                                    <div className="notice-details ">
+                                    <div className="notice-details pb-0 ">
                                         <div className="container">
 
                                             <div className="row mt-14">

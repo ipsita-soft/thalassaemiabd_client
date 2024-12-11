@@ -175,6 +175,10 @@ ol {
   margin-top: 20px;
 }
 
+.mt-14 {
+  margin-top: 96px !important;
+}
+
 .mt-25 {
   margin-top: 25px;
 }
@@ -5619,6 +5623,9 @@ End Patient Story Area
 
 /* ======= Other Donation End ============ */
 
+link{
+cursor: pointer !important;
+}
 
 
 
@@ -5627,7 +5634,7 @@ End Patient Story Area
     Start Event CSS
 ========================================*/
 .event-section.section {
-  padding-bottom: 70px;
+  padding-bottom: 30px;
   background-image: url("../images/portfolio/bg1.png");
   background-size: cover;
   background-position: center;
@@ -5784,6 +5791,11 @@ End Patient Story Area
   color: #0c6c3f;
   border-color: transparent;
 }
+
+.detail-btn {
+  cursor: pointer !important;
+}
+
 
 .event-section .pf-content .category {
   font-size: 14px;

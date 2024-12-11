@@ -52,16 +52,16 @@ const BlogNews = () => {
               data-aos-delay={(index + 1) * 100}
             >
               <div className="card">
-                <img src={blog.image} className="card-img-top" alt={blog.title} />
+              <Link to={`/blog-news/${blog.id}`}> <img src={blog.image} className="card-img-top" alt={blog.title} /> </Link>
                 <div className="card-body">
                   <h5 className="card-title text-start" style={lineClamp(2)}>
                     <Link to={`/blog-news/${blog.id}`} target="_blank">
                       {blog.title}
                     </Link>
                   </h5>
-                  <p className="card-text" style={{ ...lineClamp(5), textAlign: "justify" }}>
-                    {blog.description} 
-                  </p>
+
+                  <p className="card-text" style={{ ...lineClamp(5), textAlign: "justify" }} dangerouslySetInnerHTML={{ __html: blog.description }}></p>
+
                   <Link to={`/blog-news/${blog.id}`}>Read More</Link>
                 </div>
               </div>

@@ -38,13 +38,17 @@ const Gallery = () => {
     const galleriesData = Array.isArray(galleries.data) ? galleries.data : [];
 
     return (
-        <section id="gallery" className="gallery">
+        <section id="gallery" className="gallery section mt-14">
             <div className="container">
 
-                
-                <div className="section-title">
-                    <h2 className="wow fadeInUp mt-24" data-wow-delay=".2s">Photo Gallery</h2>
+                <div className="row">
+                    <div className="col-12">
+                    <div className="section-title">
+                        <h2 className="wow fadeInUp" data-wow-delay=".2s">Photo Gallery</h2>
+                    </div>
+                    </div>
                 </div>
+
                 
                 <div className="row mb-5 gy-4 gallery-container" data-aos="fade-up" data-aos-delay="200">
                     {galleriesData.map(item => (

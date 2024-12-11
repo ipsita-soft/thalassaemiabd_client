@@ -172,7 +172,7 @@ const Footer = () => {
                 <i className="lni lni-chevron-up"></i>
             </a>
 
-            <div className="onoffswitch3">
+            {/* <div className="onoffswitch3">
                 <input type="checkbox" name="onoffswitch3" className="onoffswitch3-checkbox" id="myonoffswitch3" checked />
                 <label className="onoffswitch3-label" htmlFor="myonoffswitch3">
                     <span className="onoffswitch3-inner">
@@ -190,7 +190,7 @@ const Footer = () => {
                                     <div className='w-96'>{setting?.copyrighttext}</div>
                                 </Marquee>
                                 <span className="onoffswitch3-switch">
-                                    BREAKING NEWS <i className="lni lni-close" onClick={handleCloseClick}></i>
+                                Highlight <i className="lni lni-close" onClick={handleCloseClick}></i>
                                 </span>
                             </span>
                         ) : (
@@ -202,7 +202,7 @@ const Footer = () => {
                                             <path d="M0 2.5A1.5 1.5 0 0 1 1.5 1h11A1.5 1.5 0 0 1 14 2.5v10.528c0 .3-.05.654-.238.972h.738a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 1 1 0v9a1.5 1.5 0 0 1-1.5 1.5H1.497A1.497 1.497 0 0 1 0 13.5zM12 14c.37 0 .654-.211.853-.441.092-.106.147-.279.147-.531V2.5a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0-.5.5v11c0 .278.223.5.497.5z" />
                                             <path d="M2 3h10v2H2zm0 3h4v3H2zm0 4h4v1H2zm0 2h4v1H2zm5-6h2v1H7zm3 0h2v1h-2zM7 8h2v1H7zm3 0h2v1h-2zm-3 2h2v1H7zm3 0h2v1h-2zm-3 2h2v1H7zm3 0h2v1h-2z" />
                                         </svg>
-                                        {/* <i className="lni lni-angle-double-right" onClick={handleCloseClick}></i> */}
+                                       
                                     </span>
                                 </span>
                             </div>
@@ -210,7 +210,7 @@ const Footer = () => {
                         )}
                     </span>
                 </label>
-            </div>
+            </div> */}
 
 
         </footer>

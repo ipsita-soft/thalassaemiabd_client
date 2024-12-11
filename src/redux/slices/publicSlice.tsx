@@ -681,7 +681,7 @@ const publicSlice = createSlice({
                 state.isError = false;
                 state.error = null;
             })
-            .addCase(fetchSingleProject.fulfilled, (state, action: PayloadAction<SingleEventResponse>) => {
+            .addCase(fetchSingleProject.fulfilled, (state, action: PayloadAction<SingleProject>) => {
                 state.isLoading = false;
                 state.singleProject = action.payload.data;
             })
@@ -836,9 +836,9 @@ const publicSlice = createSlice({
                 state.isError = false;
                 state.error = null;
             })
-            .addCase(fetchSingleEvent.fulfilled, (state, action: PayloadAction<SingleProject>) => {
+            .addCase(fetchSingleEvent.fulfilled, (state, action: PayloadAction<SingleEventResponse>) => {
                 state.isLoading = false;
-                state.singleProject = action.payload.data;
+                state.singleEvent = action.payload.data;
             })
             .addCase(fetchSingleEvent.rejected, (state, action: PayloadAction<any>) => {
                 state.isLoading = false;

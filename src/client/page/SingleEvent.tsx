@@ -7,11 +7,11 @@ import './styles/SingleEvent.css';
 import moment from 'moment';
 
 const SingleEvent = () => {
-  const { id } = useParams<{ id: string }>(); // Get event ID from URL
+  const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
 
   // Access event data from Redux state
-  const { singleEvent, isLoading, isError, error } = useSelector((state: RootState) => state.public);
+
   
   useEffect(() => {
     if (id) {
@@ -19,15 +19,18 @@ const SingleEvent = () => {
     }
   }, [dispatch, id]);
 
+  const { singleEvent, isLoading, isError, error } = useSelector((state: RootState) => state.public);
+  console.log(singleEvent);
+
   if (isLoading) return <p className="text-center">Loading...</p>;
 
-  if (isError) return <p className="text-danger text-center">Error: {error}</p>;
+  if (isError) return <p className="text-danger text-center">Error: </p>;
 
   if (!singleEvent) return <p className="text-center">No event found.</p>;
 
   return (
-    <section className="single-event-section section">
-      <div className="container mt-5">
+    <section className="single-event-section mt-14 section">
+      <div className="container">
         <div className="row justify-content-center">
           <div className="col-md-12">
             <div className="card shadow">

@@ -22,11 +22,11 @@ const SingleBlogNews = () => {
 
   if (isError) return <p className="text-danger text-center">Error: {error}</p>;
 
-  if (!singleBlogNews) return <p className="text-center">No event found.</p>;
+  if (!singleBlogNews) return <p className="text-center">No Data found.</p>;
 
   return (
-    <section className="single-event-section section">
-      <div className="container mt-5">
+    <section className="single-event-section section mt-14 ">
+      <div className="container">
         <div className="row justify-content-center">
           <div className="col-md-10">
             <div className="card shadow">

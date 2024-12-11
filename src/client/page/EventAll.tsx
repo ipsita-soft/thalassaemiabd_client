@@ -36,8 +36,8 @@ const EventAll = () => {
   });
 
   return (
-    <section className="event-section section">
-      <div className="row mt-5">
+    <section className="event-section mt-14 section">
+      <div className="row">
         <div className="col-12">
           <div className="section-title">
             <h2 className="wow fadeInUp" data-wow-delay=".5s">Events</h2>
@@ -46,7 +46,7 @@ const EventAll = () => {
       </div>
 
       <div className="container">
-        <div className="row mt-3">
+        <div className="row mb-3">
           <div className="col-12">
             <div className="event-btn-wrapper wow fadeInUp" data-wow-delay=".4s">
               <button
@@ -80,6 +80,7 @@ const EventAll = () => {
         <div className="row">
           {filteredEvents.map((event) => (
             <div key={event.id} className={`col-lg-4 col-md-6 grid-item`}>
+              <Link to={`/events/${event.id}`}>
               <div className="event-item-wrapper">
                 <div className="event-img">
                   <img src={event.image} alt={event.title} />
@@ -94,9 +95,11 @@ const EventAll = () => {
                   </div>
                 </div>
               </div>
+              </Link>
             </div>
           ))}
         </div>
+        
       </div>
     </section>
   );
