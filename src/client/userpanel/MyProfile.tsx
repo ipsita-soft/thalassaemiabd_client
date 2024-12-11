@@ -1,28 +1,10 @@
-import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  Home,
-  FileText,
-  Bell,
   User,
   Edit,
-  LogOut,
 } from "lucide-react";
 
 const MyProfile = () => {
-  const [activeTab, setActiveTab] = useState("profile");
-
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-  };
-
-  const getLinkClasses = (tab) =>
-    `nav-link px-3 py-2 rounded ${
-      activeTab === tab
-        ? "bg-red-100 text-red-600 font-bold"
-        : "text-gray-700 hover:bg-gray-100 hover:text-red-500"
-    }`;
-
   return (
     <div>
         <h5 className="text-2xl mt-2 d-flex align-items-center font-extrabold text-red-600">

@@ -1,5 +1,5 @@
-import React from "react";
-import { Droplet, Stethoscope, Syringe, Calendar, MapPin } from "lucide-react";
+
+import {Stethoscope, } from "lucide-react";
 
 const HealthHistory = () => {
   const data = [

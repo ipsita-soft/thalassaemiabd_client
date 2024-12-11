@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { RootState } from '@/redux/store'; // Import RootState to use selector
+import ReactQuill from 'react-quill';
 type MyData = {
   id: string;
   sorting_index: number;
@@ -127,7 +128,7 @@ const EditModal: React.FC<EditSliderProps> = ({ BlogNewsId }) => {
               />
             </div>
 
-            <div className="grid gap-2">
+            {/* <div className="grid gap-2">
               <Label htmlFor="description"> Description</Label>
               <Input
                 type="textarea"
@@ -137,7 +138,17 @@ const EditModal: React.FC<EditSliderProps> = ({ BlogNewsId }) => {
                 placeholder="Enter description"
                 required
               />
+            </div> */}
+
+            <div className="mb-2">
+              <Label htmlFor="description">Description</Label>
+              <ReactQuill
+                value={formData.description !== null ? formData.description : ''}
+                onChange={(value) => setFormData({ ...formData, description: value })}
+                className="react-quill-container "
+              />
             </div>
+
 
             <div className="grid gap-2">
               <Label htmlFor="sorting_index">Sorting Index</Label>

@@ -16,7 +16,7 @@ interface DoctorSliders {
 const PatientManagement = () => {
 
   const dispatch = useDispatch<AppDispatch>();
-  const { doctorSliders, isLoading, isError, error } = useSelector((state: RootState) => state.public);
+  const { doctorSliders, isLoading, isError } = useSelector((state: RootState) => state.public);
   useEffect(() => {
     dispatch(fetchDoctorSlider({}));  // Fetch sliders on mount
   }, [dispatch]);
@@ -27,7 +27,7 @@ const PatientManagement = () => {
   }
 
   if (isError) {
-    return <p>Error: {error}</p>;  // Show error message if any
+    return <p>Error:</p>;  // Show error message if any
   }
 
   const doctorSliderData: DoctorSliders[] = Array.isArray(doctorSliders.data) ? doctorSliders.data : [];

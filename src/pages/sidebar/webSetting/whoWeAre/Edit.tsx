@@ -13,12 +13,14 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { fetchPublicYearList } from '@/redux/slices/publicSlice';
+import ReactQuill from 'react-quill';
 
 type MyData = {
   id: number;
   image: string;
   name: string;
   designation: string;
+  description: string;
   type: string;
   year_id: string;
   sorting_index: number;
@@ -41,6 +43,7 @@ const Edit: React.FC<EditSliderProps> = ({ Id }) => {
     type: string | null;
     year_id: string | null;
     designation: string | null;
+    description: string | null;
   }>({
     image: null,
     sorting_index: null,
@@ -49,6 +52,7 @@ const Edit: React.FC<EditSliderProps> = ({ Id }) => {
     type: null,
     year_id: null,
     designation: null,
+    description: null,
   });
 
   const { toast } = useToast();
@@ -67,6 +71,7 @@ const Edit: React.FC<EditSliderProps> = ({ Id }) => {
         type: ToEdit.type ?? null,
         year_id: ToEdit.year_id ?? null,
         designation: ToEdit.designation ?? null,
+        description: ToEdit.description ?? null,
       });
     }
   }, [ToEdit]);
@@ -88,6 +93,7 @@ const Edit: React.FC<EditSliderProps> = ({ Id }) => {
     Data.append('status', formData.status.toString());
     Data.append('name', formData.name?.toString() || '');
     Data.append('designation', formData.designation?.toString() || '');
+    Data.append('description', formData.description?.toString() || '');
     Data.append('type', formData.type?.toString() || '');
     Data.append('year_id', formData.year_id ?? '');
 
@@ -232,6 +238,16 @@ const Edit: React.FC<EditSliderProps> = ({ Id }) => {
                   <SelectItem value="zakat-board">Zakat Board</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+
+            <div className="mb-2">
+              <Label htmlFor="description">Description</Label>
+              <ReactQuill
+                value={formData.description !== null ? formData.description : ''}
+                onChange={(value) => setFormData({ ...formData, description: value })}
+                className="react-quill-container "
+              />
             </div>
           </div>
           <DialogFooter className="mt-4">

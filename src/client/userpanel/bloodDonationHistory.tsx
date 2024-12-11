@@ -1,4 +1,3 @@
-import React from "react";
 import { Droplet } from "lucide-react";
 
 const BloodDonationHistory = () => {
@@ -39,7 +38,7 @@ const BloodDonationHistory = () => {
           </thead>
           <tbody>
             {Array(10)
-              .fill()
+              .fill(null)
               .map((_, index) => (
                 <tr key={index}>
                   <td className="text-center align-middle">{index + 1}</td>

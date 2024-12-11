@@ -1,5 +1,32 @@
 import api from "@/api";
 
+export const verifyPhone = async (params = {}) => {
+    try {
+        const response = await api.post('verify-phone', params, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error adding Data');
+    }
+}
+
+export const resendVerifyPhone = async (params = {}) => {
+    try {
+        const response = await api.post('resend-verify-phone', params, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        return response.data;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error adding Data');
+    }
+}
+
+
 export const getPublicSlider = async (params = {}) => {
     try {
         const response = await api.get('public/sliders', { params });
@@ -8,6 +35,98 @@ export const getPublicSlider = async (params = {}) => {
         throw error.response ? error.response.data : new Error('Error fetching sliders');
     }
 };
+
+
+export const permissionsAll = async (params = {}) => {
+    try {
+        const response = await api.get('public/permissions-all', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching data');
+    }
+};
+
+
+export const getPublicCountries = async (params = {}) => {
+    try {
+        const response = await api.get('public/countries', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching countries');
+    }
+};
+
+
+export const getBloodGroup = async (params = {}) => {
+    try {
+        const response = await api.get('public/blood-groups', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching Data');
+    }
+};
+
+
+export const getRoles = async (params = {}) => {
+    try {
+        const response = await api.get('public/roles-all', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching Data');
+    }
+};
+
+
+export const getDepartments = async (params = {}) => {
+    try {
+        const response = await api.get('public/departments-all', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching Data');
+    }
+};
+
+
+
+
+export const diseaseType = async (params = {}) => {
+    try {
+        const response = await api.get('public/thalassemia-type', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching Data');
+    }
+};
+export const height = async (params = {}) => {
+    try {
+        const response = await api.get('public/height', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching Data');
+    }
+};
+export const weight = async (params = {}) => {
+    try {
+        const response = await api.get('public/weight', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching Data');
+    }
+};
+
+
+
+export const getPublicCities = async (params = {}) => {
+    try {
+        const response = await api.get('public/cities', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching cities');
+    }
+}
+
+
+
 export const getDoctorSlider = async (params = {}) => {
     try {
         const response = await api.get('public/doctor-sliders', { params });
@@ -16,6 +135,8 @@ export const getDoctorSlider = async (params = {}) => {
         throw error.response ? error.response.data : new Error('Error fetching data');
     }
 };
+
+
 export const getWishers = async (params = {}) => {
     try {
         const response = await api.get('public/wishers', { params });
@@ -24,9 +145,40 @@ export const getWishers = async (params = {}) => {
         throw error.response ? error.response.data : new Error('Error fetching data');
     }
 };
+
+
+export const getMaritalStatus = async (params = {}) => {
+    try {
+        const response = await api.get('public/marital-status', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching data');
+    }
+};
+
+
+export const getGenders = async (params = {}) => {
+    try {
+        const response = await api.get('public/genders', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching data');
+    }
+};
+
+
+
 export const getPublicBlogNews = async (params = {}) => {
     try {
         const response = await api.get('public/blog-news', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching Blog');
+    }
+};
+export const getPublicStory = async (params = {}) => {
+    try {
+        const response = await api.get('public/story', { params });
         return response;
     } catch (error: any) {
         throw error.response ? error.response.data : new Error('Error fetching Blog');
@@ -115,6 +267,18 @@ export const getSingleBlogNews = async (id: string | number) => {
 };
 
 
+export const getStory = async (id: string | number) => {
+    try {
+        const response = await api.get(`public/story/${id}`);
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching data');
+    }
+};
+
+
+
+
 export const getSinglePublication = async (id: string | number) => {
     try {
         const response = await api.get(`public/publications/${id}`);
@@ -129,6 +293,14 @@ export const getSinglePublication = async (id: string | number) => {
 export const getSingleProject = async (id: string | number) => {
     try {
         const response = await api.get(`public/projects/${id}`);
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching data');
+    }
+};
+export const getCommitteeDetail = async (id: string | number) => {
+    try {
+        const response = await api.get(`public/who-we-are-page/${id}`);
         return response;
     } catch (error: any) {
         throw error.response ? error.response.data : new Error('Error fetching data');

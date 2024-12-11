@@ -56,6 +56,24 @@ import Thalassemia from './client/page/Thalassaemia.tsx';
 import PublicationSection from './client/page/PublicationSection.tsx';
 import { PublicationPage } from './pages/sidebar/webSetting/publications/PublicationPage.tsx';
 import PublicationDetail from './client/page/publication-detail.tsx';
+import BloodDonorRegistration from './pages/BloodDonorRegistration.tsx';
+import CommitteeDetails from './client/page/CommitteeDetails.tsx';
+import VerifyPhone from './pages/VerifyPhone.tsx';
+import VerifySms from './pages/VerifySms.tsx';
+import { RolesPage } from './pages/sidebar/webSetting/roles/RolesPage.tsx';
+import { RequestPage } from './pages/sidebar/webSetting/userRequest/RequestPage.tsx';
+import PatientRegistration from './pages/PatientRegistration.tsx';
+import { TestPage } from './pages/sidebar/webSetting/roles/TestPage.tsx';
+import { BloodDonorPage } from './pages/sidebar/webSetting/bloodDonor/BloodDonorPage.tsx';
+import { PatientPage } from './pages/sidebar/webSetting/patient/PatientPage';
+import { UsersPage } from './pages/sidebar/webSetting/users/UsersPage.tsx';
+import { MedicalHistoryPage } from './pages/sidebar/webSetting/medicalHistory/MedicalHistoryPage.tsx';
+import { MedicalHistoryItemPage } from './pages/sidebar/webSetting/medicalHistoryItem/MedicalHistoryItemPage.tsx';
+import { AppointmentsPage } from './pages/sidebar/webSetting/appointments/AppointmentsPage.tsx';
+import { StoryListPage } from './pages/sidebar/webSetting/story/StoryListPage.tsx';
+import SingleStory from './client/page/SingleStory.tsx';
+import StoryAll from './client/page/StoryAll.tsx';
+import { PatientMedicalHistory } from './pages/sidebar/webSetting/PatientMedicalHistory/PatientMedicalHistory';
 
 const router = createBrowserRouter([
   {
@@ -75,6 +93,10 @@ const router = createBrowserRouter([
         element: <BlogNewsAll />
       },
 
+      {
+        path: 'story-all',
+        element: <StoryAll />
+      },
       {
         path: 'our-projects',
         element: <OurProjects />
@@ -101,6 +123,12 @@ const router = createBrowserRouter([
         path: 'blog-news/:id',
         element: <SingleBlogNews />
       },
+
+      {
+        path: 'story/:id',
+        element: <SingleStory />
+      },
+
       {
         path: 'photo-gallery',
         element: <Gallery />
@@ -147,6 +175,12 @@ const router = createBrowserRouter([
       },
 
       {
+        path: 'committee-details/:id',
+        element: <CommitteeDetails />
+      },
+
+
+      {
         path: 'advisors',
         element: <AdvisorsCommittee />
       },
@@ -157,6 +191,20 @@ const router = createBrowserRouter([
       {
         path: 'zakat-board',
         element: <ZakatBoard />
+      },
+
+      {
+        path: 'blood-donor-registration',
+        element: <PublicRoute
+          element={<BloodDonorRegistration />}
+        />,
+      },
+
+      {
+        path: 'patient-registration',
+        element: <PublicRoute
+          element={<PatientRegistration />}
+        />,
       },
     ]
   },
@@ -201,6 +249,15 @@ const router = createBrowserRouter([
       },
 
       {
+        path: 'story',
+        element: <ProtectedRoute
+          element={<StoryListPage />}
+          requiredPermissions={['blogNews-all']}
+        />,
+      },
+
+
+      {
         path: 'publications',
         element: <ProtectedRoute
           element={<PublicationPage />}
@@ -215,6 +272,139 @@ const router = createBrowserRouter([
         element: <ProtectedRoute
           element={<EventsPage />}
           requiredPermissions={['event-all']}
+        />,
+      },
+
+
+      {
+        path: 'roles',
+        element: <ProtectedRoute
+          element={<RolesPage />}
+          requiredPermissions={['view_roles', 'create_role', 'edit_role', 'delete_user']}
+        />,
+      },
+
+      {
+        path: 'user-request',
+        element: <ProtectedRoute
+          element={<RequestPage />}
+          requiredPermissions={[
+            'user-request-list',
+            'user-request-show',
+            'user-request-update',
+          ]}
+        />,
+      },
+
+      {
+        path: 'blood-donors',
+        element: <ProtectedRoute
+          element={<BloodDonorPage />}
+          requiredPermissions={[
+            'admin-blood-donor-all',
+          ]}
+        />,
+      },
+
+      {
+        path: 'admin-patient',
+        element: <ProtectedRoute
+          element={<PatientPage />}
+          requiredPermissions={[
+            'admin-patient-all',
+          ]}
+        />,
+      },
+
+
+      {
+        path: 'medical-history',
+        element: <ProtectedRoute
+          element={<MedicalHistoryPage />}
+          requiredPermissions={[
+            'medical-history-all',
+          ]}
+        />,
+      },
+
+      {
+        path: 'medical-history-item',
+        element: <ProtectedRoute
+          element={<MedicalHistoryItemPage />}
+          requiredPermissions={[
+            'medical-history-item-all',
+          ]}
+        />,
+      },
+
+
+      {
+        path: 'appointments',
+        element: <ProtectedRoute
+          element={<AppointmentsPage />}
+          requiredPermissions={[
+            'appointment-all',
+          ]}
+        />,
+      },
+
+      {
+        path: 'admin-user',
+        element: <ProtectedRoute
+          element={<UsersPage />}
+          requiredPermissions={[
+            'admin-user-all',
+          ]}
+        />,
+      },
+
+
+
+      {
+        path: 'patient-medical-history/:id',
+        element: <ProtectedRoute
+          element={<PatientMedicalHistory/>}
+          requiredPermissions={[
+            'medical-history-item-all',
+          ]}
+        />,
+      },
+
+
+      {
+        path: 'test',
+        element: <ProtectedRoute
+          element={<TestPage />}
+          requiredPermissions={[
+            'user-request-list',
+            'user-request-show',
+            'user-request-update',
+          ]}
+        />,
+      },
+
+
+      {
+        path: 'user-rejected',
+        element: <ProtectedRoute
+          element={<RequestPage />}
+          requiredPermissions={[
+            'user-request-list',
+            'user-request-show',
+            'user-request-update',
+          ]}
+        />,
+      },
+
+      {
+        path: 'user-pending',
+        element: <ProtectedRoute
+          element={<RequestPage />}
+          requiredPermissions={[
+            'user-request-list',
+            'user-request-show',
+            'user-request-update',
+          ]}
         />,
       },
 
@@ -373,7 +563,21 @@ const router = createBrowserRouter([
         path: 'login',
         element: <PublicRoute
           element={<Login />}
-          // redirectTo="/dashboard/home"
+        // redirectTo="/dashboard/home"
+        />,
+      },
+      {
+        path: 'verification-phone',
+        element: <ProtectedRoute
+          element={<VerifyPhone />}
+        // requiredPermissions={['']}
+        />,
+      },
+      {
+        path: 'sms-verify',
+        element: <ProtectedRoute
+          element={<VerifySms />}
+        // requiredPermissions={['']}
         />,
       },
       {
@@ -383,6 +587,13 @@ const router = createBrowserRouter([
           redirectTo="/dashboard/home"
         />,
       },
+      // {
+      //   path: 'blood-donor-registration',
+      //   element: <PublicRoute
+      //     element={<BloodDonorRegistration />}
+      //     // redirectTo="/dashboard/home"
+      //   />,
+      // },
     ],
   },
 
@@ -397,9 +608,21 @@ const router = createBrowserRouter([
     path: '/userpanel',
     element: <ProtectedRoute
       element={<UserPanelLayout />}
-      requiredRoles={['blood_donor','admin']}
+      requiredRoles={['blood_donor', 'ec_committee', 'financial_donor', 'voluntary', 'patient']}
     />,
     children: [
+      {
+        path: '/userpanel/my-profile',
+        element: (
+          <ProtectedRoute
+            element={
+              <MyProfile />
+            }
+            requiredPermissions={['profile_view']}
+          />
+        ),
+      },
+
       {
         path: '/userpanel/notices',
         element: <Notice />
@@ -408,13 +631,18 @@ const router = createBrowserRouter([
         path: '/userpanel/annual-reports',
         element: <AnnualReports />
       },
-      {
-        path: '/userpanel/my-profile',
-        element: <MyProfile />
-      },
+
       {
         path: '/userpanel/update-profile',
-        element: <UpdateProfile />
+        element: (
+          <ProtectedRoute
+            element={
+              <UpdateProfile />
+            }
+            requiredPermissions={['profile_edit']}
+          />
+        ),
+        // element: <UpdateProfile />
       },
 
       {

@@ -20,7 +20,7 @@ const TifMembership = () => {
     const { TifType } = useParams<{ TifType: string | undefined }>();
 
     const dispatch = useDispatch<AppDispatch>();
-    const { tifPage, isLoading, isError, error } = useSelector(
+    const { tifPage, isLoading, isError } = useSelector(
         (state: RootState) => state.public
     );
     const [searchText, setSearchText] = useState<string>(""); // State for search input
@@ -44,7 +44,7 @@ const TifMembership = () => {
 
     if (isLoading) return <p>Loading...</p>;
 
-    if (isError) return <p>Error: {error}</p>;
+    if (isError) return <p>Error: </p>;
 
     const columns = [
         {

@@ -17,7 +17,7 @@ const Wishers: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   // Adjust the selector to properly match the state structure
-  const { wishers, isLoading, isError, error } = useSelector((state: RootState) => state.public);
+  const { wishers, isLoading, isError } = useSelector((state: RootState) => state.public);
 
   useEffect(() => {
     dispatch(fetchWishers({}));  // Fetch sliders on mount
@@ -28,7 +28,7 @@ const Wishers: React.FC = () => {
   }
 
   if (isError) {
-    return <p>Error: {error}</p>;  // Show error message if any
+    return <p>Error:</p>;  // Show error message if any
   }
 
   // Access the data array from sliders

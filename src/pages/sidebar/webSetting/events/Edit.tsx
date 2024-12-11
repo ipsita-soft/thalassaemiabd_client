@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { RootState } from '@/redux/store';
+import ReactQuill from 'react-quill';
 // import { DateTimePicker } from '@/components/ui/datetime-picker';
 
 type MyData = {
@@ -136,7 +137,7 @@ const Edit: React.FC<EditSliderProps> = ({ Id }) => {
               />
             </div>
 
-            <div className="grid gap-2">
+            {/* <div className="grid gap-2">
               <Label htmlFor="description">Description</Label>
               <Input
                 type="textarea"
@@ -146,18 +147,28 @@ const Edit: React.FC<EditSliderProps> = ({ Id }) => {
                 placeholder="Enter description"
                 required
               />
+            </div> */}
+
+
+            <div className="mb-2">
+              <Label htmlFor="description">Description</Label>
+              <ReactQuill
+                value={formData.description !== null ? formData.description : ''}
+                onChange={(value) => setFormData({ ...formData, description: value })}
+                className="react-quill-container "
+              />
             </div>
 
             <div className="grid gap-2">
               <Label htmlFor="date">Date</Label> <br />
 
               <Input
-                  type="date"
-                  id="date"
-                  value={formData.date ? formData.date.toISOString().split('T')[0] : ''}
-                  onChange={(e) => setFormData({ ...formData, date: e.target.value ? new Date(e.target.value) : undefined })}
-                  required
-                />
+                type="date"
+                id="date"
+                value={formData.date ? formData.date.toISOString().split('T')[0] : ''}
+                onChange={(e) => setFormData({ ...formData, date: e.target.value ? new Date(e.target.value) : undefined })}
+                required
+              />
 
               {/* <DateTimePicker
                 value={formData.date || undefined}

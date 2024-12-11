@@ -1,16 +1,24 @@
-// src/components/Sidebar.js
-import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, Bell, FileText, User, Edit, LogOut } from "lucide-react";
+import { Home, Bell, FileText, User, Edit } from "lucide-react";
+import LogoutButton from '@/components/auth/Logout';
+import { useSelector } from "react-redux";
 
-const Sidebar = ({ onTabClick }) => {
-  const location = useLocation(); // For determining active tab
+interface SidebarProps {
+  onTabClick: (tabName: string) => void;
+}
 
-  const getLinkClasses = (path) =>
-    `nav-link px-3 py-2 rounded ${
-      location.pathname.includes(path)
-        ? "bg-red-100 text-red-600 font-bold"
-        : "text-gray-700 hover:bg-gray-100 hover:text-red-500"
+const hasPermissions = (requiredPermissions: string[], userPermissions: string[]) => {
+  return requiredPermissions.every(perm => userPermissions.includes(perm));
+};
+
+
+const Sidebar: React.FC<SidebarProps> = ({ onTabClick }) => {
+  const location = useLocation();
+  const { permissions } = useSelector((state: any) => state.auth);
+  const getLinkClasses = (path: string) =>
+    `nav-link px-3 py-2 rounded ${location.pathname.includes(path)
+      ? "bg-red-100 text-red-600 font-bold"
+      : "text-gray-700 hover:bg-gray-100 hover:text-red-500"
     }`;
 
   return (
@@ -23,14 +31,28 @@ const Sidebar = ({ onTabClick }) => {
           <li className="nav-item mb-3">
             <Link
               to="/userpanel"
-              className={`d-flex align-items-center ${getLinkClasses("userpanel")}`}
+              className={`d-flex align-items-center ${getLinkClasses("/userpanel")}`}
+              // style={{background:'#76cf76'}}
               onClick={() => onTabClick("dashboard")}
             >
               <Home className="me-2" size={20} />
               Dashboard
             </Link>
           </li>
-          
+
+          {hasPermissions(['profile_view'], permissions) && (
+            <li className="nav-item mb-3">
+              <Link
+                to="/userpanel/my-profile"
+                className={`d-flex align-items-center ${getLinkClasses("my-profile")}`}
+                onClick={() => onTabClick("profile")}
+              >
+                <User className="me-2" size={20} />
+                My Profile
+              </Link>
+            </li>
+          )}
+
           <li className="nav-item mb-3">
             <Link
               to="/userpanel/notices"
@@ -53,27 +75,19 @@ const Sidebar = ({ onTabClick }) => {
             </Link>
           </li>
 
-          <li className="nav-item mb-3">
-            <Link
-              to="/userpanel/my-profile"
-              className={`d-flex align-items-center ${getLinkClasses("my-profile")}`}
-              onClick={() => onTabClick("profile")}
-            >
-              <User className="me-2" size={20} />
-              My Profile
-            </Link>
-          </li>
 
-          <li className="nav-item mb-3">
-            <Link
-              to="/userpanel/update-profile"
-              className={`d-flex align-items-center ${getLinkClasses("update-profile")}`}
-              onClick={() => onTabClick("update-profile")}
-            >
-              <Edit className="me-2" size={20} />
-              Update Profile
-            </Link>
-          </li>
+          {hasPermissions(['profile_edit'], permissions) && (
+            <li className="nav-item mb-3">
+              <Link
+                to="/userpanel/update-profile"
+                className={`d-flex align-items-center ${getLinkClasses("update-profile")}`}
+                onClick={() => onTabClick("update-profile")}
+              >
+                <Edit className="me-2" size={20} />
+                Update Profile
+              </Link>
+            </li>
+          )}
 
           <li className="nav-item mb-3">
             <Link
@@ -93,17 +107,12 @@ const Sidebar = ({ onTabClick }) => {
               onClick={() => onTabClick("health-history")}
             >
               <Edit className="me-2" size={20} />
-                Health History
+              Health History
             </Link>
           </li>
         </ul>
 
-        <a
-          href="#"
-          className="nav-link px-3 py-2 rounded bg-red-500 text-white mt-auto d-flex align-items-center gap-2"
-        >
-          <LogOut className="h-5 w-5" /> Logout
-        </a>
+        <LogoutButton className="nav-link px-3 py-2 rounded bg-red-500 text-white mt-auto d-flex align-items-center gap-2" />
       </div>
     </div>
   );

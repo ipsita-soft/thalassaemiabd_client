@@ -17,10 +17,10 @@ const BlogNews = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   // Adjust the selector to properly match the state structure
-  const { blogNews, isLoading, isError, error } = useSelector((state: RootState) => state.public);
+  const { blogNews, isLoading, isError } = useSelector((state: RootState) => state.public);
 
   useEffect(() => {
-    dispatch(fetchPublicBlogNews({ per_page: 6 })); // Fetch blog news on mount
+    dispatch(fetchPublicBlogNews({ per_page: 3 })); // Fetch blog news on mount
   }, [dispatch]);
 
   if (isLoading) {
@@ -28,41 +28,48 @@ const BlogNews = () => {
   }
 
   if (isError) {
-    return <p>Error: {error}</p>; // Show error message if any
+    return <p>Error:</p>; // Show error message if any
   }
 
   const sliderData = Array.isArray(blogNews.data) ? blogNews.data : [];
 
   return (
-    <section id="about-boxes" className="about-boxes">
+    <section id="event" className="event">
       <div className="container" data-aos="fade-up">
         <div className="row">
           <div className="col-12">
             <div className="section-title">
-              <h2 className="wow fadeInUp" data-wow-delay=".2s">Our Blog & News</h2>
+              <h2 className="wow fadeInUp" data-wow-delay=".2s">Latest Blog & News</h2>
             </div>
           </div>
         </div>
-        <div className="row wow fadeInUp" data-wow-delay=".2s">
-          {sliderData.map((blog, index) => (
+
+        <div className="row mb-4 wow fadeInUp" data-wow-delay=".2s">
+          {sliderData.map((event, index) => (
             <div
-              key={blog.id}
+              key={event.id}
               className="col-lg-4 col-md-6 d-flex align-items-stretch"
               data-aos="fade-up"
               data-aos-delay={(index + 1) * 100}
             >
-              <div className="card">
-              <Link to={`/blog-news/${blog.id}`}> <img src={blog.image} className="card-img-top" alt={blog.title} /> </Link>
+              <div className="card single_event">
+                <Link to={`/blog-news/${event.id}`}>
+                  <img
+                    src={event.image}
+                    className="card-img-top"
+                    alt={event.title}
+                  />
+                </Link>
                 <div className="card-body">
-                  <h5 className="card-title text-start" style={lineClamp(2)}>
-                    <Link to={`/blog-news/${blog.id}`} target="_blank">
-                      {blog.title}
-                    </Link>
+                  <h5 className="card-title text-start" >
+                    <Link style={lineClamp(2)} to={`/blog-news/${event.id}`}>{event.title}</Link>
                   </h5>
+                  <p className="card-text" style={{ ...lineClamp(5), textAlign: "justify" }} dangerouslySetInnerHTML={{ __html: event.description }}>
+                  </p>
+                  <div className="more d-flex justify-content-between">
 
-                  <p className="card-text" style={{ ...lineClamp(5), textAlign: "justify" }} dangerouslySetInnerHTML={{ __html: blog.description }}></p>
-
-                  <Link to={`/blog-news/${blog.id}`}>Read More</Link>
+                    <Link to={`/blog-news/${event.id}`}>Read More</Link>
+                  </div>
                 </div>
               </div>
             </div>
@@ -70,7 +77,7 @@ const BlogNews = () => {
         </div>
 
         <div className="button mt-4 text-center">
-          <Link to='blog-news-all' className="btn">See More All News</Link>
+          <Link to='/blog-news-all' className="btn">See More All News</Link>
         </div>
       </div>
     </section>

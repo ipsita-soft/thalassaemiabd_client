@@ -8,9 +8,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from "@/hooks/use-toast";
+import ReactQuill from 'react-quill';
 
 const NewBlogNewsModal: React.FC = () => {
- 
+
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     image: undefined as File | undefined,
@@ -40,7 +41,7 @@ const NewBlogNewsModal: React.FC = () => {
         title: "Success",
         description: "Blog News added successfully!",
       });
-      
+
 
       setFormData({
         image: undefined,
@@ -49,7 +50,7 @@ const NewBlogNewsModal: React.FC = () => {
         sorting_index: null,
         status: 1,
       });
-      
+
       setOpen(false);
     } catch (error) {
       console.error("Failed to add Blog News:", error);
@@ -87,7 +88,7 @@ const NewBlogNewsModal: React.FC = () => {
             </div>
 
 
-            <div className="grid gap-2">
+            {/* <div className="grid gap-2">
               <Label htmlFor="description"> Description</Label>
               <Input
                 type="textarea"
@@ -96,6 +97,17 @@ const NewBlogNewsModal: React.FC = () => {
                 onChange={(e) => setFormData({ ...formData, description: e.target.value || null })}
                 placeholder="Enter description"
                 required
+              />
+
+            </div> */}
+
+
+            <div className="mb-2">
+              <Label htmlFor="description">Description</Label>
+              <ReactQuill
+                value={formData.description !== null ? formData.description : ''}
+                onChange={(value) => setFormData({ ...formData, description: value })}
+                className="react-quill-container "
               />
             </div>
 
