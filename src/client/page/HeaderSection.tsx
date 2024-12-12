@@ -144,10 +144,10 @@ const Header = () => {
                           <Link to="thalassaemia">What is thalassaemia</Link>
                         </li>
                         <li className="nav-item">
-                          <a href="treatment.html">Treatment</a>
+                          <Link to="treatment">Treatment</Link>
                         </li>
                         <li className="nav-item">
-                          <a href="/">Prevention</a>
+                          <Link to={`/page/prevention`}>Prevention</Link>
                         </li>
                         <li className="nav-item">
                           <Link to={`/page/awareness`}>Awareness</Link>

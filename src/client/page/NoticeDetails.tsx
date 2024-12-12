@@ -72,19 +72,8 @@ const NoticeDetails = () => {
   ];
 
   return (
-    <div className="notice-details ">
+    <div className="notice-details section mt-14">
       <div className="container">
-
-        <div className="row">
-          <div className="col-12">
-            <div className="section-title">
-              <h2 className="wow fadeInUp" data-wow-delay=".3s">
-                .
-              </h2>
-            </div>
-          </div>
-        </div>
-
 
         <div className="row">
           <div className="col-12">
@@ -117,7 +106,7 @@ const NoticeDetails = () => {
 
         <div className="row">
           <div className="col-md-12">
-            <div className="card p-4 mb-5">
+            <div className="card p-4 ">
               <DataTable
                 columns={columns}
                 data={filteredNotices} // Use filtered data instead of original data

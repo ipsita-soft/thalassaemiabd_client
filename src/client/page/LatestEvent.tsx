@@ -29,7 +29,7 @@ const LatestEvent = () => {
   const eventsData = Array.isArray(events?.data) ? events.data : [];
 
   return (
-    <section id="event" className="event">
+    <section id="event" className="event pb-2">
       <div className="container" data-aos="fade-up">
         <div className="row">
           <div className="col-12">

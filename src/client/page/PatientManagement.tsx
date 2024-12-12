@@ -1,4 +1,5 @@
-import { useEffect } from "react";
+import { useEffect} from "react";
+import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store"; // Adjust the import path as per your store location
 import { fetchDoctorSlider } from "@/redux/slices/publicSlice";
@@ -20,7 +21,9 @@ const PatientManagement = () => {
   useEffect(() => {
     dispatch(fetchDoctorSlider({}));  // Fetch sliders on mount
   }, [dispatch]);
-
+ const location = useLocation();
+ console.log('SADFSAFD',location.pathname);
+  
 
   if (isLoading) {
     return <p>Loading...</p>;  // Show loading state
@@ -32,12 +35,13 @@ const PatientManagement = () => {
 
   const doctorSliderData: DoctorSliders[] = Array.isArray(doctorSliders.data) ? doctorSliders.data : [];
 
-  console.log(doctorSliders); // This will log the actual slider data
-
+  console.log(doctorSliders);
 
 
   return (
-    <section className="treatment section">
+ 
+      <section className={`treatment section pt-1 ${location.pathname == '/treatment' ? 'mt-14 pt-5':''}`}>
+
       <div className="container">
         <div className="row">
           <div className="col-12">

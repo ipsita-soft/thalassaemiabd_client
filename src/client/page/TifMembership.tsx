@@ -73,10 +73,16 @@ const TifMembership = () => {
 
     return (
         <section className="section tif-membership mt-14">
-
-
-            
             <div className="container">
+                <div className="row">
+                    <div className="col-12">
+                        <div className="section-title">
+                            <h2 className="wow fadeInUp" data-wow-delay=".7s">
+                            {tifPage?.title}
+                            </h2>
+                        </div>
+                    </div>
+                </div>
                 <div className="row">
                     <div className="col-lg-12 col-md-12 col-12">
                         <div className="single-inner">
