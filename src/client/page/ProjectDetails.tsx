@@ -22,15 +22,15 @@ const ProjectDetails = () => {
 
   if (isError) return <p className="text-danger text-center">Error: {error}</p>;
 
-  if (!singleProject) return <p className="text-center">No event found.</p>;
+  if (!singleProject) return <p className="text-center">No Project found.</p>;
 
   return (
-    <section className="single-event-section section">
-      <div className="container mt-5">
+    <section className="single-event-section mt-14 section">
+      <div className="container">
         <div className="row justify-content-center">
           <div className="col-md-10">
             <div className="card shadow">
-              <img src={singleProject.image} alt={singleProject.title} className="card-img-top h-60" />
+              <img src={singleProject.image} alt={singleProject.title} className="card-img-top img-fluid"/>
               <div className="card-body">
                 <h2 className="card-title text-destructive">{singleProject.title}</h2>
                

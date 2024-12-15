@@ -64,18 +64,10 @@ const Header = () => {
                   id="navbarSupportedContent"
                 >
                   <ul id="nav" className="navbar-nav ms-auto">
-                    <li className="nav-item">
-                      <Link
-                        className="page-scroll active dd-menu collapsed"
-                        to="/"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#submenu-1-1"
-                        aria-controls="navbarSupportedContent"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation"
-                      >
-                        Home
-                      </Link>
+
+                    <li className="nav-item active">
+                      <Link to="/">Home</Link>
+
                     </li>
 
                     <li className="nav-item">
@@ -152,10 +144,10 @@ const Header = () => {
                           <Link to="thalassaemia">What is thalassaemia</Link>
                         </li>
                         <li className="nav-item">
-                          <a href="treatment.html">Treatment</a>
+                          <Link to="treatment">Treatment</Link>
                         </li>
                         <li className="nav-item">
-                          <a href="/">Prevention</a>
+                          <Link to={`/page/prevention`}>Prevention</Link>
                         </li>
                         <li className="nav-item">
                           <Link to={`/page/awareness`}>Awareness</Link>

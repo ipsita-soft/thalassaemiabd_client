@@ -1,6 +1,6 @@
 const Thalassemia = () => {
   return (
-    <section className="about-us section">
+    <section className="about-us section mt-14">
       <div className="container">
         <div className="row align-items-center">
           {/* First Section - Thalassemia */}

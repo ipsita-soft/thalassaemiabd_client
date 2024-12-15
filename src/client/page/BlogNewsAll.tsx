@@ -25,8 +25,8 @@ const BlogNewsAll = () => {
   
 
   return (
-    <section className="event-section section">
-      <div className="row mt-5">
+    <section className="event-section section mt-14">
+      <div className="row">
         <div className="col-12">
           <div className="section-title">
             <h2 className="wow fadeInUp" data-wow-delay=".5s">Blog & News</h2>
@@ -39,13 +39,16 @@ const BlogNewsAll = () => {
         <div className="row">
           {blogNewsData.map((blogNews) => (
             <div key={blogNews.id} className={`col-lg-4 col-md-6 grid-item`}>
+              <Link to={`/blog-news/${blogNews.id}`}>
               <div className="event-item-wrapper">
-                <div className="event-img">
-                  <img src={blogNews.image} alt={blogNews.title} />
-                </div>
+                
+                  <div className="event-img">
+                    <img src={blogNews.image} alt={blogNews.title} />
+                  </div>
+                
                 <div className="event-overlay">
                   <div className="pf-content">
-                    <Link to={`/blog-news/${blogNews.id}`} className="detail-btn">
+                    <Link  to={`/blog-news/${blogNews.id}`} className="detail-btn cursor-pointer">
                       <i className="lni lni-link"></i>
                     </Link>
                    
@@ -53,6 +56,7 @@ const BlogNewsAll = () => {
                   </div>
                 </div>
               </div>
+              </Link>
             </div>
           ))}
         </div>

@@ -32,32 +32,34 @@ const OurProjects = () => {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-lg-12 col-md-12 col-12 mb-3">
+                    <div className="col-lg-12 col-md-12 col-12">
                         <div className="single-news wow fadeInUp" data-wow-delay=".2s">
                             <div className="row">
                                 {projects.map((data) => (
-                                    <div key={data.id} className="col-lg-4 col-md-4 col-12 pb-2">
-                                        <div className="card shadow-sm">
-                                            <img src={data.image || "assets/images/projects/default.jpg"} className="card-img-top" alt={data.title || "Project Image"} />
-                                            <div className="card-body">
-                                                <h5 className="card-title">
-                                                    <a href={`project-details/${data.id}`}>
-                                                        {data.title}
-                                                    </a>
-                                                </h5>
-                                                <p className="card-text">
+                                    <div key={data.id} className="col-lg-4 col-md-4 col-12 mb-4">
+                                        <a href={`project-details/${data.id}`}>
+                                            <div className="card shadow-sm">
+                                                <img src={data.image || "assets/images/projects/default.jpg"} className="card-img-top" alt={data.title || "Project Image"} />
+                                                <div className="card-body">
+                                                    <h5 className="card-title">
+                                                        <a href={`project-details/${data.id}`}>
+                                                            {data.title}
+                                                        </a>
+                                                    </h5>
+                                                    <p className="card-text">
 
-                                                    <div
-                                                        dangerouslySetInnerHTML={{
-                                                            __html: data.description ? data.description.substring(0, 200) : '',
-                                                        }}
-                                                    />
+                                                        <div
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: data.description ? data.description.substring(0, 200) : '',
+                                                            }}
+                                                        />
 
 
-                                                </p>
-                                                <a className="text-end" href={`project-details/${data.id}`}>Read More</a>
+                                                    </p>
+                                                    <a className="text-end mt-2" href={`project-details/${data.id}`}>Read More</a>
+                                                </div>
                                             </div>
-                                        </div>
+                                        </a>
                                     </div>
                                 ))}
                             </div>

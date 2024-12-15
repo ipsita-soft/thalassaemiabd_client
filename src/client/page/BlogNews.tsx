@@ -53,11 +53,13 @@ const BlogNews = () => {
               data-aos-delay={(index + 1) * 100}
             >
               <div className="card single_event">
-                <img
-                  src={event.image}
-                  className="card-img-top"
-                  alt={event.title}
-                />
+                <Link to={`/blog-news/${event.id}`}>
+                  <img
+                    src={event.image}
+                    className="card-img-top"
+                    alt={event.title}
+                  />
+                </Link>
                 <div className="card-body">
                   <h5 className="card-title text-start" >
                     <Link style={lineClamp(2)} to={`/blog-news/${event.id}`}>{event.title}</Link>
