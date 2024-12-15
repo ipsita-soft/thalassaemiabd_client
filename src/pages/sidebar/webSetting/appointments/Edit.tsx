@@ -10,84 +10,112 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useMedicalHistoryItemQuery, useUpdateMedicalHistoryItemMutation } from '@/api/medicalHistoryItemApi';
+import { useAppointmentsItemQuery, useFetchUsersWithRoleQuery, useUpdateAppointmentsItemMutation } from '@/api/appointmentsApi';
 import Swal from 'sweetalert2';
 import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-
-import {
-  useFetchMedicalHistoriesQuery,
-} from '@/api/medicalHistoryApi'
-import SelectField from '@/components/common/SelectField';
+import { useSelector } from 'react-redux';
+import SelectField from '@/components/common/SelectField';  // Assuming you have a SelectField component for dropdowns
 
 
 type EditProps = {
   Id: string;
-  open: boolean;
-  onClose: () => void;
 };
 
 const Edit: React.FC<EditProps> = ({ Id }) => {
-  const [open, setOpen] = useState(false);
-
-  const [perPage] = useState(250);
-  const search = '';
-  const currentPage = 1;
-  const status = '1';
-  const { data: medicalHistories } =
-    useFetchMedicalHistoriesQuery({
-      perPage,
-      search,
-      page: currentPage,
-      status
-    });
+  const [open, setOpen] = useState(false); // Manage modal state internally
 
 
 
-  const medicalHistoriesOption = medicalHistories?.data.map((digt: any) => ({
-    value: digt?.id,
-    label: digt?.title,
-  }));
+  const { user } = useSelector((state: any) => state.auth);
 
 
-
-
-  const [formData, setFormData] = useState({
-    title: '',
-    status: 1,
-    sorting_index: 0,
-    medical_history_id: '',
+  const { data: usersWithRole } = useFetchUsersWithRoleQuery({
+    roleId: 9,
+    perPage: 250,
+    page: 1,
+    all: 'all',
   });
 
-  const { data } = useMedicalHistoryItemQuery(Id);
-  const [updateMedicalHistory, { isLoading: isUpdating }] = useUpdateMedicalHistoryItemMutation();
+  const { data: getPatient } = useFetchUsersWithRoleQuery({
+    roleId: 8,
+    perPage: 250,
+    page: 1,
+    all: 'all',
+  });
 
-  console.log(data);
+  const DocOption =
+    usersWithRole?.data?.map((doc: any) => ({
+      value: doc.id,
+      label: doc.name,
+    })) || [];
+
+  const PatientOption =
+    getPatient?.data?.map((patient: any) => ({
+      value: patient.id,
+      label: patient.name + ' ' + patient.bts_id,
+    })) || [];
+
+  const [formData, setFormData] = useState({
+    date: '',
+    appointment_type: '',
+    status: '',
+    doctor_id: '',
+    patient_id: '',
+    created_by: user?.id || '',
+  });
+
+  const { data: appointments } = useAppointmentsItemQuery(Id);
+  const [updateMedicalAppontment, { isLoading: isUpdating }] = useUpdateAppointmentsItemMutation();
 
   useEffect(() => {
-    if (data?.data) {
-      const { title, status, sorting_index, medical_history } = data.data;
+    if (appointments?.data) {
+      const { date, appointment_type, status, doctor, patient } = appointments.data;
+
+      const statusMapping: { [key: string]: string } = {
+        Approved: '1',
+        Pending: '2',
+        Rejected: '3',
+      };
+
+      const appointmentMapping: Record<string, string> = {
+        'Doctor Appointment': '1',
+        'Blood Request': '2',
+        'Bed Booking': '3',
+      };
+
       setFormData({
-        title: title || '',
-        status: status === 'Active' ? 1 : 2,
-        sorting_index: sorting_index || 0,
-        medical_history_id: medical_history.id,
+        date: date || '',
+        appointment_type: appointmentMapping[appointment_type as keyof typeof appointmentMapping] || '',
+        status: statusMapping[status] || '',
+        doctor_id: doctor?.id,
+        patient_id: patient?.id,
+        created_by: user?.id,
       });
     }
-  }, [data]);
+  }, [appointments, user]);
+
+
+  console.log('asdf', appointments?.data.patient.id)
 
   const validationSchema = Yup.object().shape({
-    title: Yup.string().required('The title field is required.'),
-    sorting_index: Yup.number().required('The sorting index field is required.'),
-    status: Yup.number().required('The status field is required.'),
-    medical_history_id: Yup.string().required('The medical history id field is required.'),
+    date: Yup.string().required('The date field is required.'),
+    appointment_type: Yup.string().required('The appointment type field is required.'),
+    status: Yup.string().required('The status field is required.'),
+    doctor_id: Yup.string().required('The doctor field is required.'),
+    patient_id: Yup.string().required('The patient field is required.'),
   });
 
   const handleSubmit = async (values: typeof formData, { setErrors }: any) => {
     try {
-      await updateMedicalHistory({
+      const formattedValues = {
+        ...values,
+        status: Number(values.status),
+        appointment_type: Number(values.appointment_type),
+      };
+      await updateMedicalAppontment({
         id: Id,
-        historyData: values,
+        historyData: formattedValues,
       }).unwrap();
       Swal.fire({
         title: 'Success!',
@@ -96,16 +124,20 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
         timer: 3000,
         timerProgressBar: true,
       });
-      setOpen(false);
+      setOpen(false); // Close the modal after successful update
     } catch (error: any) {
-      setErrors(error?.data.data || {});
+      setErrors(error?.data?.data || {});
     }
   };
+
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="mr-2 mt-1 w-40 bg-slate-300 text-white hover:bg-slate-400 transition">
+        <Button
+          className="mr-2 mt-1 w-40 bg-slate-300 text-white hover:bg-slate-400 transition"
+          onClick={() => setOpen(true)} // Open the modal when the button is clicked
+        >
           Edit
         </Button>
       </DialogTrigger>
@@ -121,55 +153,86 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
         >
           {({ errors, touched }) => (
             <Form className="grid gap-4">
-              <div className="grid gap-2">
-                <Label htmlFor="title">Title</Label>
-                <Field
-                  as={Input}
-                  type="text"
-                  id="title"
-                  name="title"
-                  placeholder="Enter Title"
-                  className={errors.title && touched.title ? 'border-red-500' : ''}
-                />
-                {errors.title && touched.title && (
-                  <span className="text-red-500 text-sm">{errors.title}</span>
-                )}
+              {/* Date Input */}
+
+              <div className='row'>
+                <div className="col-md-6 mb-4">
+                  <Label htmlFor="date">Date</Label>
+                  <Field
+                    as={Input}
+                    type="date"
+                    id="date"
+                    name="date"
+                    className={errors.date && touched.date ? 'border-red-500' : ''}
+                  />
+                  <ErrorMessage name="date" component="span" className="text-red-500 text-sm" />
+                </div>
+
+                <div className="col-md-6 mb-4">
+                  <Label htmlFor="appointment_type">Appointment Type</Label>
+                  <Field
+                    as="select"
+                    name="appointment_type"
+                    className="form-control"
+                    id="appointment_type"
+                  >
+                    <option value="">Select Appointment Type</option>
+                    <option value="1" label="Doctor Appointment" />
+                    <option value="2" label="Blood Request" />
+                    <option value="3" label="Bed Booking" />
+                  </Field>
+                  <ErrorMessage name="appointment_type" component="span" className="text-red-500 text-sm" />
+                </div>
+
+                <div className="col-md-6 mb-4">
+                  <Label htmlFor="status">Status</Label>
+                  <Field
+                    as="select"
+                    name="status"
+                    className="form-control"
+                    id="status"
+                  >
+                    <option value="">Select Status</option>
+                    <option value="1">Active</option>
+                    <option value="2">Inactive</option>
+                  </Field>
+                  <ErrorMessage name="status" component="span" className="text-red-500 text-sm" />
+                </div>
+
+
+                {/* Doctor Dropdown */}
+                <div className="col-md-6 mb-4">
+                  <Label htmlFor="doctor_id">Doctor</Label>
+
+                  <Field
+                    as={SelectField}
+                    id="doctor_id"
+                    name="doctor_id"
+                    options={DocOption}
+                    component={SelectField}
+                    defaultValue={formData.doctor_id}
+                    placeholder="Select Doctor"
+                  />
+                  <ErrorMessage name="doctor_id" component="span" className="text-red-500 text-sm" />
+                </div>
+
+                {/* Patient Dropdown */}
+                <div className="col-md-6 mb-4">
+                  <Label htmlFor="patient_id">Patient</Label>
+
+                  <Field
+                    as={SelectField}
+                    id="patient_id"
+                    name="patient_id"
+                    options={PatientOption}
+                    component={SelectField}
+                    defaultValue={formData.patient_id}
+                    placeholder="Select Doctor"
+                  />
+                  <ErrorMessage name="patient_id" component="span" className="text-red-500 text-sm" />
+                </div>
               </div>
-              <div className="grid gap-2">
-                <Label htmlFor="sorting_index">Sorting Index</Label>
-                <Field
-                  as={Input}
-                  type="number"
-                  id="sorting_index"
-                  name="sorting_index"
-                  placeholder="Enter Sorting Index"
-                  className={errors.sorting_index && touched.sorting_index ? 'border-red-500' : ''}
-                />
-                <ErrorMessage name="sorting_index" component="div" className="text-danger" />
-              </div>
-              <div className="grid gap-2">
-                <Label htmlFor="status">Status</Label>
-                <Field as="select" name="status" className="border rounded-md p-2">
-                  <option value="1">Active</option>
-                  <option value="2">Inactive</option>
-                </Field>
-                {errors.status && touched.status && (
-                  <span className="text-red-500 text-sm">{errors.status}</span>
-                )}
-              </div>
-              <div className="col-md-6 mb-4">
-                <Field
-                  name="medical_history_id"
-                  component={SelectField}
-                  options={medicalHistoriesOption}
-                  placeholder="Medical History"
-                />
-                <ErrorMessage
-                  name="medical_history_id"
-                  component="div"
-                  className="text-danger"
-                />
-              </div>
+
 
               <DialogFooter className="mt-4">
                 <Button type="submit" disabled={isUpdating}>
@@ -178,7 +241,7 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
                 <Button
                   type="button"
                   className="ml-2 bg-gray-300 text-gray-800 hover:bg-gray-400"
-                  onClick={() => setOpen(false)}
+                  onClick={() => setOpen(false)} // Close the modal when Cancel is clicked
                 >
                   Cancel
                 </Button>

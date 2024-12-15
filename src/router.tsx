@@ -75,6 +75,7 @@ import SingleStory from './client/page/SingleStory.tsx';
 import StoryAll from './client/page/StoryAll.tsx';
 import { PatientMedicalHistory } from './pages/sidebar/webSetting/PatientMedicalHistory/PatientMedicalHistory';
 
+import ShowAppointment from './pages/sidebar/webSetting/appointments/ShowAppointment.tsx';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -317,6 +318,8 @@ const router = createBrowserRouter([
       },
 
 
+
+
       {
         path: 'medical-history',
         element: <ProtectedRoute
@@ -349,6 +352,16 @@ const router = createBrowserRouter([
       },
 
       {
+        path: 'show-appointment/:appointment_id',
+        element: <ProtectedRoute
+          element={<ShowAppointment />}
+          requiredPermissions={[
+            'appointment-all',
+          ]}
+        />,
+      },
+
+      {
         path: 'admin-user',
         element: <ProtectedRoute
           element={<UsersPage />}
@@ -361,14 +374,15 @@ const router = createBrowserRouter([
 
 
       {
-        path: 'patient-medical-history/:id',
+        path: 'patient-medical-history/:apId/:mhId/:apDate',
         element: <ProtectedRoute
-          element={<PatientMedicalHistory/>}
+          element={<PatientMedicalHistory />}
           requiredPermissions={[
             'medical-history-item-all',
           ]}
         />,
       },
+
 
 
       {

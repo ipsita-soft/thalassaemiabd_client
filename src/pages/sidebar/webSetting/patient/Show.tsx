@@ -302,7 +302,7 @@ const Show: React.FC<ShowData> = ({ Id }) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="mr-2 mt-1 w-40 bg-blue-300 text-white hover:bg-blue-400 transition">
-          Show
+        Patient Show
         </Button>
       </DialogTrigger>
       <DialogContent

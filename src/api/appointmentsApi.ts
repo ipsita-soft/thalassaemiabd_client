@@ -102,9 +102,9 @@ export const appointmentsApi = createApi({
         }),
 
         // Fetch users with a specific role
-        fetchUsersWithRole: builder.query<DataListResponse, { roleId: number; perPage?: number; page?: number }>({
-            query: ({ roleId, perPage = 250, page = 1 }) =>
-                `web/user-with-role/?role_id=${roleId}&per_page=${perPage}&page=${page}`,
+        fetchUsersWithRole: builder.query<DataListResponse, { roleId: number; perPage?: number; page?: number; all?:string }>({
+            query: ({ roleId, perPage = 250, page = 1, all }) =>
+                `web/user-with-role/?role_id=${roleId}&per_page=${perPage}&page=${page}&all=${all}`,
         }),
     }),
 });
