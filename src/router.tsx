@@ -74,6 +74,7 @@ import { StoryListPage } from './pages/sidebar/webSetting/story/StoryListPage.ts
 import SingleStory from './client/page/SingleStory.tsx';
 import StoryAll from './client/page/StoryAll.tsx';
 import { PatientMedicalHistory } from './pages/sidebar/webSetting/PatientMedicalHistory/PatientMedicalHistory';
+import PatientManagement from './client/page/PatientManagement.tsx';
 
 const router = createBrowserRouter([
   {
@@ -105,6 +106,12 @@ const router = createBrowserRouter([
         path: 'page/:TifType',
         element: <TifMembership />
       },
+
+      {
+        path: 'treatment',
+        element: <PatientManagement />
+      },
+
 
 
       {

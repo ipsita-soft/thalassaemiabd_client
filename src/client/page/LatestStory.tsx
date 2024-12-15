@@ -11,7 +11,7 @@ const lineClamp = (lines: number): CSSProperties => ({
   overflow: 'hidden',
   textOverflow: 'ellipsis',
 });
-const LatestNews = () => {
+const LatestStory = () => {
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -32,7 +32,6 @@ const LatestNews = () => {
 
   const data = Array.isArray(storys.data) ? storys.data : [];
 
-
   return (
     <div className="latest-news-area section">
       <div className="container">
@@ -43,7 +42,7 @@ const LatestNews = () => {
                 {data.map((story) => (
                   <div className="col-lg-4 col-md-6 col-12 pb-2">
                     <div className="card shadow-sm">
-                      <img src={story.image} alt={story.title} className="card-img-top" />
+                      <Link to={`/story/${story.id}`}><img src={story.image} alt={story.title} className="card-img-top" /></Link>
                       <div className="card-body">
                         <h5 className="card-title">
                           <Link style={lineClamp(2)} to={`/story/${story.id}`}>{story.title}</Link>
@@ -53,7 +52,7 @@ const LatestNews = () => {
                         <p className="card-text" style={{ ...lineClamp(5), textAlign: "justify" }} dangerouslySetInnerHTML={{ __html: story.description }}>
                         </p>
 
-                        <div className="more d-flex justify-content-between">
+                        <div className="more mt-2 d-flex justify-content-between">
 
                           <Link to={`/story/${story.id}`}>Read More</Link>
                         </div>
@@ -72,4 +71,4 @@ const LatestNews = () => {
   );
 };
 
-export default LatestNews;
+export default LatestStory;

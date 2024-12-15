@@ -175,6 +175,10 @@ ol {
   margin-top: 20px;
 }
 
+.mt-14 {
+  margin-top: 96px !important;
+}
+
 .mt-25 {
   margin-top: 25px;
 }
@@ -1638,8 +1642,8 @@ ol {
   top: 15px;
   width: 100%;
   z-index: 99;
-  -webkit-transition: all 0.3s ease-out 0s;
-  transition: all 0.3s ease-out 0s;
+  -webkit-transition: all .5s ease-out 0s;
+  transition: all .5s ease-out 0s;
   padding: 0;
 }
 
@@ -1649,8 +1653,8 @@ ol {
   background: #DC2323;
   -webkit-box-shadow: 0px 20px 50px 0px rgba(0, 0, 0, 0.05);
   box-shadow: 0px 20px 50px 0px rgba(0, 0, 0, 0.05);
-  -webkit-transition: all 0.3s ease-out 0s;
-  transition: all 0.3s ease-out 0s;
+  -webkit-transition: all .5s ease-out 0s;
+  transition: all .5s ease-out 0s;
   background: #fff;
   padding: 0px 0;
 }
@@ -5619,6 +5623,9 @@ End Patient Story Area
 
 /* ======= Other Donation End ============ */
 
+link{
+cursor: pointer !important;
+}
 
 
 
@@ -5627,7 +5634,7 @@ End Patient Story Area
     Start Event CSS
 ========================================*/
 .event-section.section {
-  padding-bottom: 70px;
+  padding-bottom: 30px;
   background-image: url("../images/portfolio/bg1.png");
   background-size: cover;
   background-position: center;
@@ -5710,7 +5717,7 @@ End Patient Story Area
 .event-item-wrapper .event-img {
   overflow: hidden;
   position: relative;
-  z-index: 5;
+  z-index: 0;
 }
 
 .event-item-wrapper .event-img::before {
@@ -5784,6 +5791,11 @@ End Patient Story Area
   color: #0c6c3f;
   border-color: transparent;
 }
+
+.detail-btn {
+  cursor: pointer !important;
+}
+
 
 .event-section .pf-content .category {
   font-size: 14px;

@@ -25,8 +25,8 @@ const StoryAll = () => {
   
 
   return (
-    <section className="event-section section">
-      <div className="row mt-5">
+    <section className="event-section section mt-14">
+      <div className="row">
         <div className="col-12">
           <div className="section-title">
             <h2 className="wow fadeInUp" data-wow-delay=".5s">Stroy</h2>
@@ -39,9 +39,12 @@ const StoryAll = () => {
         <div className="row">
           {blogNewsData.map((blogNews) => (
             <div key={blogNews.id} className={`col-lg-4 col-md-6 grid-item`}>
+            <Link to={`/story/${blogNews.id}`}>
               <div className="event-item-wrapper">
                 <div className="event-img">
+         
                   <img src={blogNews.image} alt={blogNews.title} />
+              
                 </div>
                 <div className="event-overlay">
                   <div className="pf-content">
@@ -53,6 +56,7 @@ const StoryAll = () => {
                   </div>
                 </div>
               </div>
+            </Link>
             </div>
           ))}
         </div>

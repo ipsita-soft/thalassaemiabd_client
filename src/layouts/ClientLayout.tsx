@@ -6,7 +6,7 @@ import Footer from "@/client/page/Footer";
 import Header from "@/client/page/HeaderSection";
 import HeroArea from "@/client/page/HeroArea";
 import LatestEvent from "@/client/page/LatestEvent";
-import LatestNews from "@/client/page/LatestNews";
+import LatestNews from "@/client/page/LatestStory";
 import PatientManagement from "@/client/page/PatientManagement";
 import WishersSection from "@/client/page/WishersSection";
 

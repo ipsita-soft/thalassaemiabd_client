@@ -43,7 +43,7 @@ const VideoGallery = () => {
                     {galleriesData.map((video, index) => (
                         <div key={index} className="col-md-6 col-lg-6 mt-4 mb-3">
 
-                            <iframe width="560" height="315"
+                            <iframe width="100%" height="300" className="rounded"
                                 src={video.video_url}
                                 title={video.type || "Video"}
                                 frameBorder="0"
@@ -55,7 +55,7 @@ const VideoGallery = () => {
                     ))}
                 </div>
 
-                <nav aria-label="Page navigation example">
+                <nav aria-label="Page navigation example ">
                     <ul className="pagination">
                         <li className="page-item">
                             <a className="page-link" href="#">
@@ -84,6 +84,7 @@ const VideoGallery = () => {
                         </li>
                     </ul>
                 </nav>
+                <div className="mt-3"></div>
             </div>
         </section>
     );
