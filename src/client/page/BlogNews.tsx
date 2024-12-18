@@ -54,11 +54,13 @@ const BlogNews = () => {
             >
               <div className="card single_event">
                 <Link to={`/blog-news/${event.id}`}>
-                  <img
-                    src={event.image}
-                    className="card-img-top"
-                    alt={event.title}
-                  />
+                  <div className="imgheight">
+                    <img
+                      src={event.image}
+                      className="card-img-top"
+                      alt={event.title}
+                    />
+                  </div>
                 </Link>
                 <div className="card-body">
                   <h5 className="card-title text-start" >

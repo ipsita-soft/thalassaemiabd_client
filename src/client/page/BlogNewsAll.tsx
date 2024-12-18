@@ -12,7 +12,7 @@ const BlogNewsAll = () => {
 
 
   useEffect(() => {
-    dispatch(fetchPublicBlogNews({})); // Fetch events on component mount
+    dispatch(fetchPublicBlogNews({}));
   }, [dispatch]);
 
   if (isLoading) return <p>Loading...</p>;

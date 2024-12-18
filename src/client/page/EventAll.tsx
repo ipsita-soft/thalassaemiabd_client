@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/redux/store"; // Adjust import path if necessary
+import { AppDispatch, RootState } from "@/redux/store";
 import { fetchPublicEvent } from "@/redux/slices/publicSlice";
 import { useState, useEffect } from 'react';
-import moment from 'moment'; // For handling date formatting
+import moment from 'moment';
 import { Link } from 'react-router-dom';
 
 const EventAll = () => {

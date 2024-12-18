@@ -1,4 +1,19 @@
+import { useEffect } from "react";
+import GLightbox from "glightbox";
+import "glightbox/dist/css/glightbox.min.css";
+
 const Thalassemia = () => {
+  useEffect(() => {
+    // Initialize GLightbox
+    const lightbox = GLightbox({
+      selector: ".glightbox", // This targets all elements with the "glightbox" class
+      autoplayVideos: true,
+      width: "900px",
+    });
+
+    return () => lightbox.destroy(); // Cleanup when component unmounts
+  }, []);
+
   return (
     <section className="about-us section mt-14">
       <div className="container">
@@ -6,14 +21,27 @@ const Thalassemia = () => {
           {/* First Section - Thalassemia */}
           <div className="col-lg-6 col-md-12 col-12">
             <div className="content-left wow fadeInLeft" data-wow-delay=".3s">
-              <img src="client/assets/images/financial/blood2.jpg" alt="Thalassemia Overview" />
-              <a href="https://www.youtube.com/embed/ir72Qf-x6rQ" className="glightbox video">
-                <i className="lni lni-play"></i>
+              <img
+                src="client/assets/images/financial/blood2.jpg"
+                alt="Thalassemia Overview"
+              />
+              {/* Play Button */}
+
+
+              <a href="https://www.youtube.com/embed/ir72Qf-x6rQ"  data-glightbox="type: video" className="glightbox video"><i className="lni lni-play"></i>
               </a>
+
+
+         
+            
             </div>
           </div>
+
           <div className="col-lg-6 col-md-12 col-12">
             <div className="content-right wow fadeInRight" data-wow-delay=".5s">
+
+
+
               <h2>What is thalassemia?</h2>
               <p>
                 Thalassemia is an inherited blood disorder that causes the body to produce less hemoglobin,
@@ -21,30 +49,44 @@ const Thalassemia = () => {
                 body. Hemoglobin is made up of four parts: two alpha proteins and two beta proteins.
                 Thalassemia affects one or more of the genes that produce these proteins.
               </p>
+
+
               <div className="row">
                 <div className="col-lg-6 col-12">
                   <ul className="list">
-                    <li><i className="lni lni-checkbox"></i>Inherited blood disorder</li>
-                    <li><i className="lni lni-checkbox"></i>Low hemoglobin levels</li>
-                    <li><i className="lni lni-checkbox"></i>Red blood cell damage</li>
+                    <li>
+                      <i className="lni lni-checkbox"></i>Inherited blood disorder
+                    </li>
+                    <li>
+                      <i className="lni lni-checkbox"></i>Low hemoglobin levels
+                    </li>
+                    <li>
+                      <i className="lni lni-checkbox"></i>Red blood cell damage
+                    </li>
                   </ul>
                 </div>
                 <div className="col-lg-6 col-12">
                   <ul className="list">
-                    <li><i className="lni lni-checkbox"></i>Fatigue and weakness</li>
-                    <li><i className="lni lni-checkbox"></i>Frequent blood transfusions</li>
-                    <li><i className="lni lni-checkbox"></i>Iron overload complications</li>
+                    <li>
+                      <i className="lni lni-checkbox"></i>Fatigue and weakness
+                    </li>
+                    <li>
+                      <i className="lni lni-checkbox"></i>Frequent blood transfusions
+                    </li>
+                    <li>
+                      <i className="lni lni-checkbox"></i>Iron overload complications
+                    </li>
                   </ul>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        
+
+        {/* Second Section - Haemoglobinopathies */}
         <div className="row align-items-center">
-          {/* Second Section - Haemoglobinopathies */}
-          <div className="col-lg-8 col-md-8 col-12 wow fadeInLeft" data-wow-delay=".3s">
-            <div className="content-thalass">
+        <div className="col-lg-8 col-md-8 col-12 wow fadeInLeft" data-wow-delay=".3s">
+            <div className="content-thalass mt-4">
               <h2>About haemoglobinopathies</h2>
               <p>
                 Haemoglobin disorders or haemoglobinopathies are a group of conditions affecting the human
@@ -61,8 +103,15 @@ const Thalassemia = () => {
             </div>
           </div>
           <div className="col-lg-4 col-md-4 col-12">
-            <div className="content-thalass wow fadeInRight" data-wow-delay=".3s">
-              <img className="img-fluid" src="client/assets/images/financial/thalas.jpg" alt="Haemoglobinopathies Overview" />
+            <div
+              className="content-thalass wow fadeInRight"
+              data-wow-delay=".3s"
+            >
+              <img
+                className="img-fluid"
+                src="client/assets/images/financial/thalas.jpg"
+                alt="Haemoglobinopathies Overview"
+              />
             </div>
           </div>
         </div>

@@ -42,7 +42,11 @@ const LatestStory = () => {
                 {data.map((story) => (
                   <div className="col-lg-4 col-md-6 col-12 pb-2">
                     <div className="card shadow-sm">
-                      <Link to={`/story/${story.id}`}><img src={story.image} alt={story.title} className="card-img-top" /></Link>
+                      <Link to={`/story/${story.id}`}>
+                        <div className="imgheight">
+                            <img src={story.image} alt={story.title} className="card-img-top imgheight" />
+                        </div>
+                      </Link>
                       <div className="card-body">
                         <h5 className="card-title">
                           <Link style={lineClamp(2)} to={`/story/${story.id}`}>{story.title}</Link>
@@ -65,6 +69,9 @@ const LatestStory = () => {
             </div>
             {/* End Single News */}
           </div>
+        </div>
+        <div className="button mt-4 text-center">
+          <Link to='/story-all' className="btn">See All Stories</Link>
         </div>
       </div>
     </div>

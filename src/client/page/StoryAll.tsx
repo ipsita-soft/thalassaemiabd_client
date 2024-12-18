@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/redux/store"; // Adjust import path if necessary
+import { AppDispatch, RootState } from "@/redux/store";
 import { fetchStory } from "@/redux/slices/publicSlice";
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
@@ -9,20 +9,15 @@ const StoryAll = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { storys, isLoading, isError, error } = useSelector((state: RootState) => state.public);
 
-
-
   useEffect(() => {
-    dispatch(fetchStory({})); // Fetch events on component mount
-  }, [dispatch]);
+    dispatch(fetchStory({}));
+  }, [fetchStory]);
 
   if (isLoading) return <p>Loading...</p>;
 
   if (isError) return <p>Error: {error}</p>;
 
   const blogNewsData = Array.isArray(storys?.data) ? storys.data : [];
-
-
-  
 
   return (
     <section className="event-section section mt-14">
@@ -35,7 +30,6 @@ const StoryAll = () => {
       </div>
 
       <div className="container">
-    
         <div className="row">
           {blogNewsData.map((blogNews) => (
             <div key={blogNews.id} className={`col-lg-4 col-md-6 grid-item`}>
