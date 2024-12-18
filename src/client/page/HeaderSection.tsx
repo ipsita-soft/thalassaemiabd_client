@@ -168,9 +168,9 @@ const Header = () => {
                         <li className="nav-item"><Link to="publications">Publications</Link></li>
                         <li className="nav-item"><Link to="blog-news-all">Blogs & News</Link></li>
                         <li className="nav-item"><Link to="story-all">Story</Link></li>
-                        <li className="nav-item">
+                        {/* <li className="nav-item">
                           <Link to={`/page/advertisements`}>Advertisements</Link>
-                        </li>
+                        </li> */}
                       </ul>
                     </li>
 
@@ -196,9 +196,7 @@ const Header = () => {
                     </a>
                     <div className="hover-links">
                       <ul className="donate-menu">
-                        <li className="dnt-item">
-                          <a href="donate-blood.html">Blood Donation</a>
-                        </li>
+                       
                         <li className="dnt-item">
                           <a href="sponsor-child.html">Sponsor a Child</a>
                         </li>

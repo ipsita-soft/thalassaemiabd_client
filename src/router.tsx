@@ -77,6 +77,7 @@ import { PatientMedicalHistory } from './pages/sidebar/webSetting/PatientMedical
 import PatientManagement from './client/page/PatientManagement.tsx';
 
 import ShowAppointment from './pages/sidebar/webSetting/appointments/ShowAppointment.tsx';
+import { UpdatePatientMedicalHistory } from './pages/sidebar/webSetting/PatientMedicalHistory/UpdatePatientMedicalHistory.tsx';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -384,6 +385,17 @@ const router = createBrowserRouter([
         path: 'patient-medical-history/:apId/:mhId/:apDate',
         element: <ProtectedRoute
           element={<PatientMedicalHistory />}
+          requiredPermissions={[
+            'medical-history-item-all',
+          ]}
+        />,
+      },
+
+
+      {
+        path: 'patient-medical-history-update/:apId/:mhId/:apDate',
+        element: <ProtectedRoute
+          element={<UpdatePatientMedicalHistory />}
           requiredPermissions={[
             'medical-history-item-all',
           ]}

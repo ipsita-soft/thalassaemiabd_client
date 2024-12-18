@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_BASE_URL } from '@/config/apiConfig';
 
 export interface PatientMedicalHistory {
+    data: any;
     id: string;
     name: string;
     value: string;
@@ -65,8 +66,11 @@ export const patientMedicalHistoryApi = createApi({
         fetchPatientMedicalHistory: builder.query<PatientMedicalHistory, string>({
             query: (id) => `management/patient-medical-history/${id}`,
             providesTags: (_, __, id) => [{ type: 'PatientMedicalHistory', id }],
+            // forceRefetch:true
         }),
 
+
+        
         // Create a new patient medical history
         createPatientMedicalHistory: builder.mutation<PatientMedicalHistory, Partial<PatientMedicalHistory>>({
             query: (newData) => ({

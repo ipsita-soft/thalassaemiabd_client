@@ -58,6 +58,7 @@ export const medicalHistoryApi = createApi({
                     ]
                     : [{ type: 'MedicalHistory', id: 'LIST' }],
         }),
+        
 
         MedicalHistory: builder.query<Data, string>({
             query: (id) => `web/medical-history/${id}`,

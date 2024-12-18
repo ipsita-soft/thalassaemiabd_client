@@ -57,6 +57,7 @@ export const appointmentsApi = createApi({
                         { type: 'AppointmentsItem', id: 'LIST' },
                     ]
                     : [{ type: 'AppointmentsItem', id: 'LIST' }],
+                    
         }),
 
         // Fetch a single appointment by ID

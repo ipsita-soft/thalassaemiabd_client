@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useAppointmentsItemQuery } from '@/api/appointmentsApi';
 
@@ -30,37 +30,26 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import Add from "@/pages/sidebar/webSetting/medicalHistory/Add";
-
 import Delete from "@/pages/sidebar/webSetting/medicalHistory/Delete";
 
 import Swal from "sweetalert2";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 export default function ShowAppointment() {
-
-
-
-
-
-
   const { appointment_id } = useParams();
   console.log(appointment_id);
-
-  const { data, isLoading, isError: error } = useAppointmentsItemQuery(appointment_id || '');
-
-  // console.log(data);
-
-
-  // const meta = data?.meta;
+  const { data, isLoading, isError: error, refetch } = useAppointmentsItemQuery(appointment_id || '');
+  useEffect(() => {
+    refetch();
+  }, []);
   const patientRegistrationData = data?.data?.patient_medical_history;
+  console.log(data?.data);
 
-  console.log(patientRegistrationData);
-
+  
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [filterValue, setFilterValue] = useState("");
+ 
   const columns = [
     {
       id: "serial",
@@ -98,8 +87,9 @@ export default function ShowAppointment() {
                   key={index}
                   className="flex items-center justify-between p-2 bg-gray-100 rounded-md shadow-md hover:bg-gray-200 transition"
                 >
+
                   <span className="font-medium text-gray-700">
-                    {pmhData?.name}
+                    {pmhData?.name} :
                   </span>
                   <span className="text-gray-600">
                     {pmhData?.value}
@@ -113,8 +103,6 @@ export default function ShowAppointment() {
         );
       },
     },
-
-
 
 
 
@@ -148,7 +136,7 @@ export default function ShowAppointment() {
               <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
               {/* <Edit Id={data.id.toString()} open={false} onClose={() => { }} /> */}
               <br />
-              {/* <Show Id={data.id.toString()} open={false} onClose={() => { }} /> */}
+              <Link className="mr-2 mt-1 w-40  bg-blue-300 text-white hover:bg-blue-400 transition p-2 text-center rounded font-medium" to={`/dashboard/patient-medical-history-update/${appointment_id}/${data?.id.toString()}/${data?.date}`}>Update History</Link>
               <br />
               <Delete
                 Id={data.id.toString()}
@@ -183,21 +171,8 @@ export default function ShowAppointment() {
     },
   });
 
-  const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    console.log(value);
-    setSearch(value);
-    setFilterValue(value);
-    setCurrentPage(1);
-  };
 
-  const handlePerPageChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setPerPage(parseInt(event.target.value, 10));
-  };
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
 
   return isLoading ? (
     <div className="flex justify-center items-center h-screen">
@@ -206,15 +181,22 @@ export default function ShowAppointment() {
   ) : (
     <div className="p-4">
       <div className="flex flex-col lg:flex-row justify-between items-center mb-4 space-y-4 lg:space-y-0 lg:space-x-4">
-        <Input
-          type="text"
-          placeholder="Search"
-          value={filterValue}
-          onChange={handleFilterChange}
-          className="w-full lg:w-64"
-        />
+        <div>
+          <label htmlFor="date" className="block text-gray-700 font-medium mb-2 text-sm">
+            Patient Name
+          </label>
 
-        <Add />
+          <div className="border p-2 rounded font-medium">
+            {data?.data.patient?.name + ' >>' + data?.data.patient?.bts_id}
+          </div>
+        </div>
+
+
+        <Button className="bg-white text-black border">
+          <Link className=" hover:text-black" to={'/dashboard/appointments'}>
+            Back Appointments
+          </Link>
+        </Button>
       </div>
       {error ? (
         <>Error</>
@@ -237,7 +219,7 @@ export default function ShowAppointment() {
             <TableBody>
               {table.getRowModel().rows.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={table.getVisibleLeafColumns().length}>
+                  <TableCell className="text-center" colSpan={table.getVisibleLeafColumns().length}>
                     No data available
                   </TableCell>
                 </TableRow>

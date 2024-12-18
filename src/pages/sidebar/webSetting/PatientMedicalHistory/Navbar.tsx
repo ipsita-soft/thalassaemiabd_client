@@ -39,8 +39,8 @@ const Navbar = () => {
                         className="mt-2 flex-shrink-0 transition-transform duration-200 ease-in-out transform hover:scale-105"
                     >
                         <Link
-                            to={`/dashboard/patient-medical-history/${apId}/${menu.id}/${apDate}`}
-                            className={`px-3 py-2 rounded-md transition-colors duration-300 ${isActive(
+                            to={`/dashboard/patient-medical-history/${apId || ""}/${menu.id || ""}/${apDate || ""}`}
+                            className={`px-3 py-2 rounded-md transition-colors font-bold duration-300 ${isActive(
                                 `/dashboard/patient-medical-history/${apId}/${menu.id}/${apDate}`
                             )
                                 ? "bg-blue-300 text-white"
@@ -86,6 +86,12 @@ const Navbar = () => {
                         {'<<-'} Back To Appointments
                     </Link>
 
+
+                    <Link to={`/dashboard/show-appointment/${apId}`}
+                        className={`px-2 py-1 text-sm rounded-lg transition-all duration-200 bg-gray-300 text-gray-600 hover:bg-gray-400 hover:text-gray-300`}
+                    >
+                        Show
+                    </Link>
                 </div>
 
 

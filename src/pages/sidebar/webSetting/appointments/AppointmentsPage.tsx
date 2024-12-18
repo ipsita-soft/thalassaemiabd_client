@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFetchAppointmentsQuery } from "@/api/appointmentsApi";
 import {
     SortingState,
@@ -54,6 +54,8 @@ export function AppointmentsPage() {
         status: '1',
     });
 
+
+  
     const firstItem = hItem?.data?.[0]?.id ?? undefined;
 
     const meta = data?.meta;
@@ -134,8 +136,9 @@ export function AppointmentsPage() {
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
 
+
                             <Link className="mr-2 mt-1 w-40  bg-blue-300 text-white hover:bg-blue-400 transition p-2 text-center rounded font-medium" to={`/dashboard/show-appointment/${data?.id.toString()}`}>Show Appointment History </Link>
-                         
+
 
                             {/* <ShowAppointment Id={data?.id.toString()} open={false} onClose={() => { }} /> */}
                             <br />

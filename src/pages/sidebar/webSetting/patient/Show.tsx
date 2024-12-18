@@ -15,6 +15,11 @@ import { useToast } from '@/hooks/use-toast';
 import { useFetchPatientQuery, useFetchPatientsQuery } from '@/api/patientApi';
 import Swal from 'sweetalert2';
 import { Facebook, Mail, MapPin, Phone } from "lucide-react";
+
+import React from 'react';
+import QRCode from 'react-qr-code';
+
+
 type ShowData = {
   Id: string;
   open: boolean;
@@ -46,6 +51,9 @@ const Show: React.FC<ShowData> = ({ Id }) => {
   if (isError || !data?.data) {
     return <p>Error loading data. Please try again later.</p>;
   }
+
+  console.log(data);
+
 
 
   const handlePrint = () => {
@@ -223,7 +231,10 @@ const Show: React.FC<ShowData> = ({ Id }) => {
                     <tr><th>Marital Status:</th><td>${renderValue(dataToShow?.patientInfo?.marital_status?.name)}</td></tr>
                     <tr><th>Weight:</th><td>${renderValue(dataToShow?.patientInfo?.weight?.name)}</td></tr>
                     <tr><th>Occupation:</th><td>${renderValue(dataToShow?.patientInfo?.occupation)}</td></tr>
-                    <tr><th>Blood Group:</th><td>${renderValue(dataToShow?.patientInfo?.blood_group?.name)}</td></tr>
+                    <tr><th>Blood Group:</th>
+                    <td>
+                      ${renderValue(dataToShow?.patientInfo?.blood_group?.name)}
+                    </td></tr>
                   </tbody>
                 </table>
               </div>
@@ -302,7 +313,7 @@ const Show: React.FC<ShowData> = ({ Id }) => {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="mr-2 mt-1 w-40 bg-blue-300 text-white hover:bg-blue-400 transition">
-        Patient Show
+          Patient Show
         </Button>
       </DialogTrigger>
       <DialogContent
@@ -321,7 +332,7 @@ const Show: React.FC<ShowData> = ({ Id }) => {
             onClick={() => setActiveTab("profile")}
             className={`py-2 px-4 ${activeTab === "profile" ? "text-indigo-500 border-b-2 border-indigo-500" : ""}`}
           >
-            Profile Information
+            Basic Information
           </button>
 
 
@@ -330,14 +341,14 @@ const Show: React.FC<ShowData> = ({ Id }) => {
             onClick={() => setActiveTab("patientInfo")}
             className={`py-2 px-4 ${activeTab === "patientInfo" ? "text-indigo-500 border-b-2 border-indigo-500" : ""}`}
           >
-            Patient Info Information
+            Patient Profile
           </button>
 
           <button
             onClick={() => setActiveTab("address")}
             className={`py-2 px-4 ${activeTab === "address" ? "text-indigo-500 border-b-2 border-indigo-500" : ""}`}
           >
-            Address Information
+            Address
           </button>
         </div>
 
@@ -345,6 +356,8 @@ const Show: React.FC<ShowData> = ({ Id }) => {
         <div className="space-y-6 text-gray-700">
 
           {activeTab === "profile" && (
+
+
             <div>
               <h1 className="text-sm font-semibold text-indigo-300">Profile Information</h1>
 
@@ -354,14 +367,19 @@ const Show: React.FC<ShowData> = ({ Id }) => {
                   <strong className='mb-2'>Phone:</strong> {renderValue(dataToShow?.phone)} <br /><br />
 
                   <strong className='mb-2'>Email:</strong> {renderValue(dataToShow?.email)} <br /><br />
-                  <strong className='mb-2'>Blood Group:</strong>
-                  {renderValue(dataToShow?.blood_donor_info?.blood_group?.name)}
+                  <strong className='mb-2'>Blood Group: </strong>
+                  {renderValue(dataToShow["patientInfo"]?.["blood_group"]?.["name"])}
+
                 </div>
 
                 <div>
                   <strong className='mb-2'>Status:</strong> {renderValue(dataToShow?.status)}<br /><br />
                   <strong className='mb-2'>BTS ID:</strong> {renderValue(dataToShow?.bts_id)}<br /><br />
-                  <strong className='mb-2'>Old BTS ID:</strong> {renderValue(dataToShow?.old_bts_id)}
+                  <strong className='mb-2'>Old BTS ID:</strong>
+
+                  {renderValue(dataToShow["patientInfo"]?.["old_bts_id"])}
+
+                  {/* {renderValue(dataToShow?.old_bts_id)} */}
                 </div>
 
                 <div >
@@ -379,7 +397,7 @@ const Show: React.FC<ShowData> = ({ Id }) => {
                 <div className="flex items-center mb-4">
                   <h1 className="text-lg font-semibold md:text-2xl mt-3">ID Card</h1>
                 </div>
-                <div className="flex flex-col items-center gap-6">
+                <div className="flex flex-row items-center gap-6">
                   {/* Front Side of the ID Card */}
                   <div className="w-[85mm] h-[54mm] border-3 border-red-600 rounded-md shadow-md relative overflow-hidden">
                     {/* Top Red Corner Design */}
@@ -424,18 +442,21 @@ const Show: React.FC<ShowData> = ({ Id }) => {
                       </div>
 
                       {/* Personal Information */}
-                      <div className="text-center mt-2">
+                      <div className="text-center">
                         <p className="text-sm text-capitalize font-bold text-red-600">
-                        {renderValue(dataToShow?.name)}
+                          {renderValue(dataToShow?.name)}
                         </p>
                         <p className="text-sm font-bold text-black">
                           Blood Group: {renderValue(dataToShow?.patientInfo?.blood_group?.name)}
                         </p>
-                        <p className="text-sm font-bold text-black text-green-800">
+                        <p className="text-sm font-bold  text-black text-green-800">
                           ID: {renderValue(dataToShow?.bts_id)}
+                          <br />
+                          Old-Id:
+                          {renderValue(dataToShow["patientInfo"]?.old_bts_id)}
                         </p>
                         <p className="text-sm font-bold text-red-600">
-                        {renderValue(dataToShow?.patientInfo?.disease_type?.name)}
+                          {renderValue(dataToShow?.patientInfo?.disease_type?.name)}
                         </p>
                       </div>
                     </div>
@@ -450,11 +471,13 @@ const Show: React.FC<ShowData> = ({ Id }) => {
                       {/* QR Code and Signature */}
                       <div className="flex justify-between">
                         <div className="flex justify-center items-center">
-                          <img
-                            src="../client/assets/images/qrcode.svg"
-                            alt="QR Code"
-                            style={{ height: "100px", width: "100px" }}
-                          />
+                          <QRCode style={{ height: "100px", width: "100px" }} value={
+                            'Name : ' + renderValue(dataToShow?.name) + ', ' +
+                            'Phone : ' + renderValue(dataToShow?.phone) + ', ' +
+                            'Father-Name : ' + renderValue(dataToShow?.patientInfo?.father_name) + ', ' +
+                            'Mother-Name : ' + renderValue(dataToShow?.patientInfo?.mother_name) + ', ' +
+                            'City: ' + renderValue(dataToShow?.patientInfo?.permanent_address?.city_id?.name)
+                          } />
                         </div>
                         <div className="mt-4 ms-5 text-center">
                           <img
@@ -488,7 +511,9 @@ const Show: React.FC<ShowData> = ({ Id }) => {
                     </div>
                   </div>
                 </div>
+
               </div>
+
             </div>
           )}
 
@@ -544,6 +569,13 @@ const Show: React.FC<ShowData> = ({ Id }) => {
                         <th className="pr-4 py-2 text-left text-gray-600">age</th>
                         <td className="py-2 text-gray-800 font-medium">: {renderValue(dataToShow?.patientInfo?.age)}</td>
                       </tr>
+
+
+                      <tr>
+                        <th className="pr-4 py-2 text-left text-gray-600">Number Of Children</th>
+                        <td className="py-2 text-gray-800 font-medium">: {renderValue(dataToShow?.patientInfo?.number_of_children)}</td>
+                      </tr>
+
                     </tbody>
                   </table>
                 </div>
