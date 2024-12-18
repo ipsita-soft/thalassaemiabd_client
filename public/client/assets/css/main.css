@@ -3681,7 +3681,7 @@ End bts history css
   left: 50%;
   top: 50%;
   margin-left: -40px;
-  margin-top: -80px;
+  margin-top: -50px;
   font-size: 16px;
   padding-left: 3px;
   -webkit-transition: all 0.4s ease-in-out;
@@ -8640,4 +8640,26 @@ cursor: pointer !important;
   color: #fff;
 }
 
-/* end marque news */
+
+
+.single-event-section h1{
+  font-size: 25px !important;
+}
+
+.single-blog-news-section h1{
+  font-size: 25px !important;
+}
+
+
+.event-section .event-img{
+  height: 250px !important;
+  overflow: hidden !important;
+}
+
+
+.imgheight{
+  height: 250px !important;
+  overflow: hidden !important;
+}
+
+

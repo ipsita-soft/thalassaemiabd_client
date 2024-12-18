@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 
 const financialDonations = [
   {
@@ -64,6 +65,9 @@ const FinancialDonation = () => {
               </div>
             </div>
           ))}
+        </div>
+        <div className="button mt-4 text-center">
+          <Link to='' className="btn">See All Financial Donation</Link>
         </div>
       </div>
     </section>

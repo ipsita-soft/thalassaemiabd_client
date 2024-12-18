@@ -433,7 +433,7 @@ export const fetchStory = createAsyncThunk(
     async (params: object = {}, { rejectWithValue }) => {
         try {
             const response = await getPublicStory(params);
-            return response.data.data; // Assuming response.data contains the sliders array
+            return response.data.data;
         } catch (error: any) {
             return rejectWithValue(error.response ? error.response.data : new Error('Error fetching public Blog News'));
         }
@@ -520,7 +520,7 @@ export const fetchSingleStory = createAsyncThunk(
     async (id: string | number, { rejectWithValue }) => {
         try {
             const response = await getStory(id);
-            return response.data; // Assuming response contains event data
+            return response.data;
         } catch (error: any) {
             return rejectWithValue(error.response ? error.response.data : new Error('Error fetching single data'));
         }

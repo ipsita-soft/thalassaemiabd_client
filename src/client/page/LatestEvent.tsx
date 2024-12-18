@@ -49,11 +49,14 @@ const LatestEvent = () => {
             >
               <div className="card single_event">
                 <Link to={`/events/${event.id}`}>
-                  <img
+                <div className="imgheight">
+                <img
                     src={event.image}
-                    className="card-img-top"
+                    className="card-img-top "
                     alt={event.title}
                   />
+                </div>
+
                 </Link>
                 <div className="card-body">
                   <h5 className="card-title text-start" >

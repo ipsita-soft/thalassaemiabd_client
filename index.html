@@ -40,6 +40,27 @@
   <script type="module" src="/src/main.tsx"></script>
 
   <script type="text/javascript">
+    GLightbox({
+        'href': 'https://www.youtube.com/embed/ir72Qf-x6rQ',
+        'type': 'video',
+        'source': 'youtube',
+        'width': 900,
+        'autoplayVideos': true,
+    });
+
+    var cu = new counterUp({
+        start: 0,
+        duration: 2000,
+        intvalues: true,
+        interval: 100,
+        append: " ",
+    });
+    cu.start();
+  </script>
+
+
+
+  <script type="text/javascript">
     var slider = new tns({
       container: '.hero-slider',
       slideBy: 'page',

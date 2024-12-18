@@ -17,7 +17,6 @@ const OurProjects = () => {
 
     const projects = Array.isArray(project?.data) ? project.data : [];
 
-    console.log(projects);
 
     return (
         <div className="our-projects section mt-14">
@@ -39,7 +38,9 @@ const OurProjects = () => {
                                     <div key={data.id} className="col-lg-4 col-md-4 col-12 mb-4">
                                         <a href={`project-details/${data.id}`}>
                                             <div className="card shadow-sm">
-                                                <img src={data.image || "assets/images/projects/default.jpg"} className="card-img-top" alt={data.title || "Project Image"} />
+                                                <div className="imgheight">
+                                                    <img src={data.image || "assets/images/projects/default.jpg"} className="card-img-top" alt={data.title || "Project Image"} />
+                                                </div>
                                                 <div className="card-body">
                                                     <h5 className="card-title">
                                                         <a href={`project-details/${data.id}`}>

@@ -109,7 +109,7 @@ const NoticeDetails = () => {
             <div className="card p-4 ">
               <DataTable
                 columns={columns}
-                data={filteredNotices} // Use filtered data instead of original data
+                data={filteredNotices}
                 pagination
                 highlightOnHover
                 striped
