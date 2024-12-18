@@ -2,6 +2,8 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_BASE_URL } from '@/config/apiConfig';
 
 export interface Patient {
+    bts_id: any;
+    name: any;
     id: any;
     data: any;
 }

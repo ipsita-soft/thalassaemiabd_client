@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFetchAppointmentsQuery } from "@/api/appointmentsApi";
 import {
     SortingState,
@@ -29,12 +29,12 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import Add from "@/pages/sidebar/webSetting/appointments/Add";
-import Edit from "@/pages/sidebar/webSetting/medicalHistoryItem/Edit";
-import Show from "@/pages/sidebar/webSetting/medicalHistoryItem/Show";
-import Delete from "@/pages/sidebar/webSetting/medicalHistoryItem/Delete";
-
-import Swal from "sweetalert2";
+import Edit from "@/pages/sidebar/webSetting/appointments/Edit";
+import Show from "@/pages/sidebar/webSetting/patient/Show";
+import ShowAppointment from "@/pages/sidebar/webSetting/appointments/ShowAppointment";
+import { useFetchMedicalHistoriesQuery } from "@/api/medicalHistoryApi";
 import { Link } from "react-router-dom";
+
 
 
 export function AppointmentsPage() {
@@ -47,9 +47,16 @@ export function AppointmentsPage() {
         page: currentPage,
     });
 
-    console.log(data);
+    const { data: hItem } = useFetchMedicalHistoriesQuery({
+        perPage,
+        search,
+        page: currentPage,
+        status: '1',
+    });
 
 
+  
+    const firstItem = hItem?.data?.[0]?.id ?? undefined;
 
     const meta = data?.meta;
     const patientRegistrationData = data?.data;
@@ -78,7 +85,10 @@ export function AppointmentsPage() {
             id: "patient",
             header: "Patient",
             cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.patient?.name}</div>
+                <div className="text-left">{row.original.patient?.name}
+                </div>
+
+
             ),
         },
 
@@ -115,18 +125,6 @@ export function AppointmentsPage() {
             cell: ({ row }: { row: { original: any } }) => {
                 const data = row.original;
 
-                const handleDeleteSuccess = () => {
-
-                    Swal.fire({
-                        title: 'success!',
-                        text: 'Data deleted successfully!',
-                        icon: 'success',
-                        timer: 3000,
-                        timerProgressBar: true,
-                    });
-
-                };
-
                 return (
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -138,21 +136,19 @@ export function AppointmentsPage() {
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
 
-                            <Link className="mr-2 mt-1 w-40  bg-blue-300 text-white hover:bg-blue-400 transition p-2 text-center rounded" to={`/dashboard/patient-medical-history/${data.id.toString()}`}>Add History</Link>
+
+                            <Link className="mr-2 mt-1 w-40  bg-blue-300 text-white hover:bg-blue-400 transition p-2 text-center rounded font-medium" to={`/dashboard/show-appointment/${data?.id.toString()}`}>Show Appointment History </Link>
+
+
+                            {/* <ShowAppointment Id={data?.id.toString()} open={false} onClose={() => { }} /> */}
+                            <br />
+                            <Link className="mr-2 mt-1 w-40  bg-blue-300 text-white hover:bg-blue-400 transition p-2 text-center rounded font-medium" to={`/dashboard/patient-medical-history/${data?.id.toString()}/${firstItem}/${data?.date}`}>Add History</Link>
                             <br />
 
 
-                            <Edit Id={data.id.toString()} open={false} onClose={() => { }} />
+                            <Show Id={data?.patient?.id.toString()} open={false} onClose={() => { }} />
                             <br />
-                            <Show Id={data.id.toString()} open={false} onClose={() => { }} />
-
-                            <br />
-
-
-                            <Delete
-                                Id={data.id.toString()}
-                                onSuccess={handleDeleteSuccess} // Pass the callback here
-                            />
+                            <Edit Id={data.id.toString()} />
                         </DropdownMenuContent>
                     </DropdownMenu>
                 );

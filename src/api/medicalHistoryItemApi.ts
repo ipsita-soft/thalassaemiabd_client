@@ -1,6 +1,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_BASE_URL } from '@/config/apiConfig';
 export interface Data {
+    value: string;
+    name: any;
     id: string;
     data: any;
     title?: string;
@@ -47,10 +49,10 @@ export const medicalHistoryItemApi = createApi({
 
         fetchMedicalHistories: builder.query<
             DataListResponse,
-            { perPage: number; page: number; search?: string; mhid?: string }
+            { perPage: number; page: number; search?: string; mhid?: string; status?:number }
         >({
-            query: ({ perPage, page, search, mhid }) =>
-                `web/medical-history-item?per_page=${perPage}&page=${page}&search=${search || ''}&medical_history_id=${mhid || ''}`,
+            query: ({ perPage, page, search, mhid ,status }) =>
+                `web/medical-history-item?per_page=${perPage}&page=${page}&search=${search || ''}&medical_history_id=${mhid || ''}&status=${status || ''}`,
             providesTags: (result) =>
                 result
                     ? [

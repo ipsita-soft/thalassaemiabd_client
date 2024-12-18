@@ -1,83 +1,119 @@
-import { Link, useLocation } from 'react-router-dom';
-import { Menubar, MenubarMenu, MenubarTrigger } from "@/components/ui/menubar"; // Adjust this path based on your project structure
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useFetchMedicalHistoriesQuery } from "@/api/medicalHistoryApi";
-
+import { useState } from "react";
 const Navbar = () => {
-    const perPage = 10;
+    const perPage = 4; // Number of items per page
     const search = "";
-    const currentPage = 1;
+    const [currentPage, setCurrentPage] = useState(1);
+
     const { data, isLoading, error } = useFetchMedicalHistoriesQuery({
         perPage,
         search,
         page: currentPage,
+        status: "1",
     });
 
-    const patientRegistrationData = data?.data || []; // Default to an empty array if no data
-
+    const { apId, apDate } = useParams();
     const location = useLocation();
-
-    // Function to add 'active' class based on current path
-    const isActive = (path: string) => (location.pathname === path ? 'text-primary' : '');
+    const isActive = (path: string) =>
+        location.pathname === path ? "text-primary" : "";
 
     if (isLoading) {
         return <div>Loading...</div>; // Placeholder for loading state
     }
 
     if (error) {
-        return <div>Error fetching data</div>; // Placeholder for error state
+        return <div>Error fetching data. Please try again later.</div>; // Placeholder for error state
     }
 
-    // Inline styles for the horizontal scrolling container
-    const styles = {
-        menuContainer: {
-            display: 'flex', // Arrange items in a row
-            overflowX: 'auto', // Enable horizontal scrolling for overflow
-            whiteSpace: 'nowrap', // Prevent items from wrapping to the next line
-            padding: '10px', // Add padding for better spacing
-            maxWidth: '1000px', // Limit width to fit 4 items (adjust as needed)
-            
-        },
-        scrollbar: {
-            scrollbarWidth: 'thin', // For Firefox
-            scrollbarColor: '#888 #f1f1f1', // For Firefox
-        },
-    };
-
-    
+    const meta = data?.meta;
+    const patientRegistrationData = data?.data || [];
 
     return (
-        <div className="mt-4">
-            <Menubar>
-                <MenubarMenu>
-                    {/* Apply inline styles for horizontal scrolling */}
-                    <div style={{ ...styles.menuContainer, ...styles.scrollbar }} className="menu-container">
-                        {patientRegistrationData.map((menu, index) => (
-                            <MenubarTrigger key={menu.id || index} className="mr-4 mt-2">
-                                <Link className={isActive(menu.id || '')} to={menu.id || ''}>
-                                    {menu.title}
-                                </Link>
-                            </MenubarTrigger>
-                        ))}
-                    </div>
-                </MenubarMenu>
-            </Menubar>
+        <div className="mt-6">
+            {/* Scrollable Menu */}
+            <div className="flex  overflow-x-auto  whitespace-nowrap pb-1 xl:max-w-6xl  lg:max-w-4xl space-x-4 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+                {patientRegistrationData.map((menu, index) => (
+                    <div
+                        key={menu.id || index}
+                        className="mt-2 flex-shrink-0 transition-transform duration-200 ease-in-out transform hover:scale-105"
+                    >
+                        <Link
+                            to={`/dashboard/patient-medical-history/${apId || ""}/${menu.id || ""}/${apDate || ""}`}
+                            className={`px-3 py-2 rounded-md transition-colors font-bold duration-300 ${isActive(
+                                `/dashboard/patient-medical-history/${apId}/${menu.id}/${apDate}`
+                            )
+                                ? "bg-blue-300 text-white"
+                                : "bg-gray-200 text-gray-700 hover:bg-blue-100"
+                                }`}
+                        >
+                            {menu.title}
+                        </Link>
 
-            {/* Inline CSS for the scrollbar */}
+                    </div>
+                ))}
+            </div>
+
+            {/* Pagination Section */}
+            <div className="mt-6 flex justify-between items-center">
+                <div className="flex space-x-3">
+                    {meta?.links.map((link, index) => (
+                        <button
+                            key={index}
+                            onClick={() => {
+                                if (link.url) {
+                                    const page = new URL(link.url).searchParams.get("page");
+                                    setCurrentPage(Number(page));
+                                }
+                            }}
+                            disabled={!link.url}
+                            className={`px-2 py-1 text-sm rounded-lg transition-all duration-200 ${link.active
+                                ? "bg-blue-300 text-white hover:bg-blue-300"
+                                : "bg-gray-300 text-gray-600 hover:bg-gray-400"
+                                } disabled:opacity-50`}
+                        >
+                            {link.label
+                                .replace(/&laquo;/g, "<<")
+                                .replace(/&raquo;/g, ">>")
+                                .trim()}
+                        </button>
+                    ))}
+
+                    <Link to={'/dashboard/appointments'}
+                        className={`px-2 py-1 text-sm rounded-lg transition-all duration-200 bg-gray-300 text-gray-600 hover:bg-gray-400 hover:text-gray-300`}
+                    >
+
+                        {'<<-'} Back To Appointments
+                    </Link>
+
+
+                    <Link to={`/dashboard/show-appointment/${apId}`}
+                        className={`px-2 py-1 text-sm rounded-lg transition-all duration-200 bg-gray-300 text-gray-600 hover:bg-gray-400 hover:text-gray-300`}
+                    >
+                        Show
+                    </Link>
+                </div>
+
+
+
+            </div>
+
+            {/* Scrollbar Styling */}
             <style>
                 {`
-                    .menu-container::-webkit-scrollbar {
+                            .menu - container::-webkit-scrollbar {
                         height: 8px;
-                    }
+          }
 
                     .menu-container::-webkit-scrollbar-thumb {
                         background: #888;
-                        border-radius: 4px;
-                    }
+                    border-radius: 4px;
+          }
 
                     .menu-container::-webkit-scrollbar-thumb:hover {
                         background: #555;
-                    }
-                `}
+          }
+        `}
             </style>
         </div>
     );

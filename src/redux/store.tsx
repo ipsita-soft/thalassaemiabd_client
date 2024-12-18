@@ -31,6 +31,7 @@ import { patientApi } from '@/api/patientApi';
 import { medicalHistoryApi } from '@/api/medicalHistoryApi';
 import { medicalHistoryItemApi } from '@/api/medicalHistoryItemApi';
 import { appointmentsApi } from '@/api/appointmentsApi';
+import { patientMedicalHistoryApi } from '@/api/patientMedicalHistoryApi';
 
 export const store = configureStore({
   reducer: {
@@ -67,13 +68,15 @@ export const store = configureStore({
     [medicalHistoryApi.reducerPath]: medicalHistoryApi.reducer,
     [medicalHistoryItemApi.reducerPath]: medicalHistoryItemApi.reducer,
     [appointmentsApi.reducerPath]: appointmentsApi.reducer,
+    [patientMedicalHistoryApi.reducerPath]: patientMedicalHistoryApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
       .concat(patientApi.middleware)
       .concat(medicalHistoryApi.middleware)
       .concat(medicalHistoryItemApi.middleware)
-      .concat(appointmentsApi.middleware),
+      .concat(appointmentsApi.middleware)
+      .concat(patientMedicalHistoryApi.middleware),
 });
 
 export type AppDispatch = typeof store.dispatch;

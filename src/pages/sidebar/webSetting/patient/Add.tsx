@@ -235,6 +235,7 @@ const Add: React.FC = () => {
             mother_name: '',
             husband_name: '',
             wife_name: '',
+            number_of_children: '',
             father_occupation: '',
             father_income_status: '',
             old_bts_id: '',
@@ -554,6 +555,14 @@ const Add: React.FC = () => {
                         </div>
                       </div>
                     </div>
+
+                    <div className=" form-group mb-2">
+                      <label htmlFor="number_of_children"><h5 className="birth">Number of Children</h5></label>
+                      <Field type="text" id="number_of_children" name="number_of_children" className="form-control" />
+                      <ErrorMessage name="number_of_children" component="div" className="text-danger" />
+                    </div>
+
+
 
                     {/* Present Address */}
                     <div className="row">

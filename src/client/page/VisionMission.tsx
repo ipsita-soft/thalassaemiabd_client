@@ -32,62 +32,32 @@ const VisionMission = () => {
             {/* Vision Section */}
             <section className="vision section mt-14">
                 <div className="container">
-                    <div className="row align-items-center">
+                    <div className="row align-items-start">
                         <div className="col-lg-5 col-md-12 col-12">
                             <div className="content-left wow fadeInLeft" data-wow-delay=".3s">
-                                <img src={missionVision?.vision_image} alt="Vision" />
-
+                                <img
+                                    src={missionVision?.vision_image}
+                                    alt="Vision"
+                                    className="img-fluid vision-img"
+                                />
                             </div>
                         </div>
-
                         <div className="col-lg-7 col-md-12 col-12">
                             <div className="content-right wow fadeInRight" data-wow-delay=".5s">
-                                <h2>Our Vision</h2>
+                                <h2>Vision & Mission</h2>
                                 <p
                                     className="card-text"
                                     dangerouslySetInnerHTML={{
                                         __html: missionVision?.vision_description || '',
                                     }}
                                 ></p>
-
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Mission Section */}
-            <section className="mission section">
-                <div className="container">
-                    <div className="row align-items-center">
-                        <div className="col-lg-7 col-md-8 col-12 wow fadeInLeft" data-wow-delay=".3s">
-                            <div className="content-thalass">
-                                <h2>Our Mission</h2>
-                                <p>
-                                    To ensure quality patient management and eradicate Thalassaemia from our beloved country,
-                                    Bangladesh. To achieve this vision, we have set the following objectives:
-                                </p>
-                                <div className="row">
-                                    <div className="col-lg-12 col-12">
-                                        <p
-                                            className="card-text"
-                                            dangerouslySetInnerHTML={{
-                                                __html: missionVision?.mission_description || '',
-                                            }}
-                                        ></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div className="col-lg-5 col-md-4 col-12">
-                            <div className="content-thalass wow fadeInRight" data-wow-delay=".3s">
-                                <img className="img-fluid" src={missionVision?.mission_image} alt="Mission" />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
 
 
