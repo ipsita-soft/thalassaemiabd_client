@@ -49,25 +49,6 @@ const Add: React.FC = () => {
     });
   };
 
-  // const handleSubmit = async (event: React.FormEvent) => {
-  //   event.preventDefault();
-  //   setLoading(true);
-
-  //   try {
-  //     await dispatch(add(formData)).unwrap();
-  //     toast({
-  //       title: "Success",
-  //       description: "Role added successfully!",
-  //     });
-  //     setFormData({ name: '', permissions: [] });
-  //     setOpen(false);
-  //   } catch (error: any) {
-  //     console.error("Failed to add role:", error);
-  //     setApiError(error.message || 'An error occurred while adding the role');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setLoading(true);

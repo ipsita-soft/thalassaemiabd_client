@@ -24,7 +24,7 @@ const Wishers: React.FC = () => {
   }, [dispatch]);
 
   if (isLoading) {
-    return <p>Loading...</p>;  // Show loading state
+    return <p></p>;  // Show loading state
   }
 
   if (isError) {

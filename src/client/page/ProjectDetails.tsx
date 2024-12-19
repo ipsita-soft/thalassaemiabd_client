@@ -86,14 +86,14 @@ const ProjectDetails = () => {
           <div className="row">
             {projects.map((data) => (
                 <div key={data.id} className="col-lg-4 col-md-4 col-12 mb-4">
-                    <a href={`project-details/${data.id}`}>
+                    <a href={`/project-details/${data.id}`}>
                         <div className="card shadow-sm">
                             <div className="imgheight">
                                 <img src={data.image || "assets/images/projects/default.jpg"} className="card-img-top" alt={data.title || "Project Image"} />
                             </div>
                             <div className="card-body">
                                 <h5 className="card-title">
-                                    <a href={`project-details/${data.id}`}>
+                                    <a href={`/project-details/${data.id}`}>
                                         {data.title}
                                     </a>
                                 </h5>
@@ -107,7 +107,7 @@ const ProjectDetails = () => {
 
 
                                 </p>
-                                <a className="text-end mt-2" href={`project-details/${data.id}`}>Read More</a>
+                                <a className="text-end mt-2" href={`/project-details/${data.id}`}>Read More</a>
                             </div>
                         </div>
                     </a>

@@ -18,10 +18,8 @@ const SingleStory = () => {
       dispatch(fetchStory({}));
     }, [fetchStory]);
 
-  const { storys, isLoading: stLodding, isError : isStError } = useSelector((state: RootState) => state.public);
+  const { storys } = useSelector((state: RootState) => state.public);
 
-
-  console.log(storys);
 
   useEffect(() => {
     if (id) {

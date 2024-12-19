@@ -78,6 +78,7 @@ import PatientManagement from './client/page/PatientManagement.tsx';
 
 import ShowAppointment from './pages/sidebar/webSetting/appointments/ShowAppointment.tsx';
 import { UpdatePatientMedicalHistory } from './pages/sidebar/webSetting/PatientMedicalHistory/UpdatePatientMedicalHistory.tsx';
+import RegistrationSuccess from './pages/RegistrationSuccess.tsx';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -660,6 +661,8 @@ const router = createBrowserRouter([
         path: '/userpanel/notices',
         element: <Notice />
       },
+
+      
       {
         path: '/userpanel/annual-reports',
         element: <AnnualReports />
@@ -692,6 +695,10 @@ const router = createBrowserRouter([
   },
 
 
+  {
+    path: '/registration-success',
+    element: <RegistrationSuccess />,
+  },
   {
     path: '/unauthorized',
     element: <Unauthorized />,
