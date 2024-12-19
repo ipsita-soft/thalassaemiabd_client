@@ -16,7 +16,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   requiredPermissions = [],
   // redirectTo = '/',
 }) => {
-  const { token, roles, permissions } = useSelector((state: any) => state.auth);
+  const { token, roles, permissions, user } = useSelector((state: any) => state.auth);
   const [isAuthorized, setIsAuthorized] = useState<boolean | null>(null); // null: loading, true: authorized, false: unauthorized
 
   useEffect(() => {
@@ -51,6 +51,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   // If no token, redirect to login
   if (!token) return <Navigate to="/login" />;
+
 
   // Check if the user has required roles and permissions
   const hasRequiredRole = requiredRoles.length ? requiredRoles.some(role => roles.includes(role)) : true;

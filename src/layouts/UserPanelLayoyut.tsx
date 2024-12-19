@@ -1,17 +1,24 @@
 
 
-import { Outlet, useOutlet } from "react-router-dom";
+import { Navigate, Outlet, useOutlet } from "react-router-dom";
 import PanelHeader from "@/client/userpanel/Panelheader";
 import PanelFooter from "@/client/userpanel/PanelFooter";
 import Sidebar from "@/client/userpanel/sidebar";
 import Dashboard from "@/client/userpanel/Dashboard";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const UserPanelLayout = () => {
+  const { user } = useSelector((state: any) => state.auth);
+  if (user.bts_id === null) return <Navigate to="/registration-success" />;
+
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const outlet = useOutlet();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [activeTab, setActiveTab] = useState("dashboard");
 
-  const handleTabClick = (tab:any) => {
+  const handleTabClick = (tab: any) => {
     setActiveTab(tab);
   };
 
@@ -24,8 +31,8 @@ const UserPanelLayout = () => {
         <div className="row mt-5 pt-4 gy-4 d-flex h-100 align-items-stretch">
           {/* Sidebar Section */}
           <Sidebar onTabClick={handleTabClick} />
-          
-          
+
+
           {/* Main Content Section */}
           <div className="col-md-9 mb-3 card border-none shadow-lg " style={{ height: "auto" }}>
             <div className="card-body d-flex flex-column">
