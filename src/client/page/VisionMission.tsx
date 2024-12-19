@@ -1,68 +1,75 @@
-import React from 'react';
-import 'glightbox/dist/css/glightbox.css'; // Import glightbox styles
-import GLightbox from 'glightbox'; // Import glightbox
-import { useEffect } from "react";
+import React, { useEffect } from 'react';
+import 'glightbox/dist/css/glightbox.css';
+import GLightbox from 'glightbox';
 import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/redux/store'; // Update path as necessary
-import { fetchMissionVision } from '@/redux/slices/publicSlice'; // Import the thunk
+import { AppDispatch, RootState } from '@/redux/store'; 
+import { fetchMissionVision } from '@/redux/slices/publicSlice';
 
 const VisionMission = () => {
-
-
     const dispatch = useDispatch<AppDispatch>();
-
-    // Access setting data from Redux state
     const { missionVision } = useSelector((state: RootState) => state.public);
 
     useEffect(() => {
-        // Fetch settings without checking for id
         dispatch(fetchMissionVision({}));
     }, [dispatch]);
 
-
-    // Initialize glightbox
-    React.useEffect(() => {
-        GLightbox({
+    useEffect(() => {
+        const lightbox = GLightbox({
             selector: '.glightbox',
         });
+        return () => lightbox.destroy();
     }, []);
 
+    if (!missionVision) return null;
+
+    const descriptionParts = missionVision.vision_description.split("</p>");
+
     return (
-        <>
-            {/* Vision Section */}
-            <section className="vision section mt-14">
-                <div className="container">
-                    <div className="row align-items-start">
-                        <div className="col-lg-5 col-md-12 col-12">
-                            <div className="content-left wow fadeInLeft" data-wow-delay=".3s">
-                                <img
-                                    src={missionVision?.vision_image}
-                                    alt="Vision"
-                                    className="img-fluid vision-img"
-                                />
-                            </div>
-                        </div>
-                        <div className="col-lg-7 col-md-12 col-12">
-                            <div className="content-right wow fadeInRight" data-wow-delay=".5s">
-                                <h2>Vision & Mission</h2>
-                                <p
-                                    className="card-text"
-                                    dangerouslySetInnerHTML={{
-                                        __html: missionVision?.vision_description || '',
-                                    }}
-                                ></p>
+        <section className="single-event-section mt-14">
+            <div className="container py-4">
+                <div className="row justify-content-center">
+                    <div className="col-lg-12">
+                        <div className="card shadow-lg border-0">
+                            <div className="row g-0">
+                                {/* Image Section */}
+                                <div className="col-md-6 col-12">
+                                    {!missionVision?.vision_image ? (
+                                        <div className="placeholder-image" style={{ height: '500px', backgroundColor: '#f0f0f0' }}></div>
+                                    ) : (
+                                        <img
+                                            src={missionVision?.vision_image}
+                                            alt={"Mission & Vision"}
+                                            className="img-fluid w-100 h-100 object-fit-cover"
+                                            style={{ maxHeight: "500px" }}
+                                        />
+                                    )}
+                                </div>
+
+                                {/* Side Description Section */}
+                                <div className="col-md-6 col-12 p-4 d-flex flex-column justify-content-between">
+                                    <div>
+                                        <h1 className="fw-bold text-success mb-2"> Mission & Vision </h1>
+                                        {descriptionParts.slice(0, 10).map((part, index) => (
+                                            <div key={index} className="text-secondary" dangerouslySetInnerHTML={{ __html: part || "" }}></div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Bottom Description Section */}
+                                <div className="col-12 p-4">
+                                    <div
+                                        className="text-dark"
+                                        dangerouslySetInnerHTML={{
+                                            __html: descriptionParts.slice(10).join("</p>") || "",
+                                        }}
+                                    ></div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
-
-
-
-
-
-
-        </>
+            </div>
+        </section>
     );
 };
 

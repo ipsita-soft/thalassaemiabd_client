@@ -39,9 +39,6 @@ const Thalassemia = () => {
 
           <div className="col-lg-6 col-md-12 col-12">
             <div className="content-right wow fadeInRight" data-wow-delay=".5s">
-
-
-
               <h2>What is thalassemia?</h2>
               <p>
                 Thalassemia is an inherited blood disorder that causes the body to produce less hemoglobin,
@@ -49,7 +46,6 @@ const Thalassemia = () => {
                 body. Hemoglobin is made up of four parts: two alpha proteins and two beta proteins.
                 Thalassemia affects one or more of the genes that produce these proteins.
               </p>
-
 
               <div className="row">
                 <div className="col-lg-6 col-12">

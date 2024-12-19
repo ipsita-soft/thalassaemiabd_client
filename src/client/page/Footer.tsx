@@ -170,7 +170,7 @@ const Footer = () => {
                 <i className="lni lni-chevron-up"></i>
             </a>
 
-            {/* <div className="onoffswitch3">
+            <div className="onoffswitch3">
                 <input type="checkbox" name="onoffswitch3" className="onoffswitch3-checkbox" id="myonoffswitch3" checked />
                 <label className="onoffswitch3-label" htmlFor="myonoffswitch3">
                     <span className="onoffswitch3-inner">
@@ -208,7 +208,7 @@ const Footer = () => {
                         )}
                     </span>
                 </label>
-            </div> */}
+            </div>
 
 
         </footer>
