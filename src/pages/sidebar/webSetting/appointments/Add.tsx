@@ -15,7 +15,6 @@ import {
   useCreateAppointmentsItemMutation,
   useFetchUsersWithRoleQuery,
 } from '@/api/appointmentsApi';
-import { useFetchMedicalHistoriesQuery } from '@/api/medicalHistoryApi';
 import SelectField from '@/components/common/SelectField';
 import { useSelector } from 'react-redux';
 
@@ -29,12 +28,14 @@ const Add: React.FC = () => {
     roleId: 9,
     perPage: 250,
     page: 1,
+    all: 'all',
   });
 
   const { data: getPatient } = useFetchUsersWithRoleQuery({
     roleId: 8,
     perPage: 250,
     page: 1,
+    all: 'all',
   });
 
   const DocOption =
@@ -46,7 +47,7 @@ const Add: React.FC = () => {
   const PatientOption =
     getPatient?.data?.map((patient: any) => ({
       value: patient.id,
-      label: patient.name,
+      label: patient.name + ' ' + patient.bts_id,
     })) || [];
 
   const validationSchema = Yup.object().shape({
@@ -119,9 +120,9 @@ const Add: React.FC = () => {
                     className="form-control"
                   >
                     <option value="" label="Select Appointment Type" />
-                    <option value="1" label="Approved" />
-                    <option value="2" label="Pending" />
-                    <option value="3" label="Rejected" />
+                    <option value="1" label="Doctor Appointment" />
+                    <option value="2" label="Blood Request" />
+                    <option value="3" label="Bed Booking" />
                   </Field>
                   <ErrorMessage name="appointment_type" component="div" className="text-danger" />
                 </div>

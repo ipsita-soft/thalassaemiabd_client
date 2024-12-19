@@ -49,7 +49,7 @@ export const medicalHistoryApi = createApi({
             { perPage: number; page: number; search?: string, status?: string }
         >({
             query: ({ perPage, page, search, status }) =>
-                `web/medical-history?per_page=${perPage}&page=${page}&status=${status || ''}&search=${search || ''}`,
+                `web/medical-history?per_page=${perPage}&page=${page}&status=${status || ''}&search=${search || ''}&status=${status || ''}`,
             providesTags: (result) =>
                 result
                     ? [
@@ -58,6 +58,7 @@ export const medicalHistoryApi = createApi({
                     ]
                     : [{ type: 'MedicalHistory', id: 'LIST' }],
         }),
+        
 
         MedicalHistory: builder.query<Data, string>({
             query: (id) => `web/medical-history/${id}`,
