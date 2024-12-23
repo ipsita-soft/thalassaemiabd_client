@@ -122,7 +122,7 @@ const Header = () => {
                           <Link to="zakat-board">Zakat Board</Link>
                         </li>
                         <li className="nav-item">
-                          <a href="employee-list.html">Employee List</a>
+                          <Link to="employee-list">Employee List</Link>
                         </li>
                       </ul>
                     </li>

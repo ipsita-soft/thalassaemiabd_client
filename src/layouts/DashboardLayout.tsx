@@ -343,8 +343,26 @@ function DashboardLayout() {
                                             <BookUser className="h-4 w-4" />
                                             Blood Donor
                                         </Link>
-                                    )}
+                                    )
+                                    }
 
+
+
+
+                                {hasPermissions([
+                                    'medical-history-all',
+                                ], permissions) && (
+
+                                        <Link
+                                            to="/dashboard/financial-donation"
+                                            className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all
+                                             ${isActive('/dashboard/financial-donation') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                                }`}
+                                        >
+                                            <BookUser className="h-4 w-4" />
+                                            Financial Donation
+                                        </Link>
+                                    )}
 
 
                                 <hr className="mx-2 my-2" />

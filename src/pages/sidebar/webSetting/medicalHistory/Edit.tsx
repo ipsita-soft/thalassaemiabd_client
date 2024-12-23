@@ -30,6 +30,7 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
   });
 
   const { data } = useMedicalHistoryQuery(Id);
+  
   const [updateMedicalHistory, { isLoading: isUpdating }] = useUpdateMedicalHistoryMutation();
 
   useEffect(() => {

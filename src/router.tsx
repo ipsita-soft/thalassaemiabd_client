@@ -29,6 +29,7 @@ import VisionMission from './client/page/VisionMission.tsx';
 import EditMissionVision from './pages/sidebar/webSetting/missionVision/EditMissionVision.tsx';
 import AdvisorsCommittee from './client/page/AdvisorsCommittee.tsx';
 import { WhoWeArePage } from './pages/sidebar/webSetting/whoWeAre/WhoWeArePage.tsx';
+import EmployeeList from './client/page/employeeList.tsx';
 import ZakatBoard from './client/page/ZakatBoard.tsx';
 import BloodCollectionCommittee from './client/page/BloodCollectionCommittee.tsx';
 import BtsHistory from './client/page/BtsHistory.tsx';
@@ -75,6 +76,10 @@ import SingleStory from './client/page/SingleStory.tsx';
 import StoryAll from './client/page/StoryAll.tsx';
 import { PatientMedicalHistory } from './pages/sidebar/webSetting/PatientMedicalHistory/PatientMedicalHistory';
 import PatientManagement from './client/page/PatientManagement.tsx';
+
+
+import { FinancialDonationPage } from './pages/sidebar/webSetting/financialDonation/FinancialDonationPage.tsx';
+
 
 import ShowAppointment from './pages/sidebar/webSetting/appointments/ShowAppointment.tsx';
 import { UpdatePatientMedicalHistory } from './pages/sidebar/webSetting/PatientMedicalHistory/UpdatePatientMedicalHistory.tsx';
@@ -201,6 +206,12 @@ const router = createBrowserRouter([
         path: 'zakat-board',
         element: <ZakatBoard />
       },
+
+      {
+        path: 'employee-list',
+        element: <EmployeeList />
+      },
+
 
       {
         path: 'blood-donor-registration',
@@ -379,8 +390,7 @@ const router = createBrowserRouter([
         />,
       },
 
-
-
+      
       {
         path: 'patient-medical-history/:apId/:mhId/:apDate',
         element: <ProtectedRoute
@@ -583,8 +593,31 @@ const router = createBrowserRouter([
           requiredPermissions={['view_dashboard']}
         />,
       },
+
+      {
+        path: 'financial-donation',
+        element: <ProtectedRoute
+          element={<FinancialDonationPage />}
+          requiredPermissions={[
+            'medical-history-all',
+          ]}
+        />,
+      },
     ],
   },
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
