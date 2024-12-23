@@ -191,7 +191,7 @@ const Header = () => {
                   </div> */}
 
                   <div className="button donate-button">
-                    <a href="donate.html" className="btn">
+                    <a href="#" className="btn">
                       DONATE NOW
                     </a>
                     <div className="hover-links">

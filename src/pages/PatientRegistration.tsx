@@ -21,12 +21,12 @@ const PatientRegistration = () => {
 
   useEffect(() => {
     dispatch(fetchPublicCountries({ per_page: 250 }));
-    dispatch(fetchMaritalStatus({}));
-    dispatch(fetchGenders({}));
-    dispatch(fetchBloodGroup({}));
-    dispatch(fetchDiseaseType({}));
-    dispatch(fetchHeight({}));
-    dispatch(fetchWeight({}));
+    dispatch(fetchMaritalStatus({ per_page: 250 }));
+    dispatch(fetchGenders({ per_page: 250 }));
+    dispatch(fetchBloodGroup({ per_page: 250 }));
+    dispatch(fetchDiseaseType({ per_page: 250 }));
+    dispatch(fetchHeight({ per_page: 250 }));
+    dispatch(fetchWeight({ per_page: 250 }));
   }, [dispatch]);
 
 
@@ -195,6 +195,7 @@ const PatientRegistration = () => {
                   mother_name: '',
                   husband_name: '',
                   wife_name: '',
+                  number_of_children: '',
                   father_occupation: '',
                   father_income_status: '',
                   old_bts_id: '',
@@ -382,7 +383,7 @@ const PatientRegistration = () => {
                                   name="disease_type_id"
                                   component={SelectField}
                                   options={diseaseTypesOption}
-                                  placeholder="Disease Type"
+                                  placeholder="Thalassemias Disease Type"
                                 />
                                 <ErrorMessage name="disease_type_id" component="div" className="text-danger" />
                               </div>
@@ -457,17 +458,18 @@ const PatientRegistration = () => {
 
                         <div className="form-group">
 
-                          <label htmlFor="siblings_status"><h5 className="birth">Electrophoresis Report</h5></label>
+                          <label htmlFor="profile_image"><h5 className="birth">Profile Picture</h5></label>
                           <input
-                            name="electrophoresis_report"
+                            name="profile_image"
                             type="file"
                             className="form-control pt-2"
                             onChange={(event: any) => {
                               const file = event.currentTarget.files[0];
-                              setFieldValue("electrophoresis_report", file);
+                              setFieldValue("profile_image", file);
                             }}
+                            accept="image/*"
                           />
-                          <ErrorMessage name="electrophoresis_report" component="div" className="text-danger" />
+                          <ErrorMessage name="profile_image" component="div" className="text-danger" />
                         </div>
 
                       </div>
@@ -560,10 +562,22 @@ const PatientRegistration = () => {
                           </div>
 
 
-                          <div> <div className="form-group">
-                            <Field name="emergency_contact_number" type="text" placeholder="Emergency Contact Number" className="form-control" />
-                            <ErrorMessage name="emergency_contact_number" component="div" className="text-danger" />
-                          </div></div>
+                          <div className='row'>
+                            <div className="col-md-6">
+                              <div className="form-group">
+                                <Field name="emergency_contact_number" type="text" placeholder="Emergency Contact Number" className="form-control" />
+                                <ErrorMessage name="emergency_contact_number" component="div" className="text-danger" />
+                              </div>
+                            </div>
+
+                            <div className="col-md-6">
+                              <div className="form-group">
+                                <Field type="text" id="number_of_children" name="number_of_children" placeholder="Number of Children" className="form-control" />
+                                <ErrorMessage name="number_of_children" component="div" className="text-danger" />
+                              </div>
+                            </div>
+                          </div>
+
 
 
 
@@ -679,19 +693,22 @@ const PatientRegistration = () => {
                             </div>
 
 
+
+
                             <div className="form-group">
 
-                              <label htmlFor="profile_image"><h5 className="birth">Profile Picture</h5></label>
+                              <label htmlFor="siblings_status"><h5 className="birth">Electrophoresis Report</h5></label>
                               <input
-                                name="profile_image"
+                                name="electrophoresis_report"
                                 type="file"
                                 className="form-control pt-2"
                                 onChange={(event: any) => {
                                   const file = event.currentTarget.files[0];
-                                  setFieldValue("profile_image", file);
+                                  setFieldValue("electrophoresis_report", file);
                                 }}
+                                accept='application/pdf,image/*'
                               />
-                              <ErrorMessage name="profile_image" component="div" className="text-danger" />
+                              <ErrorMessage name="electrophoresis_report" component="div" className="text-danger" />
                             </div>
 
 

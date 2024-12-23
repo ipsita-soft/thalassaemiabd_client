@@ -185,7 +185,7 @@ const Add: React.FC = () => {
           let nestedObj = formikErrors;
           keys.forEach((k) => {
             if (!nestedObj[k]) {
-              nestedObj[k] = {}; 
+              nestedObj[k] = {};
             }
             nestedObj = nestedObj[k];
           });
@@ -379,7 +379,7 @@ const Add: React.FC = () => {
                             name="disease_type_id"
                             component={SelectField}
                             options={diseaseTypesOption}
-                            placeholder="Disease Type"
+                            placeholder="Thalassemias Disease Type"
                           />
                           <ErrorMessage name="disease_type_id" component="div" className="text-danger" />
                         </div>
@@ -454,6 +454,7 @@ const Add: React.FC = () => {
                           const file = event.currentTarget.files[0];
                           setFieldValue("profile_image", file);
                         }}
+                          accept="image/*"
                       />
                       <ErrorMessage name="profile_image" component="div" className="text-danger" />
                     </div>
@@ -685,6 +686,7 @@ const Add: React.FC = () => {
                             setFieldValue("electrophoresis_report", file);
                           }}
 
+                          accept="application/pdf,image/*"
                         // required
                         />
 

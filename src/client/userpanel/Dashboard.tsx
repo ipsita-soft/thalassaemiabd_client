@@ -3,15 +3,14 @@ import { Home, FileText, Bell } from "lucide-react";
 import { useSelector } from "react-redux";
 
 const Dashboard: React.FC = () => {
-  const { roles, user } = useSelector((state: any) => state.auth);
+  const { user } = useSelector((state: any) => state.auth);
   return (
     <div>
       <div className="">
         <div className="absolute inset-0 bg-gradient-to-r from-purple-300 via-transparent to-red-300 opacity-10 pointer-events-none"></div>
         <h5 className="text-2xl mt-2 font-extrabold d-flex text-red-600">
           <Home className="me-2" size={30} /> Hello, {user.name}!
-          <br />
-          Role - {roles}
+          
         </h5>
         <p className="text-gray-500 mt-2">
           Welcome back to your personalized dashboard.

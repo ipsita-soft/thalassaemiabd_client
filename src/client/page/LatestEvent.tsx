@@ -22,7 +22,7 @@ const LatestEvent = () => {
     dispatch(fetchPublicEvent({ per_page: 3 })); // Fetch events on component mount
   }, [dispatch]);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <p></p>;
 
   if (isError) return <p>Error</p>;
 
