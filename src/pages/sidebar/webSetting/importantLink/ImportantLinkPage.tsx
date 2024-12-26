@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import {useFetchFinancialDonationsQuery } from "@/api/financialDonationApi";
+import { useFetchImportantLinksQuery } from "@/api/ImportantLinkApi";
+
 import {
     SortingState,
     ColumnFiltersState,
@@ -28,17 +29,17 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import Add from "@/pages/sidebar/webSetting/financialDonation/Add";
-import Edit from "@/pages/sidebar/webSetting/financialDonation/Edit";
-import Delete from "@/pages/sidebar/webSetting/financialDonation/Delete";
+import Add from "@/pages/sidebar/webSetting/importantLink/Add";
+import Edit from "@/pages/sidebar/webSetting/importantLink/Edit";
+import Delete from "@/pages/sidebar/webSetting/importantLink/Delete";
 
 import Swal from "sweetalert2";
 
-export function FinancialDonationPage() {
+export function ImportantLinkPage() {
     const [perPage, setPerPage] = useState(10);
     const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const { data, isLoading, error } = useFetchFinancialDonationsQuery({
+    const { data, isLoading, error } = useFetchImportantLinksQuery({
         perPage,
         search,
         page: currentPage,

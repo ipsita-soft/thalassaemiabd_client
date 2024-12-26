@@ -75,6 +75,7 @@ const Footer = () => {
                                         <li><Link to="videos-gallery">Videos</Link></li>
                                         <li><Link to="publications">Publications</Link></li>
                                         <li><Link to="blog-news-all">Blogs & News</Link></li>
+                                        <li><Link to="related-links">Related Links</Link></li>
                                          
                                          
                                         </ul>

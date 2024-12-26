@@ -9,13 +9,14 @@ import {
 } from '@/components/ui/dialog';
 
 import { Button } from '@/components/ui/button';
-import { useFetchFinancialDonationQuery, useUpdateFinancialDonationMutation } from '@/api/financialDonationApi';
+import { useFetchImportantLinkQuery, useUpdateImportantLinkMutation } from '@/api/ImportantLinkApi';
 import Swal from 'sweetalert2';
 import * as Yup from 'yup';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { Loader2 } from 'lucide-react';
+
 type EditProps = {
   Id: string;
   open: boolean;
@@ -27,23 +28,22 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
   const [formData, setFormData] = useState({
     title: '',
     image: null,
+    url: '',
     description: '',
     status: 1,
     sorting_index: 0,
   });
 
-  
-
-  const { data } = useFetchFinancialDonationQuery(Id);
-
-  const [updateFinancialDonation, { isLoading: loading }] = useUpdateFinancialDonationMutation();
+  const { data } = useFetchImportantLinkQuery(Id);
+  const [updateImportantLink, { isLoading: loading }] = useUpdateImportantLinkMutation();
 
   useEffect(() => {
     if (data?.data) {
-      const { title, image, description, status, sorting_index } = data.data;
+      const { title, image, url, description, status, sorting_index } = data.data;
       setFormData({
         title: title || '',
-        image:  null,
+        image: image|| '',
+        url: url || '',
         description: description || '',
         status: status === 'Active' ? 1 : 2,
         sorting_index: sorting_index || 0,
@@ -53,29 +53,35 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
 
   const validationSchema = Yup.object().shape({
     title: Yup.string().required('The title field is required.'),
+    url: Yup.string().required('The URL field is required.'),
     description: Yup.string().required('The description field is required.'),
     sorting_index: Yup.number()
       .required('The sorting index field is required.')
       .typeError('Sorting index must be a number.'),
     status: Yup.number().required('The status field is required.'),
+    image: Yup.mixed().notRequired(),
   });
+  
+
 
   const handleSubmit = async (values: typeof formData, { setErrors }: any) => {
     try {
-
       const formData = new FormData();
       formData.append('title', values.title);
+      formData.append('url', values.url);
       formData.append('description', values.description);
-      formData.append('image', values.image || '');
       formData.append('status', values.status.toString());
       formData.append('sorting_index', values.sorting_index.toString());
-
-    
-      await updateFinancialDonation({
+  
+      if (values.image) {
+        formData.append('image', values.image);
+      }
+  
+      await updateImportantLink({
         id: Id,
         data: values,
       }).unwrap();
-
+  
       Swal.fire({
         title: 'Success!',
         text: 'Data updated successfully!',
@@ -83,12 +89,13 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
         timer: 3000,
         timerProgressBar: true,
       });
-
+  
       setOpen(false);
     } catch (error: any) {
       setErrors(error?.data.data || {});
     }
   };
+  
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -97,9 +104,9 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
           Edit
         </Button>
       </DialogTrigger>
-      <DialogContent  className="sm:max-w-[425px] md:max-w-[600px] lg:max-w-[700px] xl:max-w-[800px] w-full max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[425px] md:max-w-[600px] lg:max-w-[700px] xl:max-w-[800px] w-full max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Edit Financia Donation</DialogTitle>
+          <DialogTitle>Edit Important Link</DialogTitle>
         </DialogHeader>
         <Formik
           initialValues={formData}
@@ -124,36 +131,35 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
                   <ErrorMessage name="title" component="div" className="text-danger" />
                 </div>
 
+                {/* URL */}
+                <div>
+                  <label htmlFor="url" className="block text-sm font-medium text-gray-700">
+                    URL
+                  </label>
+                  <Field
+                    name="url"
+                    type="text"
+                    placeholder="Enter URL"
+                    className="form-control"
+                  />
+                  <ErrorMessage name="url" component="div" className="text-danger" />
+                </div>
+
                 {/* Image */}
-                {/* <div>
+                <div>
                   <label htmlFor="image" className="block text-sm font-medium text-gray-700">
                     Image
                   </label>
-               
-
-                   <input
+                  <input
+                    name="image"
                     type="file"
-                    id="image"
-                    accept="image/jpeg,image/png,image/jpg,image/gif"
-                    onChange={(e) => {
-                      if (e.target.files) {
-                        setFieldValue('image', e.target.files[0]); // Save the file to Formik state
-                      }
+                    className="form-control pt-2"
+                    onChange={(event: any) => {
+                      const file = event.currentTarget.files[0];
+                      setFieldValue('image', file);
                     }}
-                    className="form-control"
                   />
-                  <ErrorMessage name="image" component="div" className="text-danger" />
-                </div> */}
-                
-                <input
-                  name="image"
-                  type="file"
-                  className="form-control pt-2"
-                  onChange={(event: any) => {
-                    const file = event.currentTarget.files[0];
-                    setFieldValue("image", file);
-                  }}
-                />
+                </div>
 
                 {/* Description */}
                 <div>
@@ -204,11 +210,15 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
                       Please wait
                     </>
                   ) : (
-                    'Submit'
+                    'Update'
                   )}
                 </Button>
 
-                <Button type="button" className="ml-2 bg-gray-300 text-gray-800 hover:bg-gray-400" onClick={() => setOpen(false)}>
+                <Button
+                  type="button"
+                  className="ml-2 bg-gray-300 text-gray-800 hover:bg-gray-400"
+                  onClick={() => setOpen(false)}
+                >
                   Cancel
                 </Button>
               </DialogFooter>

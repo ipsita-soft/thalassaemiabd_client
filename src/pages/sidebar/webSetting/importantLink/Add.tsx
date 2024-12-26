@@ -1,58 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from '@/components/ui/dialog';
-
+import React, { useState } from 'react';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { useFetchFinancialDonationQuery, useUpdateFinancialDonationMutation } from '@/api/financialDonationApi';
+import { Field, Form, Formik, ErrorMessage } from 'formik';
 import Swal from 'sweetalert2';
 import * as Yup from 'yup';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Loader2 } from 'lucide-react';
+import { useCreateImportantLinkMutation } from '@/api/ImportantLinkApi';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { Loader2 } from 'lucide-react';
-type EditProps = {
-  Id: string;
-  open: boolean;
-  onClose: () => void;
-};
 
-const Edit: React.FC<EditProps> = ({ Id }) => {
+const Add: React.FC = () => {
   const [open, setOpen] = useState(false);
-  const [formData, setFormData] = useState({
-    title: '',
-    image: null,
-    description: '',
-    status: 1,
-    sorting_index: 0,
-  });
-
-  
-
-  const { data } = useFetchFinancialDonationQuery(Id);
-
-  const [updateFinancialDonation, { isLoading: loading }] = useUpdateFinancialDonationMutation();
-
-  useEffect(() => {
-    if (data?.data) {
-      const { title, image, description, status, sorting_index } = data.data;
-      setFormData({
-        title: title || '',
-        image:  null,
-        description: description || '',
-        status: status === 'Active' ? 1 : 2,
-        sorting_index: sorting_index || 0,
-      });
-    }
-  }, [data]);
+  const [loading, setLoading] = useState(false);
+  const [createlink] = useCreateImportantLinkMutation();
 
   const validationSchema = Yup.object().shape({
-    title: Yup.string().required('The title field is required.'),
+    title: Yup.string().required('The title field is required.'), 
+    image: Yup.string().required('The image field is required.'),
+    url: Yup.string().required('The url field is required.'),
     description: Yup.string().required('The description field is required.'),
     sorting_index: Yup.number()
       .required('The sorting index field is required.')
@@ -60,54 +25,50 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
     status: Yup.number().required('The status field is required.'),
   });
 
-  const handleSubmit = async (values: typeof formData, { setErrors }: any) => {
+  const handleSubmit = async (values: any, { setErrors, resetForm }: any) => {
+    setLoading(true);
     try {
-
-      const formData = new FormData();
-      formData.append('title', values.title);
-      formData.append('description', values.description);
-      formData.append('image', values.image || '');
-      formData.append('status', values.status.toString());
-      formData.append('sorting_index', values.sorting_index.toString());
-
-    
-      await updateFinancialDonation({
-        id: Id,
-        data: values,
-      }).unwrap();
-
+      await createlink(values).unwrap();
+      setOpen(false);
+      resetForm();
       Swal.fire({
         title: 'Success!',
-        text: 'Data updated successfully!',
+        text: 'Data added successfully!',
         icon: 'success',
-        timer: 3000,
-        timerProgressBar: true,
+        confirmButtonText: 'OK',
       });
-
-      setOpen(false);
     } catch (error: any) {
-      setErrors(error?.data.data || {});
+      setErrors(error?.data?.data || {});
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="mr-2 mt-1 w-40 bg-slate-300 text-white hover:bg-slate-400 transition">
-          Edit
-        </Button>
+        <Button variant="outline">Add New</Button>
       </DialogTrigger>
-      <DialogContent  className="sm:max-w-[425px] md:max-w-[600px] lg:max-w-[700px] xl:max-w-[800px] w-full max-h-[90vh] overflow-y-auto">
+      <DialogContent
+        className="w-full max-w-3xl mx-auto rounded-xl shadow-2xl bg-white p-8 border border-gray-200"
+        style={{ maxHeight: '90vh', overflowY: 'auto' }}
+      >
         <DialogHeader>
-          <DialogTitle>Edit Financia Donation</DialogTitle>
+          <DialogTitle>Add New</DialogTitle>
         </DialogHeader>
         <Formik
-          initialValues={formData}
+          initialValues={{
+            title: '',
+            image: null,
+            url: '',
+            description: '',
+            sorting_index: '',
+            status: 1,
+          }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
-          enableReinitialize
         >
-          {({ values, setFieldValue }) => (
+          {({ setFieldValue, values }) => (
             <Form>
               <div className="grid gap-4">
                 {/* Title */}
@@ -125,35 +86,33 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
                 </div>
 
                 {/* Image */}
-                {/* <div>
+                <div>
                   <label htmlFor="image" className="block text-sm font-medium text-gray-700">
                     Image
                   </label>
-               
-
-                   <input
+                  <input
                     type="file"
                     id="image"
-                    accept="image/jpeg,image/png,image/jpg,image/gif"
-                    onChange={(e) => {
-                      if (e.target.files) {
-                        setFieldValue('image', e.target.files[0]); // Save the file to Formik state
-                      }
-                    }}
+                    onChange={(event) =>
+                      setFieldValue('image', event.currentTarget.files ? event.currentTarget.files[0] : null)
+                    }
                     className="form-control"
                   />
                   <ErrorMessage name="image" component="div" className="text-danger" />
-                </div> */}
-                
-                <input
-                  name="image"
-                  type="file"
-                  className="form-control pt-2"
-                  onChange={(event: any) => {
-                    const file = event.currentTarget.files[0];
-                    setFieldValue("image", file);
-                  }}
-                />
+                </div>
+
+                <div>
+                  <label htmlFor="url" className="block text-sm font-medium text-gray-700">
+                    Url
+                  </label>
+                  <Field
+                    name="url"
+                    type="url"
+                    placeholder="Enter Link"
+                    className="form-control"
+                  />
+                  <ErrorMessage name="url" component="div" className="text-danger" />
+                </div>
 
                 {/* Description */}
                 <div>
@@ -163,13 +122,14 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
                   <ReactQuill
                     value={values.description}
                     onChange={(value) => setFieldValue('description', value)}
-                    style={{ height: '200px', marginBottom: '50px' }}
+                    style={{ height: '300px',  marginBottom:'50px'}} 
                   />
                   <ErrorMessage name="description" component="div" className="text-danger" />
                 </div>
 
+
                 {/* Status */}
-                <div>
+                <div className=''>
                   <label htmlFor="status" className="block text-sm font-medium text-gray-700">
                     Status
                   </label>
@@ -207,8 +167,7 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
                     'Submit'
                   )}
                 </Button>
-
-                <Button type="button" className="ml-2 bg-gray-300 text-gray-800 hover:bg-gray-400" onClick={() => setOpen(false)}>
+                <Button variant="outline" onClick={() => setOpen(false)} disabled={loading}>
                   Cancel
                 </Button>
               </DialogFooter>
@@ -220,4 +179,4 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
   );
 };
 
-export default Edit;
+export default Add;

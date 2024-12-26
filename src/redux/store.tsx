@@ -33,6 +33,8 @@ import { medicalHistoryItemApi } from '@/api/medicalHistoryItemApi';
 import { appointmentsApi } from '@/api/appointmentsApi';
 import { patientMedicalHistoryApi } from '@/api/patientMedicalHistoryApi';
 import { financialDonationApi } from '@/api/financialDonationApi';
+import { importantlinkApi } from '@/api/ImportantLinkApi';
+import { whatisthalassemiaApi } from '@/api/WhatIsThalassemiaApi';
 
 export const store = configureStore({
   reducer: {
@@ -71,6 +73,8 @@ export const store = configureStore({
     [appointmentsApi.reducerPath]: appointmentsApi.reducer,
     [patientMedicalHistoryApi.reducerPath]: patientMedicalHistoryApi.reducer,
     [financialDonationApi.reducerPath]: financialDonationApi.reducer,
+    [importantlinkApi.reducerPath]: importantlinkApi.reducer,
+    [whatisthalassemiaApi.reducerPath]: whatisthalassemiaApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
@@ -79,7 +83,9 @@ export const store = configureStore({
       .concat(medicalHistoryItemApi.middleware)
       .concat(appointmentsApi.middleware)
       .concat(patientMedicalHistoryApi.middleware)
-      .concat(financialDonationApi.middleware),
+      .concat(financialDonationApi.middleware)
+      .concat(importantlinkApi.middleware)
+      .concat(whatisthalassemiaApi.middleware)
 });
 
 export type AppDispatch = typeof store.dispatch;
