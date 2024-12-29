@@ -22,7 +22,7 @@ const SingleBlogNews = () => {
   }, [dispatch, id]);
 
   // Fetch all blog news
-  const { blogNews, isLoading: blogLoading, isError: blogError, error: blogErrorMessage } = useSelector(
+  const { blogNews, isLoading: blogLoading } = useSelector(
     (state: RootState) => state.public
   );
 

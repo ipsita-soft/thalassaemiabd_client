@@ -30,7 +30,9 @@ import {
     UserRoundCheck,
     Layers,
     History,
-    Library
+    Library,
+    DatabaseIcon,
+    GitPullRequest
 
 } from 'lucide-react';
 
@@ -351,20 +353,7 @@ function DashboardLayout() {
 
 
 
-                                {/* {hasPermissions([
-                                    'medical-history-all',
-                                ], permissions) && (
 
-                                        <Link
-                                            to="/dashboard/patient-medical-history"
-                                            className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all
-                                             ${isActive('/dashboard/medical-history') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
-                                                }`}
-                                        >
-                                            <History className="h-4 w-4" />
-                                            Patient Medical History
-                                        </Link>
-                                    )} */}
 
 
 
@@ -403,10 +392,6 @@ function DashboardLayout() {
                                         </Link>
                                     )}
 
-
-
-
-
                                 {hasPermissions([
                                     'medical-history-item-all',
                                 ], permissions) && (
@@ -422,6 +407,20 @@ function DashboardLayout() {
                                         </Link>
                                     )}
 
+                                {hasPermissions([
+                                    'patient-medical-history-all',
+                                ], permissions) && (
+
+                                        <Link
+                                            to="/dashboard/patient-medical-history"
+                                            className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all
+                                             ${isActive('/dashboard/patient-medical-history') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                                }`}
+                                        >
+                                            <DatabaseIcon className="h-4 w-4" />
+                                            Patient Medical History
+                                        </Link>
+                                    )}
 
                                 {hasPermissions([
                                     'appointment-all',
@@ -434,7 +433,7 @@ function DashboardLayout() {
                                                 }`}
                                         >
 
-                                            <UserRoundCheck className="h-4 w-4" />
+                                            <GitPullRequest className="h-4 w-4" />
                                             Appointments
                                         </Link>
                                     )}

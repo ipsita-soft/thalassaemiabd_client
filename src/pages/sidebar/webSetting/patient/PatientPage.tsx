@@ -10,7 +10,7 @@ import {
     useReactTable,
     flexRender,
 } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { HistoryIcon, MoreHorizontal, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import {
@@ -28,12 +28,11 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import Add from "./Add";
 import Edit from "./Edit";
 import Show from "./Show";
-import Delete from "@/pages/sidebar/webSetting/patient/Delete";
+import { Link, useNavigate } from "react-router-dom";
+import { useFetchMedicalHistoriesQuery } from "@/api/medicalHistoryApi";
 
-import Swal from "sweetalert2";
 
 export function PatientPage() {
     const [perPage, setPerPage] = useState(10);
@@ -46,18 +45,31 @@ export function PatientPage() {
         page: currentPage,
     });
 
+
+
+    const { data: hItem, isLoading: itemLoading } = useFetchMedicalHistoriesQuery({
+        perPage,
+        search,
+        page: currentPage,
+        status: '1',
+    });
+
+    const firstItem = hItem?.data?.[0]?.id;
+
+    console.log(firstItem);
+
+
     const meta = data?.meta;
     const patientRegistrationData = data?.data;
-    
 
-    // const dispatch: AppDispatch = useDispatch();
 
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [filterValue, setFilterValue] = useState("");
 
-    const [isEditModalOpen, setEditModalOpen] = useState(false);
+    const navigate = useNavigate();
+
 
     const columns = [
         {
@@ -81,6 +93,15 @@ export function PatientPage() {
                 <div className="text-left">{row.original.bts_id}</div>
             ),
         },
+
+        {
+            id: "old-bts-id",
+            header: "OLD BTS ID",
+            cell: ({ row }: { row: { original: any } }) => (
+                <div className="text-left">{row.original.patientInfo?.old_bts_id}</div>
+            ),
+        },
+
         {
             id: "phone",
             header: "Phone",
@@ -104,46 +125,43 @@ export function PatientPage() {
         },
         {
             id: "actions",
+            header: "Action",
             enableHiding: false,
             cell: ({ row }: { row: { original: any } }) => {
                 const data = row.original;
-
-                const handleDeleteSuccess = () => {
-
-                    Swal.fire({
-                        title: 'success!',
-                        text: 'Data deleted successfully!',
-                        icon: 'success',
-                        timer: 3000,
-                        timerProgressBar: true,
-                    });
-
-                };
-
                 return (
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                                <span className="sr-only">Open menu</span>
-                                <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
-                            <Edit
-                                Id={data.id.toString()}
-                                open={isEditModalOpen}
-                                onClose={() => setEditModalOpen(false)}
-                            />
-                            <br />
-                            <Show Id={data.id.toString()} open={false} onClose={() => { }} />
-                            <br />
-                            <Delete
-                                Id={data.id.toString()}
-                                onSuccess={handleDeleteSuccess} // Pass the callback here
-                            />
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+
+                    <div className="flex items-center gap-2">
+
+                        {!itemLoading && (
+                            <button
+                                title="Add History"
+                                className={`flex items-center justify-center rounded-full 
+        p-0 w-8 h-8 bg-transparent border border-gray-300 
+        hover:bg-gray-100 hover:border-gray-400 transition-all 
+        focus:ring-2 focus:ring-gray-300 disabled:opacity-50`}
+                                onClick={() => navigate(`/dashboard/patient-medical-history/${data?.id.toString()}/${firstItem}`)}
+                            >
+                                <PlusCircle className="text-gray-600 w-5 h-5" />
+                            </button>
+                        )}
+                        <button
+                            title="Show Patient Medical History"
+                            className={`flex items-center justify-center rounded-full 
+        p-0 w-8 h-8 bg-transparent border border-indigo-300 
+        hover:bg-indigo-100 hover:border-indigo-400 transition-all 
+        focus:ring-2 focus:ring-indigo-300 disabled:opacity-50`}
+
+                            onClick={() => navigate(`/dashboard/show-patient-medical-history/${data?.id.toString()}/${firstItem}`)}
+                        >
+                            <HistoryIcon className="text-indigo-600 w-5 h-5" />
+                        </button>
+
+                        <Show Id={data.id.toString()} open={false} onClose={() => { }} />
+
+
+                    </div>
+
                 );
             },
         },
@@ -216,7 +234,7 @@ export function PatientPage() {
                         <option value={100}>100</option>
                     </select>
                 </div>
-                <Add />
+                {/* <Add /> */}
             </div>
             {error ? (
                 <>Error</>
@@ -276,12 +294,11 @@ export function PatientPage() {
                                 }
                             }}
                             disabled={!link.url}
-                            className={`${
-                                link.active
-                                  ? "bg-blue-500 text-white hover:bg-blue-600"
-                                  : "bg-gray-200 text-black hover:bg-gray-300"
-                              }`}
-                              
+                            className={`${link.active
+                                ? "bg-blue-500 text-white hover:bg-blue-600"
+                                : "bg-gray-200 text-black hover:bg-gray-300"
+                                }`}
+
                         >
                             {link.label
                                 .replace(/&laquo;/g, '<<')

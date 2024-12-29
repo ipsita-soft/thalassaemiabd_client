@@ -10,20 +10,22 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from '@/components/ui/button';
-import { useDeleteMedicalHistoryMutation } from '@/api/medicalHistoryApi';
+import { useDeletePatientMedicalHistoryMutation } from '@/api/patientMedicalHistoryApi';
+import { Trash } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 
 interface DeleteSliderProps {
   Id: string;
   onSuccess: () => void;
 }
 const Delete: React.FC<DeleteSliderProps> = ({ Id, onSuccess }) => {
-  const [deleteMedicalHistory, { isLoading }] = useDeleteMedicalHistoryMutation();
- 
+  const [deleteMedicalHistory, { isLoading }] = useDeletePatientMedicalHistoryMutation();
+
 
   const handleDelete = async () => {
     try {
-      await deleteMedicalHistory(Id).unwrap(); 
-      onSuccess(); 
+      await deleteMedicalHistory(Id).unwrap();
+      onSuccess();
     } catch (error) {
       console.error('Error deleting data:', error);
 
@@ -33,9 +35,24 @@ const Delete: React.FC<DeleteSliderProps> = ({ Id, onSuccess }) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive" className="mr-2 mt-1 w-40" disabled={isLoading}>
-          {isLoading ? 'Deleting...' : 'Delete'}
+        <Button
+          title="Delete"
+          variant="outline"
+          className={`flex items-center justify-center rounded-full 
+            p-0 w-8 h-8 bg-transparent border border-red-300 
+            hover:bg-red-100 hover:border-red-400 transition-all 
+            focus:ring-2 focus:ring-red-300 disabled:opacity-50`}
+          disabled={isLoading}
+          onClick={handleDelete}
+        >
+          {isLoading ? (
+            <Spinner className="w-5 h-5 text-red-600" />
+          ) : (
+            <Trash className="w-5 h-5 text-red-600" />
+          )}
         </Button>
+
+
       </AlertDialogTrigger>
 
       <AlertDialogContent>

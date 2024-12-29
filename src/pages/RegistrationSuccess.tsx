@@ -1,6 +1,5 @@
 import { logout } from '@/redux/slices/authSlice';
 import { AppDispatch } from '@/redux/store';
-import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 

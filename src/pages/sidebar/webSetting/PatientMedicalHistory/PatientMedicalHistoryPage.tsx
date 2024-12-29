@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useFetchAppointmentsQuery } from "@/api/appointmentsApi";
+import { useFetchPatientMedicalHistoriesQuery } from "@/api/patientMedicalHistoryApi";
 import {
     SortingState,
     ColumnFiltersState,
@@ -10,15 +10,11 @@ import {
     useReactTable,
     flexRender,
 } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { Edit } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuLabel,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import { Input } from "@/components/ui/input";
 import {
     Table,
@@ -28,35 +24,24 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import Add from "@/pages/sidebar/webSetting/appointments/Add";
-import Edit from "@/pages/sidebar/webSetting/appointments/Edit";
-// import Show from "@/pages/sidebar/webSetting/patient/Show";
-import { useFetchMedicalHistoriesQuery } from "@/api/medicalHistoryApi";
-import { Link } from "react-router-dom";
 
+// import Delete from "@/pages/sidebar/webSetting/PatientMedicalHistory/Delete";
 
+import Swal from "sweetalert2";
+import ShowPmhDetails from "./ShowPmhDetails";
 
-export function AppointmentsPage() {
+export function PatientMedicalHistoryPage() {
     const [perPage, setPerPage] = useState(10);
     const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const { data, isLoading, error } = useFetchAppointmentsQuery({
+
+    const { data, isLoading, error } = useFetchPatientMedicalHistoriesQuery({
         perPage,
         search,
         page: currentPage,
     });
 
-    const { data: hItem } = useFetchMedicalHistoriesQuery({
-        perPage,
-        search,
-        page: currentPage,
-        status: '1',
-    });
-
-
-
-    const firstItem = hItem?.data?.[0]?.id ?? undefined;
-
+    const [isEditModalOpen, setEditModalOpen] = useState(false);
 
     const meta = data?.meta;
     const patientRegistrationData = data?.data;
@@ -69,40 +54,38 @@ export function AppointmentsPage() {
             id: "serial",
             header: "SL No",
             cell: ({ row }: { row: { index: number } }) => (
-                <div className="text-right">{row.index + 1}</div>
+                <div className="">{row.index + 1}</div>
             ),
         },
 
 
         {
-            id: "doctor",
-            header: "Doctor",
+            id: "Patient_name",
+            header: "Patient Name",
             cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.doctor?.name}</div>
-            ),
-        },
-        {
-            id: "patient",
-            header: "Patient",
-            cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.patient?.name}
-                </div>
-
-
+                <div className="text-left">{row.original.patient.name}</div>
             ),
         },
 
 
         {
             id: "bts_id",
-            header: "Id",
+            header: "BTS ID",
             cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.patient?.bts_id}
-                </div>
-
-
+                <div className="text-left">{row.original.patient.bts_id}</div>
             ),
         },
+
+
+
+        {
+            id: "medical-history",
+            header: "Medical History",
+            cell: ({ row }: { row: { original: any } }) => (
+                <div className="text-left">{row.original.medicalHistory.title}</div>
+            ),
+        },
+
 
 
 
@@ -114,62 +97,81 @@ export function AppointmentsPage() {
             ),
         },
 
+
+
         {
-            id: "status",
-            header: "Status",
+            accessorKey: "created_by_user",
+            header: "Created By",
             cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.status}</div>
+                <div className="text-center">{row.original.created_by_user.name}</div>
             ),
         },
 
-
         {
-            id: "appointment_type",
-            header: "Appointment Type",
+            accessorKey: "data",
+            header: "Data",
             cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.appointment_type}</div>
+                <div className="text-center">
+
+
+                    <ShowPmhDetails
+                        Id={row.original.id.toString()}
+                        open={isEditModalOpen}
+                        onClose={() => setEditModalOpen(false)}
+                    />
+
+                </div>
             ),
         },
 
 
         {
             id: "actions",
+            header: "Action",
             enableHiding: false,
             cell: ({ row }: { row: { original: any } }) => {
                 const data = row.original;
 
+                const handleDeleteSuccess = () => {
+
+                    Swal.fire({
+                        title: 'success!',
+                        text: 'Data deleted successfully!',
+                        icon: 'success',
+                        timer: 3000,
+                        timerProgressBar: true,
+                    });
+
+                };
+
                 return (
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                                <span className="sr-only">Open menu</span>
-                                <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
 
-                            <Link className="mr-2 mt-1 w-40  bg-blue-300 text-white hover:bg-blue-400 transition p-2 text-center rounded font-medium" to={`/dashboard/patient-medical-history/${data?.patient?.id?.toString()}/${firstItem}`}>Add History</Link>
+                    <div className="flex items-center gap-2">
 
-                            {/* <br />
-                            <Link className="mr-2 mt-1 w-40  bg-blue-300 text-white hover:bg-blue-400 transition p-2 text-center rounded font-medium" to={`/dashboard/show-appointment/${data?.id.toString()}`}>Show Appointment History </Link> */}
-                            <br />
-
-
-
-
+                        <button
+                            title="Edit"
+                            className={`flex items-center justify-center rounded-full 
+    p-0 w-8 h-8 bg-transparent border border-gray-300 
+    hover:bg-gray-100 hover:border-gray-400 transition-all 
+    focus:ring-2 focus:ring-gray-300 disabled:opacity-50`}
+                            onClick={() =>
+                                navigate(`/dashboard/patient-medical-history-update/${data?.id}`, {
+                                    state: { from: location.pathname }, // Pass the current route dynamically
+                                })
+                            }
+                        >
+                            <Edit className="text-blue-600 w-5 h-5" />
+                        </button>
 
 
 
-                            {/* <ShowAppointment Id={data?.id.toString()} open={false} onClose={() => { }} /> */}
+                        {/* <Delete
+                            Id={data.id.toString()}
+                            onSuccess={handleDeleteSuccess}
+                        /> */}
 
 
-
-                            {/* <Show Id={data?.patient?.id.toString()} open={false} onClose={() => { }} /> */}
-                            <br />
-                            <Edit Id={data.id.toString()} />
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    </div>
                 );
             },
         },
@@ -212,6 +214,10 @@ export function AppointmentsPage() {
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
+    const navigate = useNavigate();
+    const handleNavigate = () => {
+        navigate('/dashboard/admin-patient'); // Replace with your desired route
+    };
 
     return isLoading ? (
         <div className="flex justify-center items-center h-screen">
@@ -242,7 +248,11 @@ export function AppointmentsPage() {
                         <option value={100}>100</option>
                     </select>
                 </div>
-                <Add />
+
+                <Button variant="outline" onClick={handleNavigate}>Add New</Button>
+
+
+
             </div>
             {error ? (
                 <>Error</>

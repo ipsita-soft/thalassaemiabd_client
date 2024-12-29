@@ -2,6 +2,11 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_BASE_URL } from '@/config/apiConfig';
 
 export interface PatientMedicalHistory {
+    date: string | number | readonly string[] | undefined;
+    date: ReactNode;
+    created_by_user: any;
+    medicalHistory: any;
+    patient: any;
     data: any;
     id: string;
     name: string;
@@ -46,19 +51,40 @@ export const patientMedicalHistoryApi = createApi({
         // Fetch all patient medical histories
         fetchPatientMedicalHistories: builder.query<
             PatientMedicalHistoryResponse,
-            { perPage: number; page: number; search?: string }
+            { perPage: number; page: number; search?: string; patientId?: string; medicalHistorieId?: string }
         >({
-            query: ({ perPage, page, search }) =>
-                `management/patient-medical-history?per_page=${perPage}&page=${page}&search=${search || ''}`,
+            query: ({ perPage, page, search, patientId, medicalHistorieId }) =>
+                `management/patient-medical-history?per_page=${perPage}&page=${page}&search=${search || ''}&patient_id=${patientId || ''}&medical_historie_id=${medicalHistorieId || ''}`,
             providesTags: (result) =>
                 result
                     ? [
-                          ...result.data.map(({ id }) => ({
-                              type: 'PatientMedicalHistory',
-                              id,
-                          } as const)),
-                          { type: 'PatientMedicalHistory', id: 'LIST' },
-                      ]
+                        ...result.data.map(({ id }) => ({
+                            type: 'PatientMedicalHistory',
+                            id,
+                        } as const)),
+                        { type: 'PatientMedicalHistory', id: 'LIST' },
+                    ]
+                    : [{ type: 'PatientMedicalHistory', id: 'LIST' }],
+        }),
+
+
+
+
+        fetchPatientMedicalHistoriesByDate: builder.query<
+            PatientMedicalHistoryResponse,
+            { perPage: string; page: number; search?: string; patientId?: string; medicalHistorieId?: string }
+        >({
+            query: ({ perPage, page, search, patientId, medicalHistorieId }) =>
+                `management/patient-medical-history-date?per_page=${perPage}&page=${page}&search=${search || ''}&patient_id=${patientId || ''}&medical_historie_id=${medicalHistorieId || ''}`,
+            providesTags: (result) =>
+                result
+                    ? [
+                        ...result.data.map(({ id }) => ({
+                            type: 'PatientMedicalHistory',
+                            id,
+                        } as const)),
+                        { type: 'PatientMedicalHistory', id: 'LIST' },
+                    ]
                     : [{ type: 'PatientMedicalHistory', id: 'LIST' }],
         }),
 
@@ -70,7 +96,7 @@ export const patientMedicalHistoryApi = createApi({
         }),
 
 
-        
+
         // Create a new patient medical history
         createPatientMedicalHistory: builder.mutation<PatientMedicalHistory, Partial<PatientMedicalHistory>>({
             query: (newData) => ({
@@ -111,6 +137,7 @@ export const patientMedicalHistoryApi = createApi({
 // Export hooks
 export const {
     useFetchPatientMedicalHistoriesQuery,
+    useFetchPatientMedicalHistoriesByDateQuery,
     useFetchPatientMedicalHistoryQuery,
     useCreatePatientMedicalHistoryMutation,
     useUpdatePatientMedicalHistoryMutation,
