@@ -5,37 +5,43 @@ import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { useFetchWhatIsThalassemiaQuery, useUpdateWhatIsThalassemiaMutation } from '@/api/WhatIsThalassemiaApi';
+import { useFetchFounderQuery, useUpdateFounderMutation } from '@/api/founderApi';
 
-type EditWhatIsThalassemiaProps = {
+type EditFounderProps = {
   Id: string;
 };
 
-const EditWhatIsThalassemia: React.FC<EditWhatIsThalassemiaProps> = ({ Id }) => {
+const EditFounder: React.FC<EditFounderProps> = ({ Id }) => {
   const { toast } = useToast();
-  const { data: apiResponse, isLoading } = useFetchWhatIsThalassemiaQuery(Id);
-  const [updateWhatIsThalassemia, { isLoading: isUpdating }] = useUpdateWhatIsThalassemiaMutation();
+  const { data: apiResponse, isLoading } = useFetchFounderQuery(Id);
+  const [updateFounder, { isLoading: isUpdating }] = useUpdateFounderMutation();
 
   const data = apiResponse?.data;
-  
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
       title: data?.title || '',
-      video: data?.video || '',
+      name: data?.name || '',
+      image: null,
+      designation: data?.designation || '',
       description: data?.description || '',
     },
     validationSchema: Yup.object({
       title: Yup.string().required('Title is required'),
-      video: Yup.string().url('Invalid URL').required('YouTube video URL is required'),
+      name: Yup.string().required('Name is required'),
+      image: Yup.mixed()
+        .nullable(),
+       
+      designation: Yup.string().required('Designation is required'),
       description: Yup.string().required('Description is required'),
     }),
     onSubmit: async (values) => {
       try {
-        await updateWhatIsThalassemia({ id: Id, data: values }).unwrap();
+        await updateFounder({ id: Id, data: values }).unwrap();
         toast({
           title: 'Success',
-          description: 'What is Thalassemia updated successfully!',
+          description: 'Founder details updated successfully!',
         });
       } catch (error) {
         toast({
@@ -83,23 +89,65 @@ const EditWhatIsThalassemia: React.FC<EditWhatIsThalassemiaProps> = ({ Id }) => 
         )}
       </div>
 
-      {/* YouTube Video URL */}
+      {/* Name */}
       <div>
-        <label htmlFor="video" className="block text-sm font-medium text-gray-700">
-          YouTube Video URL
+        <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+          Name
         </label>
         <input
-          id="video"
-          name="video"
-          type="url"
-          placeholder="YouTube Video URL"
+          id="name"
+          name="name"
+          type="text"
+          placeholder="Enter Name"
           className="form-control"
-          value={formik.values.video}
+          value={formik.values.name}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
         />
-        {formik.errors.video && formik.touched.video && (
-          <div className="text-danger">{String(formik.errors.video)}</div>
+        {formik.errors.name && formik.touched.name && (
+          <div className="text-danger">{String(formik.errors.name)}</div>
+        )}
+      </div>
+
+      {/* Image */}
+      <div>
+        <label htmlFor="image" className="block text-sm font-medium text-gray-700">
+          Image
+        </label>
+        <input
+          id="image"
+          name="image"
+          type="file"
+          className="form-control"
+          onChange={(event) => {
+            if (event.target.files) {
+              formik.setFieldValue('image', event.target.files[0]);
+            }
+          }}
+          onBlur={formik.handleBlur}
+        />
+        {formik.errors.image && formik.touched.image && (
+          <div className="text-danger">{String(formik.errors.image)}</div>
+        )}
+      </div>
+
+      {/* Designation */}
+      <div>
+        <label htmlFor="designation" className="block text-sm font-medium text-gray-700">
+          Designation
+        </label>
+        <input
+          id="designation"
+          name="designation"
+          type="text"
+          placeholder="Enter Designation"
+          className="form-control"
+          value={formik.values.designation}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+        />
+        {formik.errors.designation && formik.touched.designation && (
+          <div className="text-danger">{String(formik.errors.designation)}</div>
         )}
       </div>
 
@@ -118,14 +166,12 @@ const EditWhatIsThalassemia: React.FC<EditWhatIsThalassemiaProps> = ({ Id }) => 
         )}
       </div>
 
-
-
       {/* Submit Button */}
-      <Button type="submit" className='mt-4' disabled={isUpdating}>
+      <Button type="submit" className="mt-4" disabled={isUpdating}>
         {isUpdating ? 'Updating...' : 'Update'}
       </Button>
     </form>
   );
 };
 
-export default EditWhatIsThalassemia;
+export default EditFounder;

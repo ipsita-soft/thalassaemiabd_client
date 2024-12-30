@@ -281,6 +281,21 @@ function DashboardLayout() {
                                     </Link>
                                 )}
 
+                                {hasPermissions(['mission-vision-all'], permissions) && (
+                                    <Link
+
+                                        to={`/dashboard/founder/${id}`}
+                                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive(`/dashboard/founder/${id}`)
+                                            ? 'bg-muted text-primary'
+                                            : 'text-muted-foreground hover:text-primary'
+                                            }`}
+                                    >
+                                        <TargetIcon className="h-4 w-4" />
+                                       Founder Details
+                                    </Link>
+                                )}
+
+
 
                                 {hasPermissions(['bts-history-all'], permissions) && (
                                     <Link

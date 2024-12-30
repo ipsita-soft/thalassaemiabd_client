@@ -201,7 +201,8 @@ const Header = () => {
                           <a href="sponsor-child.html">Sponsor a Child</a>
                         </li>
                         <li className="dnt-item">
-                          <a href="general-donate.html">Financial Donation</a>
+                        <Link to="financial-donations">Financial Donation</Link>
+                          
                         </li>
                       </ul>
                     </div>

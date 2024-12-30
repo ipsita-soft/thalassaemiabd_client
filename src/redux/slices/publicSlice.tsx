@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getPublicBlogNews, getPublicSlider, getDoctorSlider, getWishers, getPublicEvent, getSingleEvent, getSingleBlogNews, getGallery, getSetting, getMissionVision, getWhoWeArePage, getBtsHistory, getPublicOurProjects, getSingleProject, getPublicNotices, getPublicTifPages, getPublicYear, getPublicPublication, getSinglePublication, getPublicCountries, getPublicCities, getCommitteeDetail, getStory, getPublicStory } from "../api/publicApi";
+import { getPublicBlogNews, getPublicSlider, getDoctorSlider, getWishers, getlink, getPublicEvent, getSingleEvent, getSingleBlogNews, getGallery, getSetting, getMissionVision, getfounder, getWhoWeArePage, getBtsHistory, getPublicOurProjects, getSingleProject, getPublicNotices, getPublicTifPages, getPublicYear, getPublicPublication, getSinglePublication, getPublicCountries, getPublicCities, getCommitteeDetail, getStory, getPublicStory, getPublicfinancialdonation, getSinglefinancialdonation, getwhatisthalassemia} from "../api/publicApi";
 
 
 
@@ -182,6 +182,17 @@ interface Event {
     sorting_index: number; // Added sorting_index
     status: string;        // Added status
 }
+
+interface FinancialDonation {
+    id: number;
+    image: string;
+    title: string;
+    description: string;
+    sorting_index: number;
+    status: string;
+}
+
+
 interface Notices {
     id: number;
     pdf: string;
@@ -202,6 +213,30 @@ interface MissionVision {
     vision_description: string;
 }
 
+interface AboutThalassaemia {
+    id: number;
+    title: string;
+    description: string;
+    video: string;
+}
+
+interface Founder {
+    id: number;
+    title: string;
+    name: string;
+    image: string;
+    designation: string;
+    description: string;
+}
+
+interface Link {
+    id: number;
+    title: string;
+    image: string;
+    url: string;
+    description: string;
+}
+
 interface BtsHistory {
     id: number;
     mtitle: string;
@@ -216,15 +251,39 @@ interface BtsHistory {
 
 
 interface SingleEventResponse {
-    data: Event; // This is the structure of the response you receive
+    data: Event; 
+}
+
+interface SingleFinancialResponse {
+    data: FinancialDonation; 
 }
 
 interface SingleSettingResponse {
     data: SettingData; // This is the structure of the response you receive
 }
+
 interface SingleMissionVision {
     data: MissionVision; // This is the structure of the response you receive
 }
+
+interface SingleAboutThalassaemia {
+    data: AboutThalassaemia; // This is the structure of the response you receive
+}
+
+
+interface SingleFounder {
+    data: Founder; 
+}
+
+interface SingleLink {
+    data: Link; 
+}
+
+
+
+
+
+
 
 interface SingleBtsHistory {
     data: BtsHistory; // This is the structure of the response you receive
@@ -246,6 +305,10 @@ interface PublicState {
     tifPage: TIFPages | null;
     project: { data: Project[] };
     singleProject: Project | null;
+
+    financialdonations: { data: FinancialDonation[] };
+    singleFinancialdonation: FinancialDonation | null;
+
     committeeDetail:  null;
     whoWeArePage: { data: WhoWeArePage[] }
     blogNews: { data: BlogNews[] };
@@ -262,6 +325,9 @@ interface PublicState {
     singleEvent: Event | null;
     setting: SettingData | null;
     missionVision: MissionVision | null;
+    aboutthalassaemia: AboutThalassaemia | null;
+    founder: Founder | null;
+    link: Link | null;
     btsHistory: BtsHistory | null;
     isLoading: boolean;
     isError: boolean;
@@ -273,8 +339,8 @@ interface DoctorSliders {
     id: number;
     image: string;
     name: string;
-    sorting_index: number; // Added sorting_index
-    status: string;        // Added status
+    sorting_index: number;
+    status: string;
 }
 
 
@@ -310,10 +376,15 @@ const initialState: PublicState = {
     doctorSliders: { data: [] },
     whoWeArePage: { data: [] },
     events: { data: [] },
+    financialdonations: { data: [] },
+    singleFinancialdonation: null,
     notices: { data: [] },
     singleEvent: null,
     setting: null,
     missionVision: null,
+    aboutthalassaemia: null,
+    founder: null,
+    link:null,
     btsHistory: null,
     wishers: { data: [] },
     galleries: { data: [] },
@@ -452,6 +523,8 @@ export const fetchPublicPublication = createAsyncThunk(
         }
     }
 );
+
+
 export const fetchPublicOurProjects = createAsyncThunk(
     'public/fetchPublicOurProjects',
     async (params: object = {}, { rejectWithValue }) => {
@@ -554,6 +627,17 @@ export const fetchPublicEvent = createAsyncThunk(
     }
 );
 
+export const fetchFinancialDonation = createAsyncThunk(
+    'public/fetchFinancialDonation',
+    async (params: object = {}, { rejectWithValue }) => {
+        try {
+            const response = await getPublicfinancialdonation(params);
+            return response.data.data;
+        } catch (error: any) {
+            return rejectWithValue(error.response ? error.response.data : new Error('Error fetching financial donation'));
+        }
+    }
+);
 
 export const fetchPublicYearList = createAsyncThunk(
     'public/fetchPublicYearList',
@@ -600,12 +684,25 @@ export const fetchSingleEvent = createAsyncThunk(
         try {
             const response = await getSingleEvent(id);
             return response.data; // Assuming response contains event data
-            console.log('inner',response.data);
         } catch (error: any) {
             return rejectWithValue(error.response ? error.response.data : new Error('Error fetching single event'));
         }
     }
 );
+
+
+export const fetchSingleFinancialDonation = createAsyncThunk(
+    'public/fetchSingleFinancialDonation',
+    async (id: string | number, { rejectWithValue }) => {
+        try {
+            const response = await getSinglefinancialdonation(id);
+            return response.data; 
+        } catch (error: any) {
+            return rejectWithValue(error.response ? error.response.data : new Error('Error fetching single financial donation'));
+        }
+    }
+);
+
 
 
 
@@ -631,6 +728,46 @@ export const fetchMissionVision = createAsyncThunk(
         }
     }
 );
+
+export const fetchAboutThalassaemia = createAsyncThunk(
+    'public/fetchAboutThalassaemia',
+    async (params: object = {}, { rejectWithValue }) => {
+        try {
+            const response = await getwhatisthalassemia(params);
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(error.response ? error.response.data : new Error('Error fetching data'));
+        }
+    }
+);
+
+export const fetchFounder = createAsyncThunk(
+    'public/fetchFounder',
+    async (params: object = {}, { rejectWithValue }) => {
+        try {
+            const response = await getfounder(params);
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(error.response ? error.response.data : new Error('Error fetching data'));
+        }
+    }
+);
+
+export const fetchLink = createAsyncThunk(
+    'public/fetchLink',
+    async (params: object = {}, { rejectWithValue }) => {
+        try {
+            const response = await getlink(params);
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(error.response ? error.response.data : new Error('Error fetching data'));
+        }
+    }
+);
+
+
+
+
 
 export const fetchBtsHistory = createAsyncThunk(
     'public/fetchBtsHistory',
@@ -799,6 +936,30 @@ const publicSlice = createSlice({
                 state.error = action.payload;
             })
 
+
+
+
+
+
+            .addCase(fetchFinancialDonation.pending, (state) => {
+                state.isLoading = true;
+                state.isError = false;
+                state.error = null;
+            })
+            .addCase(fetchFinancialDonation.fulfilled, (state, action: PayloadAction<FinancialDonation[]>) => {
+                state.isLoading = false;
+                state.financialdonations = { data: action.payload };
+            })
+            .addCase(fetchFinancialDonation.rejected, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.payload;
+            })
+
+
+
+            
+
             //notices call 
             .addCase(fetchPublicNotices.pending, (state) => {
                 state.isLoading = true;
@@ -895,6 +1056,56 @@ const publicSlice = createSlice({
                 state.isError = true;
                 state.error = action.payload;
             })
+
+            .addCase(fetchAboutThalassaemia.pending, (state) => {
+                state.isLoading = true;
+                state.isError = false;
+                state.error = null;
+            })
+            .addCase(fetchAboutThalassaemia.fulfilled, (state, action: PayloadAction<SingleAboutThalassaemia>) => {
+                state.isLoading = false;
+                state.aboutthalassaemia = action.payload.data;
+            })
+            .addCase(fetchAboutThalassaemia.rejected, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.payload;
+            })
+
+
+            .addCase(fetchFounder.pending, (state) => {
+                state.isLoading = true;
+                state.isError = false;
+                state.error = null;
+            })
+            .addCase(fetchFounder.fulfilled, (state, action: PayloadAction<SingleFounder>) => {
+                state.isLoading = false;
+                state.founder = action.payload.data;
+            })
+            .addCase(fetchFounder.rejected, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.payload;
+            })
+
+
+
+
+            .addCase(fetchLink.pending, (state) => {
+                state.isLoading = true;
+                state.isError = false;
+                state.error = null;
+            })
+            .addCase(fetchLink.fulfilled, (state, action: PayloadAction<SingleLink>) => {
+                state.isLoading = false;
+                state.link = action.payload.data;
+            })
+            .addCase(fetchLink.rejected, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.payload;
+            })
+
 
             .addCase(fetchBtsHistory.pending, (state) => {
                 state.isLoading = true;
@@ -1045,6 +1256,10 @@ const publicSlice = createSlice({
             })
             // single  OurProjects
 
+
+
+
+
             .addCase(fetchSingleEvent.pending, (state) => {
                 state.isLoading = true;
                 state.isError = false;
@@ -1060,6 +1275,25 @@ const publicSlice = createSlice({
                 state.error = action.payload;
             })
 
+
+
+            .addCase(fetchSingleFinancialDonation.pending, (state) => {
+                state.isLoading = true;
+                state.isError = false;
+                state.error = null;
+            })
+            .addCase(fetchSingleFinancialDonation.fulfilled, (state, action: PayloadAction<SingleFinancialResponse>) => {
+                state.isLoading = false;
+                state.singleFinancialdonation = action.payload.data;
+            })
+            .addCase(fetchSingleFinancialDonation.rejected, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.payload;
+            })
+
+
+            
 
             //OurProjects
             .addCase(fetchPublicOurProjects.pending, (state) => {

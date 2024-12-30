@@ -28,7 +28,7 @@ import EditSetting from './pages/sidebar/webSetting/setting/EditSetting.tsx';
 
 import VisionMission from './client/page/VisionMission.tsx';
 import EditWhatIsThalassemia from './pages/sidebar/webSetting/whatIsThalassemia/EditWhatIsThalassemia.tsx';
-
+import EditFounder from './pages/sidebar/webSetting/whatIsThalassemia/EditFounder.tsx';
 import EditMissionVision from './pages/sidebar/webSetting/missionVision/EditMissionVision.tsx';
 import AdvisorsCommittee from './client/page/AdvisorsCommittee.tsx';
 import { WhoWeArePage } from './pages/sidebar/webSetting/whoWeAre/WhoWeArePage.tsx';
@@ -58,6 +58,8 @@ import { YearsPage } from './pages/sidebar/webSetting/years/YearsPage.tsx';
 import Committee from './client/page/Committee.tsx';
 import Founder from './client/page/Founder.tsx';
 import Thalassemia from './client/page/Thalassaemia.tsx';
+import SingleDonation from './client/page/FinancialDonationDetails.tsx';
+import FinancialDonation from './client/page/FinancialDonation.tsx';
 import PublicationSection from './client/page/PublicationSection.tsx';
 import { PublicationPage } from './pages/sidebar/webSetting/publications/PublicationPage.tsx';
 import PublicationDetail from './client/page/publication-detail.tsx';
@@ -114,6 +116,18 @@ const router = createBrowserRouter([
         path: 'our-projects',
         element: <OurProjects />
       },
+
+      {
+        path: 'financial-donations',
+        element: <FinancialDonation />
+      },
+
+      {
+        path: 'financial-donation-details/:id',
+        element: <SingleDonation />
+      },
+      
+
       {
         path: 'page/:TifType',
         element: <TifMembership />
@@ -561,6 +575,20 @@ const router = createBrowserRouter([
           <ProtectedRoute
             element={
               <EditWhatIsThalassemia
+                Id={'1'}
+              />
+            }
+            requiredPermissions={['settings-all']}
+          />
+        ),
+      },
+
+      {
+        path: 'founder/:id',
+        element: (
+          <ProtectedRoute
+            element={
+              <EditFounder
                 Id={'1'}
               />
             }
