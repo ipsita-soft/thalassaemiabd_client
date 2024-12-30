@@ -6,67 +6,39 @@ import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import Navbar from './Navbar';
 import { useParams } from 'react-router-dom';
-import { useCreatePatientMedicalHistoryMutation, useFetchPatientMedicalHistoryQuery, useUpdatePatientMedicalHistoryMutation } from '@/api/patientMedicalHistoryApi';
+import { useCreatePatientMedicalHistoryMutation } from '@/api/patientMedicalHistoryApi';
 import Swal from 'sweetalert2';
 import { useSelector } from 'react-redux';
-import { useAppointmentsItemQuery } from '@/api/appointmentsApi';
+import { useFetchPatientQuery } from '@/api/patientApi';
 
-export function PatientMedicalHistory() {
-    const { apId, mhId, apDate } = useParams();
+export function CratePatientMedicalHistory() {
+    const { patient_id, mhId } = useParams();
     const perPage = 250;
     const search = '';
     const currentPage = 1;
-
-    // Fetch medical history items
     const { data, isLoading, error } = useFetchMedicalHistoriesQuery({ perPage, search, page: currentPage, mhid: mhId });
 
-
-    const { data: patientHistory, isLoading: loadingPatientHistory } = useFetchPatientMedicalHistoryQuery(mhId || '', {
-        skip: !mhId,
-    });
-
-    // console.log(patientHistory);
+    const currentDate = new Date();
+    const localeDate = currentDate.toLocaleDateString('en-US');
+    const [month, day, year] = localeDate.split('/');
+    const formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 
     const { user } = useSelector((state: any) => state.auth);
     const patientRegistrationData = data?.data || [];
     const [createPatient] = useCreatePatientMedicalHistoryMutation();
-    const [updatePatient] = useUpdatePatientMedicalHistoryMutation();
-
-    const { data: appointments } = useAppointmentsItemQuery(apId || '');
-
-    useEffect(() => {
-        if (mhId && patientHistory && !loadingPatientHistory) {
-            formik.setValues({
-                ...formik.values,
-                date: apDate || '',
-                created_by: user?.id || '',
-                medical_historie_id: mhId || '',
-                appointment_id: apId || '',
-                data: patientHistory.data.map((item: any) => ({
-                    id: item?.id,
-                    name: item?.name,
-                    value: item?.value,
-                })),
-            });
-
-            console.log(patientHistory.data);
-
-
-        }
-    }, [mhId, patientHistory, apDate, apId, user]);
+    const { data: appointments } = useFetchPatientQuery(patient_id || '');
 
     const formik = useFormik({
         initialValues: {
-            date: apDate || '',
+            date: formattedDate || '',
+            patient_id: patient_id || '',
             created_by: user?.id || '',
             medical_historie_id: mhId || '',
-            appointment_id: apId || '',
             data: [],
         },
         validationSchema: Yup.object().shape({
             date: Yup.string().required('Date is required'),
-            created_by: Yup.string().required('Created By is required'),
-            appointment_id: Yup.string().required('Appointment ID is required'),
+            created_by: Yup.string().required('Created By is required')
         }),
         onSubmit: async (values: any, { setErrors, resetForm }) => {
             try {
@@ -80,13 +52,7 @@ export function PatientMedicalHistory() {
                 });
 
                 if (result.isConfirmed) {
-                    // If updating an existing history, update it
-                    if (mhId) {
-                        await updatePatient({ id: mhId, historyData: values }).unwrap();
-                    } else {
-                        // If creating a new history, create it
-                        await createPatient(values).unwrap();
-                    }
+                    await createPatient(values).unwrap();
 
                     Swal.fire({
                         title: 'Success!',
@@ -96,12 +62,26 @@ export function PatientMedicalHistory() {
                     });
 
                     resetForm();
+                    window.location.reload();
                 }
             } catch (error: any) {
+                // console.log(error);
+                Swal.fire({
+                    title: 'error!',
+                    text: error?.data?.data?.patientData,
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                });
                 setErrors(error?.data?.data || {});
             }
         },
     });
+
+    useEffect(() => {
+        if (mhId) {
+            formik.setFieldValue('medical_historie_id', mhId);
+        }
+    }, [mhId]);
 
     useEffect(() => {
         if (patientRegistrationData.length > 0) {
@@ -116,13 +96,14 @@ export function PatientMedicalHistory() {
         }
     }, [patientRegistrationData]);
 
-    return isLoading || loadingPatientHistory ? (
+    return isLoading ? (
         <div className="flex justify-center items-center h-screen bg-gray-50">
             <Spinner className="text-blue-500 w-10 h-10 animate-spin" />
         </div>
     ) : (
         <div className="p-6 bg-gray-50 min-h-screen">
-            <Navbar />
+            <Navbar patient_id={patient_id?.toString() || ''} />
+            
             {error ? (
                 <div className="text-red-500 text-center font-semibold text-base mt-8">
                     Unable to load data. Please try again later.
@@ -139,7 +120,7 @@ export function PatientMedicalHistory() {
                             </label>
                             <input
                                 type="text"
-                                value={appointments?.data?.patient?.name + ' >>' + appointments?.data?.patient?.bts_id}
+                                value={appointments?.data?.name + ' >>' + appointments?.data?.bts_id}
                                 onChange={formik.handleChange}
                                 className="text-capitalize w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 focus:outline-none transition"
                                 disabled
@@ -154,11 +135,12 @@ export function PatientMedicalHistory() {
                                 type="date"
                                 id="date"
                                 name="date"
-                                value={formik.values.date}
+                                value={formik.values.date || formattedDate}
                                 onChange={formik.handleChange}
                                 className="w-full border border-gray-300 rounded-md p-2 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 focus:outline-none transition"
                             />
                         </div>
+
 
                         <input
                             type="hidden"
@@ -169,8 +151,8 @@ export function PatientMedicalHistory() {
 
                         <input
                             type="hidden"
-                            name="appointment_id"
-                            value={apId}
+                            name="patient_id"
+                            value={patient_id}
                             readOnly
                         />
                     </div>

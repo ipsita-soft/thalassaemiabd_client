@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useFetchPatientsQuery } from "@/api/patientApi";
+import { useFetchPatientMedicalHistoriesQuery } from "@/api/patientMedicalHistoryApi";
 import {
     SortingState,
     ColumnFiltersState,
@@ -10,7 +10,8 @@ import {
     useReactTable,
     flexRender,
 } from "@tanstack/react-table";
-import { HistoryIcon, PlusCircle } from "lucide-react";
+import { Edit } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 
@@ -23,140 +24,153 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import Show from "./Show";
-import { useNavigate } from "react-router-dom";
-import { useFetchMedicalHistoriesQuery } from "@/api/medicalHistoryApi";
-import Add from "./Add";
 
+// import Delete from "@/pages/sidebar/webSetting/PatientMedicalHistory/Delete";
 
-export function PatientPage() {
+import ShowPmhDetails from "./ShowPmhDetails";
+
+export function PatientMedicalHistoryPage() {
     const [perPage, setPerPage] = useState(10);
     const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
 
-    const { data, isLoading, error } = useFetchPatientsQuery({
+    const { data, isLoading, error } = useFetchPatientMedicalHistoriesQuery({
         perPage,
         search,
         page: currentPage,
     });
 
-
-
-    const { data: hItem, isLoading: itemLoading } = useFetchMedicalHistoriesQuery({
-        perPage,
-        search,
-        page: currentPage,
-        status: '1',
-    });
-
-    const firstItem = hItem?.data?.[0]?.id;
-
-    console.log(firstItem);
-
+    const [isEditModalOpen, setEditModalOpen] = useState(false);
 
     const meta = data?.meta;
     const patientRegistrationData = data?.data;
-
-
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [filterValue, setFilterValue] = useState("");
-
-    const navigate = useNavigate();
-
-
     const columns = [
         {
             id: "serial",
             header: "SL No",
             cell: ({ row }: { row: { index: number } }) => (
-                <div className="text-right">{row.index + 1}</div>
+                <div className="">{row.index + 1}</div>
             ),
         },
+
+
         {
-            id: "name",
-            header: "Name",
+            id: "Patient_name",
+            header: "Patient Name",
             cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.name}</div>
+                <div className="text-left">{row.original.patient.name}</div>
             ),
         },
+
+
         {
-            id: "bts-id",
+            id: "bts_id",
             header: "BTS ID",
             cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.bts_id}</div>
+                <div className="text-left">{row.original.patient.bts_id}</div>
+            ),
+        },
+
+
+
+        {
+            id: "medical-history",
+            header: "Medical History",
+            cell: ({ row }: { row: { original: any } }) => (
+                <div className="text-left">{row.original.medicalHistory.title}</div>
+            ),
+        },
+
+
+
+
+        {
+            id: "date",
+            header: "Date",
+            cell: ({ row }: { row: { original: any } }) => (
+                <div className="text-left">{row.original.date}</div>
+            ),
+        },
+
+
+
+        {
+            accessorKey: "created_by_user",
+            header: "Created By",
+            cell: ({ row }: { row: { original: any } }) => (
+                <div className="text-center">{row.original.created_by_user.name}</div>
             ),
         },
 
         {
-            id: "old-bts-id",
-            header: "OLD BTS ID",
+            accessorKey: "data",
+            header: "Data",
             cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.patientInfo?.old_bts_id}</div>
+                <div className="text-center">
+
+
+                    <ShowPmhDetails
+                        Id={row.original.id.toString()}
+                        open={isEditModalOpen}
+                        onClose={() => setEditModalOpen(false)}
+                    />
+
+                </div>
             ),
         },
 
-        {
-            id: "phone",
-            header: "Phone",
-            cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.phone}</div>
-            ),
-        },
-        {
-            id: "email",
-            header: "Email",
-            cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.email}</div>
-            ),
-        },
-        {
-            accessorKey: "status",
-            header: "Status",
-            cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-center">{row.original.status}</div>
-            ),
-        },
+
         {
             id: "actions",
             header: "Action",
             enableHiding: false,
             cell: ({ row }: { row: { original: any } }) => {
                 const data = row.original;
+
+                // const handleDeleteSuccess = () => {
+
+                //     Swal.fire({
+                //         title: 'success!',
+                //         text: 'Data deleted successfully!',
+                //         icon: 'success',
+                //         timer: 3000,
+                //         timerProgressBar: true,
+                //     });
+
+                // };
+
                 return (
 
                     <div className="flex items-center gap-2">
 
-                        {!itemLoading && (
-                            <button
-                                title="Add History"
-                                className={`flex items-center justify-center rounded-full 
-        p-0 w-8 h-8 bg-transparent border border-gray-300 
-        hover:bg-gray-100 hover:border-gray-400 transition-all 
-        focus:ring-2 focus:ring-gray-300 disabled:opacity-50`}
-                                onClick={() => navigate(`/dashboard/patient-medical-history/${data?.id.toString()}/${firstItem}`)}
-                            >
-                                <PlusCircle className="text-gray-600 w-5 h-5" />
-                            </button>
-                        )}
                         <button
-                            title="Show Patient Medical History"
+                            title="Edit"
                             className={`flex items-center justify-center rounded-full 
-        p-0 w-8 h-8 bg-transparent border border-indigo-300 
-        hover:bg-indigo-100 hover:border-indigo-400 transition-all 
-        focus:ring-2 focus:ring-indigo-300 disabled:opacity-50`}
-
-                            onClick={() => navigate(`/dashboard/show-patient-medical-history/${data?.id.toString()}/${firstItem}`)}
+    p-0 w-8 h-8 bg-transparent border border-gray-300 
+    hover:bg-gray-100 hover:border-gray-400 transition-all 
+    focus:ring-2 focus:ring-gray-300 disabled:opacity-50`}
+                            onClick={() =>
+                                navigate(`/dashboard/patient-medical-history-update/${data?.id}`, {
+                                    state: { from: location.pathname }, // Pass the current route dynamically
+                                })
+                            }
                         >
-                            <HistoryIcon className="text-indigo-600 w-5 h-5" />
+                            <Edit className="text-blue-600 w-5 h-5" />
                         </button>
 
-                        <Show Id={data.id.toString()} open={false} onClose={() => { }} />
+
+
+                        {/* <Delete
+                            Id={data.id.toString()}
+                            onSuccess={handleDeleteSuccess}
+                        /> */}
 
 
                     </div>
-
                 );
             },
         },
@@ -199,6 +213,10 @@ export function PatientPage() {
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
+    const navigate = useNavigate();
+    const handleNavigate = () => {
+        navigate('/dashboard/admin-patient'); // Replace with your desired route
+    };
 
     return isLoading ? (
         <div className="flex justify-center items-center h-screen">
@@ -229,7 +247,11 @@ export function PatientPage() {
                         <option value={100}>100</option>
                     </select>
                 </div>
-                <Add />
+
+                <Button variant="outline" onClick={handleNavigate}>Add New</Button>
+
+
+
             </div>
             {error ? (
                 <>Error</>
@@ -304,9 +326,6 @@ export function PatientPage() {
                     ))}
                 </div>
             </div>
-
-
-
 
 
 

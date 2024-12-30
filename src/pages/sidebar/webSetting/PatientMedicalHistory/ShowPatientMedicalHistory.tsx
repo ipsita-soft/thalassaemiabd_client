@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { useAppointmentsItemQuery } from '@/api/appointmentsApi';
+import { useFetchPatientMedicalHistoryQuery } from '@/api/patientMedicalHistoryApi';
 
 import {
   SortingState,
@@ -35,15 +35,14 @@ import Delete from "@/pages/sidebar/webSetting/medicalHistory/Delete";
 import Swal from "sweetalert2";
 import { Link, useParams } from "react-router-dom";
 
-export default function ShowAppointment() {
-  const { appointment_id } = useParams();
-  console.log(appointment_id);
-  const { data, isLoading, isError: error, refetch } = useAppointmentsItemQuery(appointment_id || '');
+export default function ShowPatientMedicalHistory() {
+  const { mhid } = useParams();
+  console.log(mhid);
+  const { data, isLoading, isError: error, refetch } = useFetchPatientMedicalHistoryQuery(mhid || '');
   useEffect(() => {
     refetch();
   }, []);
   const patientRegistrationData = data?.data?.patient_medical_history;
-  console.log(data?.data);
 
 
   const [sorting, setSorting] = useState<SortingState>([]);

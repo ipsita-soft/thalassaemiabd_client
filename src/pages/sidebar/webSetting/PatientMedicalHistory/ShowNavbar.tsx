@@ -1,14 +1,14 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useFetchMedicalHistoriesQuery } from "@/api/medicalHistoryApi";
 import { useState } from "react";
 
-interface ShowNavbarProps {
+interface NavbarProps {
     patient_id: string;
 }
 
 
 
-const ShowNavbar: React.FC<ShowNavbarProps> = ({ patient_id }) => {
+const Navbar: React.FC<NavbarProps> = ({ patient_id }) => {
 
     const perPage = 4; // Number of items per page
     const search = "";
@@ -21,15 +21,10 @@ const ShowNavbar: React.FC<ShowNavbarProps> = ({ patient_id }) => {
         status: "1",
     });
 
+
+
+    const { apId } = useParams();
     const location = useLocation();
-    const navigate = useNavigate();
-
-    const handleBackNavigate = () => {
-        const previousRoute = location.state?.from || '/dashboard/admin-patient';
-        navigate(previousRoute);
-    };
-
-
     const isActive = (path: string) =>
         location.pathname === path ? "text-primary" : "";
 
@@ -54,9 +49,9 @@ const ShowNavbar: React.FC<ShowNavbarProps> = ({ patient_id }) => {
                         className="mt-2 flex-shrink-0 transition-transform duration-200 ease-in-out transform hover:scale-105"
                     >
                         <Link
-                            to={`/dashboard/patient-medical-history/${patient_id || ""}/${menu.id || ""}`}
+                            to={`/dashboard/show-patient-medical-history/${patient_id || ""}/${menu.id || ""}`}
                             className={`px-3 py-2 rounded-md transition-colors font-bold duration-300 ${isActive(
-                                `/dashboard/patient-medical-history/${patient_id}/${menu.id}`
+                                `/dashboard/show-patient-medical-history/${patient_id}/${menu.id}`
                             )
                                 ? "bg-blue-300 text-white"
                                 : "bg-gray-200 text-gray-700 hover:bg-blue-100"
@@ -94,19 +89,19 @@ const ShowNavbar: React.FC<ShowNavbarProps> = ({ patient_id }) => {
                         </button>
                     ))}
 
-                    <button
-                        //  to={'/dashboard/admin-patient'}
-                        onClick={() => { handleBackNavigate() }}
+                    <Link to={'/dashboard/admin-patient'}
                         className={`px-2 py-1 text-sm rounded-lg transition-all duration-200 bg-gray-300 text-gray-600 hover:bg-gray-400 hover:text-gray-300`}
                     >
 
-                        {'<<-'} Back Previous Page
-                    </button>
+                        {'<<-'} Back To Patient
+                    </Link>
 
 
-
-
-
+                    <Link to={`/dashboard/show-appointment/${apId}`}
+                        className={`px-2 py-1 text-sm rounded-lg transition-all duration-200 bg-gray-300 text-gray-600 hover:bg-gray-400 hover:text-gray-300`}
+                    >
+                        Show
+                    </Link>
                 </div>
 
 
@@ -134,4 +129,4 @@ const ShowNavbar: React.FC<ShowNavbarProps> = ({ patient_id }) => {
     );
 };
 
-export default ShowNavbar;
+export default Navbar;

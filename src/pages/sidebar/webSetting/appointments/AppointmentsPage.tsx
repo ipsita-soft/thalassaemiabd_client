@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useFetchAppointmentsQuery } from "@/api/appointmentsApi";
 import {
     SortingState,
@@ -30,8 +30,7 @@ import {
 } from "@/components/ui/table";
 import Add from "@/pages/sidebar/webSetting/appointments/Add";
 import Edit from "@/pages/sidebar/webSetting/appointments/Edit";
-import Show from "@/pages/sidebar/webSetting/patient/Show";
-import ShowAppointment from "@/pages/sidebar/webSetting/appointments/ShowAppointment";
+// import Show from "@/pages/sidebar/webSetting/patient/Show";
 import { useFetchMedicalHistoriesQuery } from "@/api/medicalHistoryApi";
 import { Link } from "react-router-dom";
 
@@ -55,8 +54,9 @@ export function AppointmentsPage() {
     });
 
 
-  
+
     const firstItem = hItem?.data?.[0]?.id ?? undefined;
+
 
     const meta = data?.meta;
     const patientRegistrationData = data?.data;
@@ -91,6 +91,19 @@ export function AppointmentsPage() {
 
             ),
         },
+
+
+        {
+            id: "bts_id",
+            header: "Id",
+            cell: ({ row }: { row: { original: any } }) => (
+                <div className="text-left">{row.original.patient?.bts_id}
+                </div>
+
+
+            ),
+        },
+
 
 
         {
@@ -136,17 +149,23 @@ export function AppointmentsPage() {
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
 
+                            <Link className="mr-2 mt-1 w-40  bg-blue-300 text-white hover:bg-blue-400 transition p-2 text-center rounded font-medium" to={`/dashboard/patient-medical-history/${data?.patient?.id?.toString()}/${firstItem}`}>Add History</Link>
 
-                            <Link className="mr-2 mt-1 w-40  bg-blue-300 text-white hover:bg-blue-400 transition p-2 text-center rounded font-medium" to={`/dashboard/show-appointment/${data?.id.toString()}`}>Show Appointment History </Link>
+                            {/* <br />
+                            <Link className="mr-2 mt-1 w-40  bg-blue-300 text-white hover:bg-blue-400 transition p-2 text-center rounded font-medium" to={`/dashboard/show-appointment/${data?.id.toString()}`}>Show Appointment History </Link> */}
+                            <br />
+
+
+
+
+
 
 
                             {/* <ShowAppointment Id={data?.id.toString()} open={false} onClose={() => { }} /> */}
-                            <br />
-                            <Link className="mr-2 mt-1 w-40  bg-blue-300 text-white hover:bg-blue-400 transition p-2 text-center rounded font-medium" to={`/dashboard/patient-medical-history/${data?.id.toString()}/${firstItem}/${data?.date}`}>Add History</Link>
-                            <br />
 
 
-                            <Show Id={data?.patient?.id.toString()} open={false} onClose={() => { }} />
+
+                            {/* <Show Id={data?.patient?.id.toString()} open={false} onClose={() => { }} /> */}
                             <br />
                             <Edit Id={data.id.toString()} />
                         </DropdownMenuContent>

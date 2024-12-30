@@ -76,6 +76,15 @@ export const getRoles = async (params = {}) => {
     }
 };
 
+export const getRoleWithUser = async (params = {}) => {
+    try {
+        const response = await api.get('public/user-with-role', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching Data');
+    }
+};
+
 
 export const getDepartments = async (params = {}) => {
     try {

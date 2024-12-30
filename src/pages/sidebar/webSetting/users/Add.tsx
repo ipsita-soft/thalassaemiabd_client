@@ -35,8 +35,6 @@ const Add: React.FC = () => {
   }));
 
 
-  console.log(departmentsOptions);
-
 
   useEffect(() => {
     dispatch(fetchDepartments({}));
@@ -70,7 +68,6 @@ const Add: React.FC = () => {
       dispatch(get({}));
 
     } catch (error: any) {
-      console.log('sadifasndfasf inn', error);
       const formikErrors = Object.entries(error).reduce((acc: any, [key, value]) => {
         const keys = key.split('.');
         const lastKey = keys.pop();
@@ -165,7 +162,7 @@ const Add: React.FC = () => {
                         name="department_id"
                         component={SelectField}
                         options={departmentsOptions}
-                        placeholder="Select City"
+                        placeholder="Select Department"
                       />
                       <ErrorMessage name="department_id" component="div" className="text-danger" />
                     </div>
@@ -192,7 +189,7 @@ const Add: React.FC = () => {
                         name="role_id"
                         component={SelectField}
                         options={roleOption}
-                        placeholder="Select City"
+                        placeholder="Select Role"
                       />
 
                       <ErrorMessage name="role_id" component="div" className="text-danger" />
