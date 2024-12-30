@@ -3,7 +3,6 @@ import { API_BASE_URL } from '@/config/apiConfig';
 
 export interface PatientMedicalHistory {
     date: string | number | readonly string[] | undefined;
-    date: ReactNode;
     created_by_user: any;
     medicalHistory: any;
     patient: any;

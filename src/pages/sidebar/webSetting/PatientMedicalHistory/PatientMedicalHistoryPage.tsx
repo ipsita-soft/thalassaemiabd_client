@@ -27,7 +27,6 @@ import {
 
 // import Delete from "@/pages/sidebar/webSetting/PatientMedicalHistory/Delete";
 
-import Swal from "sweetalert2";
 import ShowPmhDetails from "./ShowPmhDetails";
 
 export function PatientMedicalHistoryPage() {
@@ -132,17 +131,17 @@ export function PatientMedicalHistoryPage() {
             cell: ({ row }: { row: { original: any } }) => {
                 const data = row.original;
 
-                const handleDeleteSuccess = () => {
+                // const handleDeleteSuccess = () => {
 
-                    Swal.fire({
-                        title: 'success!',
-                        text: 'Data deleted successfully!',
-                        icon: 'success',
-                        timer: 3000,
-                        timerProgressBar: true,
-                    });
+                //     Swal.fire({
+                //         title: 'success!',
+                //         text: 'Data deleted successfully!',
+                //         icon: 'success',
+                //         timer: 3000,
+                //         timerProgressBar: true,
+                //     });
 
-                };
+                // };
 
                 return (
 

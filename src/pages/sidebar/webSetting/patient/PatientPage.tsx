@@ -10,15 +10,10 @@ import {
     useReactTable,
     flexRender,
 } from "@tanstack/react-table";
-import { HistoryIcon, MoreHorizontal, PlusCircle } from "lucide-react";
+import { HistoryIcon, PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuLabel,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import { Input } from "@/components/ui/input";
 import {
     Table,
@@ -28,10 +23,10 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import Edit from "./Edit";
 import Show from "./Show";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useFetchMedicalHistoriesQuery } from "@/api/medicalHistoryApi";
+import Add from "./Add";
 
 
 export function PatientPage() {
@@ -234,7 +229,7 @@ export function PatientPage() {
                         <option value={100}>100</option>
                     </select>
                 </div>
-                {/* <Add /> */}
+                <Add />
             </div>
             {error ? (
                 <>Error</>

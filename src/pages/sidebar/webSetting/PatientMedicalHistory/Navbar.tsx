@@ -1,4 +1,4 @@
-import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useFetchMedicalHistoriesQuery } from "@/api/medicalHistoryApi";
 import { useState } from "react";
 
