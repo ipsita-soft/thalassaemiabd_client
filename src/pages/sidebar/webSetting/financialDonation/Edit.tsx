@@ -40,7 +40,7 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
 
   useEffect(() => {
     if (data?.data) {
-      const { title, image, description, status, sorting_index } = data.data;
+      const { title, description, status, sorting_index } = data.data;
       setFormData({
         title: title || '',
         image:  null,

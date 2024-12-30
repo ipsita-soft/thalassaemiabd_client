@@ -28,7 +28,6 @@ interface Project {
 }
 
 
-// Interface for TIF Slider items
 interface TIFSlider {
     id: number;
     image: string;
@@ -40,7 +39,6 @@ interface TIFSlider {
     updated_at: string;
 }
 
-// Interface for TIF Attachment items
 interface TIFAttachment {
     id: number;
     title: string;
@@ -231,9 +229,9 @@ interface Founder {
 
 interface Link {
     id: number;
-    title: string;
-    image: string;
     url: string;
+    image: string;
+    title: string;
     description: string;
 }
 
@@ -327,7 +325,7 @@ interface PublicState {
     missionVision: MissionVision | null;
     aboutthalassaemia: AboutThalassaemia | null;
     founder: Founder | null;
-    link: Link | null;
+    link: Link[];
     btsHistory: BtsHistory | null;
     isLoading: boolean;
     isError: boolean;
@@ -384,7 +382,7 @@ const initialState: PublicState = {
     missionVision: null,
     aboutthalassaemia: null,
     founder: null,
-    link:null,
+    link:[],
     btsHistory: null,
     wishers: { data: [] },
     galleries: { data: [] },
@@ -1096,10 +1094,12 @@ const publicSlice = createSlice({
                 state.isError = false;
                 state.error = null;
             })
+            
             .addCase(fetchLink.fulfilled, (state, action: PayloadAction<SingleLink>) => {
                 state.isLoading = false;
-                state.link = action.payload.data;
+                state.link = Array.isArray(action.payload.data) ? action.payload.data : [action.payload.data];
             })
+              
             .addCase(fetchLink.rejected, (state, action: PayloadAction<any>) => {
                 state.isLoading = false;
                 state.isError = true;

@@ -23,7 +23,7 @@ const EditFounder: React.FC<EditFounderProps> = ({ Id }) => {
     initialValues: {
       title: data?.title || '',
       name: data?.name || '',
-      image: null,
+      image: undefined,
       designation: data?.designation || '',
       description: data?.description || '',
     },

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { useFetchAppointmentsQuery } from "@/api/appointmentsApi";
 import {
     SortingState,
@@ -31,7 +31,6 @@ import {
 import Add from "@/pages/sidebar/webSetting/appointments/Add";
 import Edit from "@/pages/sidebar/webSetting/appointments/Edit";
 import Show from "@/pages/sidebar/webSetting/patient/Show";
-import ShowAppointment from "@/pages/sidebar/webSetting/appointments/ShowAppointment";
 import { useFetchMedicalHistoriesQuery } from "@/api/medicalHistoryApi";
 import { Link } from "react-router-dom";
 

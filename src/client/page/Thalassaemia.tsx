@@ -9,20 +9,23 @@ const Thalassemia = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { aboutthalassaemia } = useSelector((state: RootState) => state.public);
 
+  // Fetch the about Thalassemia data when the component mounts
   useEffect(() => {
     dispatch(fetchAboutThalassaemia({}));
   }, [dispatch]);
 
+  // Initialize GLightbox when component is mounted
   useEffect(() => {
     const lightbox = GLightbox({
-      selector: ".glightbox",
-      autoplayVideos: true,
-      width: "900px",
+      selector: ".glightbox", // Target the glightbox class
+      autoplayVideos: true, // Autoplay video when the modal opens
+      width: "900px", // Set modal width
     });
 
-    return () => lightbox.destroy();
+    return () => lightbox.destroy(); // Cleanup GLightbox when component unmounts
   }, []);
 
+  // Split description content for structured rendering
   const descriptionParts = aboutthalassaemia?.description?.split("</p>") || [];
 
   return (
@@ -34,10 +37,7 @@ const Thalassemia = () => {
               <div className="row g-0">
                 {/* Image Section */}
                 <div className="col-md-6 col-12">
-                  <div
-                    className="content-left wow fadeInLeft"
-                    data-wow-delay=".3s"
-                  >
+                  <div className="content-left wow fadeInLeft" data-wow-delay=".3s">
                     <img
                       src="client/assets/images/financial/blood2.jpg"
                       alt="Thalassemia Overview"
@@ -59,7 +59,7 @@ const Thalassemia = () => {
                     <h1 className="fw-bold text-success mb-2">
                       {aboutthalassaemia?.title}{" "}
                     </h1>
-                    {descriptionParts.slice(0,7).map((part, index) => (
+                    {descriptionParts.slice(0, 7).map((part, index) => (
                       <div
                         key={index}
                         className="text-secondary"

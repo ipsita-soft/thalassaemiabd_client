@@ -44,7 +44,7 @@ const RelatedLinks = () => {
                     </thead>
                     <tbody>
                       {link?.length > 0 ? (
-                        link.map((item, index) => (
+                        link.map((item:any, index:any) => (
                           <tr key={item.id}>
                             <th scope="row">{index + 1}</th>
                             <td>
@@ -59,14 +59,15 @@ const RelatedLinks = () => {
                                   className="img-fluid"
                                   style={{
                                     width: "80px",
-                                    height: "40px",
+                                    height: "50px",
                                    
                                   }}
                                 />
                               </a>
                             </td>
                             <td>{item.title || "N/A"}</td>
-                            <td>{item.description || "No description available."}</td>
+                            <td>{item.description ? item.description.replace(/<[^>]+>/g, '') : "No description available."}</td>
+
                           </tr>
                         ))
                       ) : (

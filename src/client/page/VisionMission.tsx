@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import  { useEffect } from 'react';
 import 'glightbox/dist/css/glightbox.css';
 import GLightbox from 'glightbox';
 import { useDispatch, useSelector } from 'react-redux';
