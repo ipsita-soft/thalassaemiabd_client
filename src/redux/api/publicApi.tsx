@@ -213,6 +213,27 @@ export const getPublicOurProjects = async (params = {}) => {
     }
 };
 
+export const getPublicfinancialdonation = async (params = {}) => {
+    try {
+        const response = await api.get('public/financial-donation', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching data');
+    }
+};
+
+export const getSinglefinancialdonation = async (id: string | number) => {
+    try {
+        const response = await api.get(`public/financial-donation-details/${id}`);
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching financial donation');
+    }
+};
+
+
+
+
 
 export const getPublicNotices = async (params = {}) => {
     try {
@@ -342,6 +363,35 @@ export const getMissionVision = async (params = {}) => {
         return response;
     } catch (error: any) {
         throw error.response ? error.response.data : new Error('Error fetching mission-vision');
+    }
+};
+
+
+
+export const getwhatisthalassemia = async (params = {}) => {
+    try {
+        const response = await api.get('public/what-is-thalassemia', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching what-is-thalassemia data');
+    }
+};
+
+export const getfounder = async (params = {}) => {
+    try {
+        const response = await api.get('public/founder', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching founder data');
+    }
+};
+
+export const getlink = async (params = {}) => {
+    try {
+        const response = await api.get('public/important-link', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching mportant link');
     }
 };
 

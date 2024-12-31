@@ -1,5 +1,6 @@
-import React, {  useState } from "react";
-import { useFetchAppointmentsQuery } from "@/api/appointmentsApi";
+import React, { useState } from "react";
+import { useFetchImportantLinksQuery } from "@/api/ImportantLinkApi";
+
 import {
     SortingState,
     ColumnFiltersState,
@@ -28,36 +29,21 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import Add from "@/pages/sidebar/webSetting/appointments/Add";
-import Edit from "@/pages/sidebar/webSetting/appointments/Edit";
-// import Show from "@/pages/sidebar/webSetting/patient/Show";
-import { useFetchMedicalHistoriesQuery } from "@/api/medicalHistoryApi";
-import { Link } from "react-router-dom";
+import Add from "@/pages/sidebar/webSetting/importantLink/Add";
+import Edit from "@/pages/sidebar/webSetting/importantLink/Edit";
+import Delete from "@/pages/sidebar/webSetting/importantLink/Delete";
 
+import Swal from "sweetalert2";
 
-
-export function AppointmentsPage() {
+export function ImportantLinkPage() {
     const [perPage, setPerPage] = useState(10);
     const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const { data, isLoading, error } = useFetchAppointmentsQuery({
+    const { data, isLoading, error } = useFetchImportantLinksQuery({
         perPage,
         search,
         page: currentPage,
     });
-
-    const { data: hItem } = useFetchMedicalHistoriesQuery({
-        perPage,
-        search,
-        page: currentPage,
-        status: '1',
-    });
-
-
-
-    const firstItem = hItem?.data?.[0]?.id ?? undefined;
-
-
     const meta = data?.meta;
     const patientRegistrationData = data?.data;
     const [sorting, setSorting] = useState<SortingState>([]);
@@ -69,74 +55,61 @@ export function AppointmentsPage() {
             id: "serial",
             header: "SL No",
             cell: ({ row }: { row: { index: number } }) => (
-                <div className="text-right">{row.index + 1}</div>
+                <div className="text-left">{row.index + 1}</div>
             ),
         },
-
-
         {
-            id: "doctor",
-            header: "Doctor",
+            id: "title",
+            header: "Title",
             cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.doctor?.name}</div>
+                <div className="text-left">{row.original.title}</div>
             ),
         },
+
         {
-            id: "patient",
-            header: "Patient",
+            id: "image",
+            header: "Image",
             cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.patient?.name}
-                </div>
-
-
+                <img
+                    src={row.original.image}
+                    alt="image"
+                    className="w-16 h-16 object-cover"
+                />
             ),
         },
 
-
         {
-            id: "bts_id",
-            header: "Id",
+            id: "sorting_index",
+            header: "Sorting Index",
             cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.patient?.bts_id}
-                </div>
-
-
+                <div className="text-left">{row.original.sorting_index}</div>
             ),
         },
-
-
-
+        
         {
-            id: "date",
-            header: "Date",
-            cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.date}</div>
-            ),
-        },
-
-        {
-            id: "status",
+            accessorKey: "status",
             header: "Status",
             cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.status}</div>
+                <div className="text-center">{row.original.status}</div>
             ),
         },
-
-
-        {
-            id: "appointment_type",
-            header: "Appointment Type",
-            cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.appointment_type}</div>
-            ),
-        },
-
-
         {
             id: "actions",
             enableHiding: false,
             cell: ({ row }: { row: { original: any } }) => {
                 const data = row.original;
+
+                const handleDeleteSuccess = () => {
+
+                    Swal.fire({
+                        title: 'success!',
+                        text: 'Data deleted successfully!',
+                        icon: 'success',
+                        timer: 3000,
+                        timerProgressBar: true,
+                    });
+
+                };
 
                 return (
                     <DropdownMenu>
@@ -148,26 +121,16 @@ export function AppointmentsPage() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
-
-                            <Link className="mr-2 mt-1 w-40  bg-blue-300 text-white hover:bg-blue-400 transition p-2 text-center rounded font-medium" to={`/dashboard/patient-medical-history/${data?.patient?.id?.toString()}/${firstItem}`}>Add History</Link>
-
-                            {/* <br />
-                            <Link className="mr-2 mt-1 w-40  bg-blue-300 text-white hover:bg-blue-400 transition p-2 text-center rounded font-medium" to={`/dashboard/show-appointment/${data?.id.toString()}`}>Show Appointment History </Link> */}
+                            <Edit Id={data.id.toString()} open={false} onClose={() => { }} />
+                            
                             <br />
-
-
-
-
-
-
-
-                            {/* <ShowAppointment Id={data?.id.toString()} open={false} onClose={() => { }} /> */}
-
-
-
-                            {/* <Show Id={data?.patient?.id.toString()} open={false} onClose={() => { }} /> */}
-                            <br />
-                            <Edit Id={data.id.toString()} />
+                            {/* <Show Id={data.id.toString()} open={false} onClose={() => { }} />
+                            <br /> */}
+                            
+                            <Delete
+                                Id={data.id.toString()}
+                                onSuccess={handleDeleteSuccess}
+                            />
                         </DropdownMenuContent>
                     </DropdownMenu>
                 );
@@ -302,11 +265,12 @@ export function AppointmentsPage() {
                                 }
                             }}
                             disabled={!link.url}
-                            className={`${link.active
-                                ? "bg-blue-500 text-white hover:bg-blue-600"
-                                : "bg-gray-200 text-black hover:bg-gray-300"
-                                }`}
-
+                            className={`${
+                                link.active
+                                  ? "bg-blue-500 text-white hover:bg-blue-600"
+                                  : "bg-gray-200 text-black hover:bg-gray-300"
+                              }`}
+                              
                         >
                             {link.label
                                 .replace(/&laquo;/g, '<<')
@@ -317,9 +281,6 @@ export function AppointmentsPage() {
                     ))}
                 </div>
             </div>
-
-
-
         </div>
     );
 }

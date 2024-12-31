@@ -9,7 +9,7 @@ import ClientLayout from './layouts/ClientLayout';
 import UserPanelLayout from './layouts/UserPanelLayoyut.tsx';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import PublicRoute from './components/auth/PublicRoute.tsx';
-import Unauthorized from './pages/Unauthorized'; // Import the Unauthorized page
+import Unauthorized from './pages/Unauthorized';
 import Logout from './components/auth/Logout.tsx';
 import { PaymentPage } from './pages/sidebar/webSetting/payment/PaymentPage';
 import { SliderPage } from './pages/sidebar/webSetting/slider/SliderPage';
@@ -25,10 +25,15 @@ import { GalleryPage } from './pages/sidebar/webSetting/gallery/GalleryPage.tsx'
 import Gallery from './client/page/Gallery.tsx';
 import VideoGallery from './client/page/VideoGallery.tsx';
 import EditSetting from './pages/sidebar/webSetting/setting/EditSetting.tsx';
+
 import VisionMission from './client/page/VisionMission.tsx';
+import EditWhatIsThalassemia from './pages/sidebar/webSetting/whatIsThalassemia/EditWhatIsThalassemia.tsx';
+import EditFounder from './pages/sidebar/webSetting/whatIsThalassemia/EditFounder.tsx';
 import EditMissionVision from './pages/sidebar/webSetting/missionVision/EditMissionVision.tsx';
 import AdvisorsCommittee from './client/page/AdvisorsCommittee.tsx';
 import { WhoWeArePage } from './pages/sidebar/webSetting/whoWeAre/WhoWeArePage.tsx';
+import EmployeeList from './client/page/employeeList.tsx';
+import RelatedLinks from './client/page/RelatedLinks.tsx';
 import ZakatBoard from './client/page/ZakatBoard.tsx';
 import BloodCollectionCommittee from './client/page/BloodCollectionCommittee.tsx';
 import BtsHistory from './client/page/BtsHistory.tsx';
@@ -53,6 +58,8 @@ import { YearsPage } from './pages/sidebar/webSetting/years/YearsPage.tsx';
 import Committee from './client/page/Committee.tsx';
 import Founder from './client/page/Founder.tsx';
 import Thalassemia from './client/page/Thalassaemia.tsx';
+import SingleDonation from './client/page/FinancialDonationDetails.tsx';
+import FinancialDonation from './client/page/FinancialDonation.tsx';
 import PublicationSection from './client/page/PublicationSection.tsx';
 import { PublicationPage } from './pages/sidebar/webSetting/publications/PublicationPage.tsx';
 import PublicationDetail from './client/page/publication-detail.tsx';
@@ -74,6 +81,10 @@ import { StoryListPage } from './pages/sidebar/webSetting/story/StoryListPage.ts
 import SingleStory from './client/page/SingleStory.tsx';
 import StoryAll from './client/page/StoryAll.tsx';
 import PatientManagement from './client/page/PatientManagement.tsx';
+
+
+import { FinancialDonationPage } from './pages/sidebar/webSetting/financialDonation/FinancialDonationPage.tsx';
+import { ImportantLinkPage } from './pages/sidebar/webSetting/importantLink/ImportantLinkPage.tsx';
 
 import ShowAppointment from './pages/sidebar/webSetting/appointments/ShowAppointment.tsx';
 import { UpdatePatientMedicalHistory } from './pages/sidebar/webSetting/PatientMedicalHistory/UpdatePatientMedicalHistory.tsx';
@@ -109,6 +120,18 @@ const router = createBrowserRouter([
         path: 'our-projects',
         element: <OurProjects />
       },
+
+      {
+        path: 'financial-donations',
+        element: <FinancialDonation />
+      },
+
+      {
+        path: 'financial-donation-details/:id',
+        element: <SingleDonation />
+      },
+      
+
       {
         path: 'page/:TifType',
         element: <TifMembership />
@@ -205,6 +228,16 @@ const router = createBrowserRouter([
       {
         path: 'zakat-board',
         element: <ZakatBoard />
+      },
+
+      {
+        path: 'employee-list',
+        element: <EmployeeList />
+      },
+
+      {
+        path: 'related-links',
+        element: <RelatedLinks />
       },
 
       {
@@ -432,9 +465,6 @@ const router = createBrowserRouter([
         />,
       },
 
-
-
-
       {
         path: 'patient-medical-history/:patient_id/:mhId',
         element: <ProtectedRoute
@@ -444,9 +474,6 @@ const router = createBrowserRouter([
           ]}
         />,
       },
-
-
-      
 
 
 
@@ -585,7 +612,7 @@ const router = createBrowserRouter([
 
 
       {
-        path: 'mission-vision/:id', // assuming you need an ID
+        path: 'mission-vision/:id',
         element: (
           <ProtectedRoute
             element={
@@ -597,8 +624,38 @@ const router = createBrowserRouter([
           />
         ),
       },
+
       {
-        path: 'bts-history/:id', // assuming you need an ID
+        path: 'about-thalassemia/:id',
+        element: (
+          <ProtectedRoute
+            element={
+              <EditWhatIsThalassemia
+                Id={'1'}
+              />
+            }
+            requiredPermissions={['settings-all']}
+          />
+        ),
+      },
+
+      {
+        path: 'founder/:id',
+        element: (
+          <ProtectedRoute
+            element={
+              <EditFounder
+                Id={'1'}
+              />
+            }
+            requiredPermissions={['settings-all']}
+          />
+        ),
+      },
+
+
+      {
+        path: 'bts-history/:id',
         element: (
           <ProtectedRoute
             element={
@@ -645,8 +702,41 @@ const router = createBrowserRouter([
           requiredPermissions={['view_dashboard']}
         />,
       },
+
+      {
+        path: 'financial-donation',
+        element: <ProtectedRoute
+          element={<FinancialDonationPage />}
+          requiredPermissions={[
+            'medical-history-all',
+          ]}
+        />,
+      },
+
+      {
+        path: 'important-links',
+        element: <ProtectedRoute
+          element={<ImportantLinkPage />}
+          requiredPermissions={[
+            'medical-history-all',
+          ]}
+        />,
+      },
     ],
   },
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

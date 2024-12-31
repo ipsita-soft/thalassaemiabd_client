@@ -19,14 +19,13 @@ const PatientManagement = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { doctorSliders, isLoading, isError } = useSelector((state: RootState) => state.public);
   useEffect(() => {
-    dispatch(fetchDoctorSlider({}));  // Fetch sliders on mount
+    dispatch(fetchDoctorSlider({}));
   }, [dispatch]);
  const location = useLocation();
- console.log('SADFSAFD',location.pathname);
   
 
   if (isLoading) {
-    return <p></p>;  // Show loading state
+    return <p></p>; 
   }
 
   if (isError) {

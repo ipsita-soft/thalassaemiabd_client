@@ -35,6 +35,9 @@ const SingleStory = () => {
   if (!singleStory) return <p className="text-center my-5">No data found.</p>;
   const blogNewsData = Array.isArray(storys?.data) ? storys.data : [];
   const descriptionParts = singleStory.description.split("</p>");
+
+
+  
   return (
     <>
     <section className="single-event-section mt-14">

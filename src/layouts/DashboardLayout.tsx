@@ -269,6 +269,36 @@ function DashboardLayout() {
                                 )}
 
 
+                                {hasPermissions(['mission-vision-all'], permissions) && (
+                                    <Link
+
+                                        to={`/dashboard/about-thalassemia/${id}`}
+                                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive(`/dashboard/about-thalassemia/${id}`)
+                                            ? 'bg-muted text-primary'
+                                            : 'text-muted-foreground hover:text-primary'
+                                            }`}
+                                    >
+                                        <TargetIcon className="h-4 w-4" />
+                                       What Is thalassemia
+                                    </Link>
+                                )}
+
+                                {hasPermissions(['mission-vision-all'], permissions) && (
+                                    <Link
+
+                                        to={`/dashboard/founder/${id}`}
+                                        className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all ${isActive(`/dashboard/founder/${id}`)
+                                            ? 'bg-muted text-primary'
+                                            : 'text-muted-foreground hover:text-primary'
+                                            }`}
+                                    >
+                                        <TargetIcon className="h-4 w-4" />
+                                       Founder Details
+                                    </Link>
+                                )}
+
+
+
                                 {hasPermissions(['bts-history-all'], permissions) && (
                                     <Link
 
@@ -345,9 +375,43 @@ function DashboardLayout() {
                                             <BookUser className="h-4 w-4" />
                                             Blood Donor
                                         </Link>
+                                    )
+                                    }
+
+
+
+
+                                {hasPermissions([
+                                    'medical-history-all',
+                                ], permissions) && (
+
+                                        <Link
+                                            to="/dashboard/financial-donation"
+                                            className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all
+                                             ${isActive('/dashboard/financial-donation') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                                }`}
+                                        >
+                                            <BookUser className="h-4 w-4" />
+                                            Financial Donation
+                                        </Link>
                                     )}
 
 
+
+                                {hasPermissions([
+                                    'medical-history-all',
+                                ], permissions) && (
+
+                                        <Link
+                                            to="/dashboard/important-links"
+                                            className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all
+                                             ${isActive('/dashboard/important-links') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                                }`}
+                                        >
+                                            <BookUser className="h-4 w-4" />
+                                            Important Links
+                                        </Link>
+                                    )}
 
                                 <hr className="mx-2 my-2" />
 

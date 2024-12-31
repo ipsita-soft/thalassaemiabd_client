@@ -135,7 +135,7 @@ export default function ShowPatientMedicalHistory() {
               <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
               {/* <Edit Id={data.id.toString()} open={false} onClose={() => { }} /> */}
               <br />
-              <Link className="mr-2 mt-1 w-40  bg-blue-300 text-white hover:bg-blue-400 transition p-2 text-center rounded font-medium" to={`/dashboard/patient-medical-history-update/${appointment_id}/${data?.id.toString()}/${data?.date}`}>Update History</Link>
+              {/* <Link className="mr-2 mt-1 w-40  bg-blue-300 text-white hover:bg-blue-400 transition p-2 text-center rounded font-medium" to={`/dashboard/patient-medical-history-update/${appointment_id}/${data?.id.toString()}/${data?.date}`}>Update History</Link> */}
               <br />
               <Delete
                 Id={data.id.toString()}

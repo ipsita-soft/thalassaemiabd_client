@@ -122,7 +122,7 @@ const Header = () => {
                           <Link to="zakat-board">Zakat Board</Link>
                         </li>
                         <li className="nav-item">
-                          <a href="employee-list.html">Employee List</a>
+                          <Link to="employee-list">Employee List</Link>
                         </li>
                       </ul>
                     </li>
@@ -201,7 +201,8 @@ const Header = () => {
                           <a href="sponsor-child.html">Sponsor a Child</a>
                         </li>
                         <li className="dnt-item">
-                          <a href="general-donate.html">Financial Donation</a>
+                        <Link to="financial-donations">Financial Donation</Link>
+                          
                         </li>
                       </ul>
                     </div>
