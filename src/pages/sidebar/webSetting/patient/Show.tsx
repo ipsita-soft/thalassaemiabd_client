@@ -14,7 +14,7 @@ import { update } from '@/redux/slices/userRequestSlice';
 import { useToast } from '@/hooks/use-toast';
 import { useFetchPatientQuery, useFetchPatientsQuery } from '@/api/patientApi';
 import Swal from 'sweetalert2';
-import { Facebook, Mail, MapPin, Phone } from "lucide-react";
+import { Eye, Facebook, Mail, MapPin, Phone } from "lucide-react";
 
 import React from 'react';
 import QRCode from 'react-qr-code';
@@ -45,15 +45,12 @@ const Show: React.FC<ShowData> = ({ Id }) => {
   const dispatch = useDispatch<AppDispatch>();
   const { toast } = useToast();
   if (isLoading) {
-    return <p>Loading...</p>;
+    return '';
   }
 
   if (isError || !data?.data) {
     return <p>Error loading data. Please try again later.</p>;
   }
-
-  console.log(data);
-
 
 
   const handlePrint = () => {
@@ -212,10 +209,13 @@ const Show: React.FC<ShowData> = ({ Id }) => {
                     <p><strong>Old BTS ID:</strong> ${renderValue(dataToShow?.patientInfo?.old_bts_id)}</p>
                   </div>
                
+                 * 
                   <div class="flex-column">
 
                     <img src="${renderValue(dataToShow?.profile_image)}" alt="Profile" class="img-profile" />
                   </div>
+
+
                 </div>
               </div>
   
@@ -312,9 +312,21 @@ const Show: React.FC<ShowData> = ({ Id }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="mr-2 mt-1 w-40 bg-blue-300 text-white hover:bg-blue-400 transition">
-          Patient Show
+        <Button
+          title='Show Patient'
+          className={`flex items-center justify-center rounded-full 
+          p-0 w-8 h-8 bg-transparent border border-blue-300 
+          hover:bg-blue-100 hover:border-blue-400 transition-all 
+          focus:ring-2 focus:ring-blue-300 disabled:opacity-50`}>
+          <Eye className="w-5 h-5 text-blue-600" />
+
         </Button>
+
+
+
+
+
+
       </DialogTrigger>
       <DialogContent
         className="w-full max-w-4xl lg:max-w-5xl xl:max-w-6xl mx-auto rounded-lg shadow-2xl bg-white p-6 border-2 border-indigo-200"

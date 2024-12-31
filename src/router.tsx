@@ -80,7 +80,6 @@ import { AppointmentsPage } from './pages/sidebar/webSetting/appointments/Appoin
 import { StoryListPage } from './pages/sidebar/webSetting/story/StoryListPage.tsx';
 import SingleStory from './client/page/SingleStory.tsx';
 import StoryAll from './client/page/StoryAll.tsx';
-import { PatientMedicalHistory } from './pages/sidebar/webSetting/PatientMedicalHistory/PatientMedicalHistory';
 import PatientManagement from './client/page/PatientManagement.tsx';
 
 
@@ -90,6 +89,11 @@ import { ImportantLinkPage } from './pages/sidebar/webSetting/importantLink/Impo
 import ShowAppointment from './pages/sidebar/webSetting/appointments/ShowAppointment.tsx';
 import { UpdatePatientMedicalHistory } from './pages/sidebar/webSetting/PatientMedicalHistory/UpdatePatientMedicalHistory.tsx';
 import RegistrationSuccess from './pages/RegistrationSuccess.tsx';
+import { PatientMedicalHistoryPage } from './pages/sidebar/webSetting/PatientMedicalHistory/PatientMedicalHistoryPage.tsx';
+import { PatientAllHistory } from './pages/sidebar/webSetting/PatientMedicalHistory/PatientAllHistory';
+import { CratePatientMedicalHistory } from './pages/sidebar/webSetting/PatientMedicalHistory/CratePatientMedicalHistory.tsx';
+
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -372,6 +376,43 @@ const router = createBrowserRouter([
         />,
       },
 
+
+
+      {
+        path: 'medical-history',
+        element: <ProtectedRoute
+          element={<MedicalHistoryPage />}
+          requiredPermissions={[
+            'medical-history-all',
+          ]}
+        />,
+      },
+
+
+      {
+        path: 'patient-medical-history',
+        element: <ProtectedRoute
+          element={<PatientMedicalHistoryPage />}
+          requiredPermissions={[
+            'patient-medical-history-all',
+          ]}
+        />,
+      },
+
+
+
+
+
+      {
+        path: 'medical-history',
+        element: <ProtectedRoute
+          element={<MedicalHistoryPage />}
+          requiredPermissions={[
+            'medical-history-all',
+          ]}
+        />,
+      },
+
       {
         path: 'medical-history-item',
         element: <ProtectedRoute
@@ -403,6 +444,17 @@ const router = createBrowserRouter([
         />,
       },
 
+
+      {
+        path: 'show-patient-medical-history/:patient_id/:mhId',
+        element: <ProtectedRoute
+          element={<PatientAllHistory />}
+          requiredPermissions={[
+            'appointment-all',
+          ]}
+        />,
+      },
+
       {
         path: 'admin-user',
         element: <ProtectedRoute
@@ -413,11 +465,10 @@ const router = createBrowserRouter([
         />,
       },
 
-      
       {
-        path: 'patient-medical-history/:apId/:mhId/:apDate',
+        path: 'patient-medical-history/:patient_id/:mhId',
         element: <ProtectedRoute
-          element={<PatientMedicalHistory />}
+          element={<CratePatientMedicalHistory />}
           requiredPermissions={[
             'medical-history-item-all',
           ]}
@@ -425,8 +476,9 @@ const router = createBrowserRouter([
       },
 
 
+
       {
-        path: 'patient-medical-history-update/:apId/:mhId/:apDate',
+        path: 'patient-medical-history-update/:pmhId',
         element: <ProtectedRoute
           element={<UpdatePatientMedicalHistory />}
           requiredPermissions={[
@@ -434,6 +486,10 @@ const router = createBrowserRouter([
           ]}
         />,
       },
+
+
+
+
 
 
 
@@ -757,7 +813,7 @@ const router = createBrowserRouter([
         element: <Notice />
       },
 
-      
+
       {
         path: '/userpanel/annual-reports',
         element: <AnnualReports />

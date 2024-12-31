@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dialog,
   DialogTrigger,
@@ -12,40 +12,54 @@ import Swal from 'sweetalert2';
 import * as Yup from 'yup';
 import { Loader2 } from 'lucide-react';
 import {
-  useCreateAppointmentsItemMutation,
-  useFetchUsersWithRoleQuery,
+  useCreateAppointmentsItemMutation
 } from '@/api/appointmentsApi';
 import SelectField from '@/components/common/SelectField';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchRoleWithDoctor, fetchRoleWithPatient } from '@/redux/slices/commonSlice';
+import { AppDispatch, RootState } from '@/redux/store';
 
 const Add: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [createAppointment] = useCreateAppointmentsItemMutation();
   const { user } = useSelector((state: any) => state.auth);
+  const dispatch = useDispatch<AppDispatch>();
+  
+  useEffect(() => {
+    dispatch(fetchRoleWithPatient({
+      role_id: 8,
+      per_page: 250,
+      page: 1,
+      search: 'all',
+    }));
 
-  const { data: usersWithRole } = useFetchUsersWithRoleQuery({
-    roleId: 9,
-    perPage: 250,
-    page: 1,
-    all: 'all',
-  });
+  }, [dispatch]);
 
-  const { data: getPatient } = useFetchUsersWithRoleQuery({
-    roleId: 8,
-    perPage: 250,
-    page: 1,
-    all: 'all',
-  });
+  useEffect(() => {
+    dispatch(fetchRoleWithDoctor({
+      role_id: 9,
+      per_page: 250,
+      page: 1,
+      search: 'all',
+    }));
+
+  }, [dispatch]);
+
+  const { roleWithPatient, roleWithDoctor } = useSelector((state: RootState) => state.commonData);
+
 
   const DocOption =
-    usersWithRole?.data?.map((doc: any) => ({
+    roleWithDoctor?.map((doc: any) => ({
       value: doc.id,
       label: doc.name,
     })) || [];
 
+
+console.log(roleWithDoctor);
+
   const PatientOption =
-    getPatient?.data?.map((patient: any) => ({
+    roleWithPatient?.map((patient: any) => ({
       value: patient.id,
       label: patient.name + ' ' + patient.bts_id,
     })) || [];

@@ -44,7 +44,6 @@ export function BloodDonorPage() {
         (state: RootState) => state.adminBloodDonorReg
     );
 
-    console.log(bloodDonorRegistrationData);
 
     const [showSliderDetails, setShowSliderDetails] = useState(false);
 

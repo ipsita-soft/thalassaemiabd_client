@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { diseaseType, getBloodGroup, getDepartments, getGenders, getMaritalStatus, getRoles, height, permissionsAll, weight } from "../api/publicApi";
+import { diseaseType, getBloodGroup, getDepartments, getGenders, getMaritalStatus, getRoles, getRoleWithUser, height, permissionsAll, weight } from "../api/publicApi";
 
 const initialState = {
     isLoading: false,
@@ -9,6 +9,8 @@ const initialState = {
     genders: [],
     bloodGroups: [],
     departments: [],
+    roleWithPatient: [],
+    roleWithDoctor: [],
     roles: [],
     diseaseTypes: [],
     heights: [],
@@ -46,6 +48,29 @@ export const fetchRoles = createAsyncThunk(
     async (params: object = {}, { rejectWithValue }) => {
         try {
             const response = await getRoles(params);
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(error.response ? error.response.data : new Error('Error fetching data'));
+        }
+    }
+);
+
+export const fetchRoleWithPatient = createAsyncThunk(
+    'fetchRoleWithPatient',
+    async (params: object = {}, { rejectWithValue }) => {
+        try {
+            const response = await getRoleWithUser(params);
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(error.response ? error.response.data : new Error('Error fetching data'));
+        }
+    }
+);
+export const fetchRoleWithDoctor = createAsyncThunk(
+    'fetchRoleWithDoctor',
+    async (params: object = {}, { rejectWithValue }) => {
+        try {
+            const response = await getRoleWithUser(params);
             return response.data;
         } catch (error: any) {
             return rejectWithValue(error.response ? error.response.data : new Error('Error fetching data'));
@@ -212,6 +237,38 @@ const commonSlice = createSlice({
                 state.error = action.payload;
             })
 
+
+            .addCase(fetchRoleWithPatient.pending, (state) => {
+                state.isLoading = true;
+                state.isError = false;
+            })
+            .addCase(fetchRoleWithPatient.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isError = false;
+                state.roleWithPatient = action.payload.data;
+            })
+            .addCase(fetchRoleWithPatient.rejected, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.payload;
+            })
+
+
+
+            .addCase(fetchRoleWithDoctor.pending, (state) => {
+                state.isLoading = true;
+                state.isError = false;
+            })
+            .addCase(fetchRoleWithDoctor.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isError = false;
+                state.roleWithDoctor = action.payload.data;
+            })
+            .addCase(fetchRoleWithDoctor.rejected, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.payload;
+            })
 
 
 
