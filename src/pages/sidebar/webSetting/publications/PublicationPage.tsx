@@ -243,7 +243,7 @@ export function PublicationPage() {
             {isLoading ? (
                 <p>Loading...</p>
             ) : isError ? (
-                <>Error: {error && <p>Error: {error.message}</p>}</>
+                <>Error: {error && <p>Error</p>}</>
             ) : (
                 <div className="overflow-x-auto">
                     <Table>

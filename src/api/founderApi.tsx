@@ -48,10 +48,10 @@ export const founderApi = createApi({
             providesTags: (_, __, id) => [{ type: 'Founder', id }],
         }),
 
-        updateFounder: builder.mutation<Founder, { id: string | number; data: Partial<Founder> }>({
+        updateFounder: builder.mutation<Founder, { id: string | number; data: FormData }>({
             query: ({ id, data }) => ({
                 url: `web/founder/${id}`,
-                method: 'PUT',
+                method: 'POST',
                 body: data,
             }),
             invalidatesTags: (_, error, { id }) =>

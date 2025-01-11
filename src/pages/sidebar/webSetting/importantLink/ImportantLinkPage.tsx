@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {  useState } from "react";
 import { useFetchImportantLinksQuery } from "@/api/ImportantLinkApi";
 
 import {
@@ -44,6 +44,8 @@ export function ImportantLinkPage() {
         search,
         page: currentPage,
     });
+
+
     const meta = data?.meta;
     const patientRegistrationData = data?.data;
     const [sorting, setSorting] = useState<SortingState>([]);
@@ -85,7 +87,7 @@ export function ImportantLinkPage() {
                 <div className="text-left">{row.original.sorting_index}</div>
             ),
         },
-        
+
         {
             accessorKey: "status",
             header: "Status",
@@ -122,11 +124,11 @@ export function ImportantLinkPage() {
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel className="text-center">Actions</DropdownMenuLabel>
                             <Edit Id={data.id.toString()} open={false} onClose={() => { }} />
-                            
+
                             <br />
                             {/* <Show Id={data.id.toString()} open={false} onClose={() => { }} />
                             <br /> */}
-                            
+
                             <Delete
                                 Id={data.id.toString()}
                                 onSuccess={handleDeleteSuccess}
@@ -265,12 +267,11 @@ export function ImportantLinkPage() {
                                 }
                             }}
                             disabled={!link.url}
-                            className={`${
-                                link.active
-                                  ? "bg-blue-500 text-white hover:bg-blue-600"
-                                  : "bg-gray-200 text-black hover:bg-gray-300"
-                              }`}
-                              
+                            className={`${link.active
+                                ? "bg-blue-500 text-white hover:bg-blue-600"
+                                : "bg-gray-200 text-black hover:bg-gray-300"
+                                }`}
+
                         >
                             {link.label
                                 .replace(/&laquo;/g, '<<')

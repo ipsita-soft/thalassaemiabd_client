@@ -48,11 +48,13 @@ const PublicationDetail = () => {
 
           <div className="col-lg-5 col-md-5">
             <div className="publication-img shadow">
-              <img
-                src={publicationDetail.image || 'assets/images/publication/default.png'} // Fallback image
-                className="img-fluid rounded-start"
-                alt={publicationDetail.title}
-              />
+              <a target='_blank' href={publicationDetail?.pdf}>
+                <img
+                  src={publicationDetail.image || 'assets/images/publication/default.png'} // Fallback image
+                  className="img-fluid rounded-start"
+                  alt={publicationDetail.title}
+                />
+              </a>
             </div>
           </div>
           <div className="col-lg-7 col-md-7">
