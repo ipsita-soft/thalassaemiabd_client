@@ -111,7 +111,7 @@ const SponsorChild = () => {
             <div className="col-lg-6 col-md-6 col-12">
               <div className="card">
                 <div className="card-body">
-                  <h5 className="card-title">Search Child by BTS-ID</h5>
+                  <h5 className="card-title">Search Child by User BTS-ID</h5>
                   <div className="input-group mb-3">
                     <input
                       type="text"
@@ -177,7 +177,7 @@ const SponsorChild = () => {
                   ) : (
                     btsidSearch && (
                       <div className="alert alert-danger">
-                        No Child found with BTS-ID: {btsidSearch}
+                        No Child found with User BTS-ID: {btsidSearch}
                       </div>
                     )
                   )}
