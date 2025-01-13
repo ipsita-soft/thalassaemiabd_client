@@ -59,6 +59,7 @@ import Committee from './client/page/Committee.tsx';
 import Founder from './client/page/Founder.tsx';
 import Thalassemia from './client/page/Thalassaemia.tsx';
 import SingleDonation from './client/page/FinancialDonationDetails.tsx';
+import SponsorChild from './client/page/Sponsorchild.tsx';
 import FinancialDonation from './client/page/FinancialDonation.tsx';
 import PublicationSection from './client/page/PublicationSection.tsx';
 import { PublicationPage } from './pages/sidebar/webSetting/publications/PublicationPage.tsx';
@@ -82,7 +83,6 @@ import SingleStory from './client/page/SingleStory.tsx';
 import StoryAll from './client/page/StoryAll.tsx';
 import PatientManagement from './client/page/PatientManagement.tsx';
 
-
 import { FinancialDonationPage } from './pages/sidebar/webSetting/financialDonation/FinancialDonationPage.tsx';
 import { ImportantLinkPage } from './pages/sidebar/webSetting/importantLink/ImportantLinkPage.tsx';
 
@@ -92,7 +92,6 @@ import RegistrationSuccess from './pages/RegistrationSuccess.tsx';
 import { PatientMedicalHistoryPage } from './pages/sidebar/webSetting/PatientMedicalHistory/PatientMedicalHistoryPage.tsx';
 import { PatientAllHistory } from './pages/sidebar/webSetting/PatientMedicalHistory/PatientAllHistory';
 import { CratePatientMedicalHistory } from './pages/sidebar/webSetting/PatientMedicalHistory/CratePatientMedicalHistory.tsx';
-
 
 const router = createBrowserRouter([
   {
@@ -130,6 +129,13 @@ const router = createBrowserRouter([
         path: 'financial-donation-details/:id',
         element: <SingleDonation />
       },
+
+      {
+        path: 'sponsor-child',
+        element: <SponsorChild />
+      },
+
+      
       
 
       {

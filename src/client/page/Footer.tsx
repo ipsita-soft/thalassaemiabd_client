@@ -122,12 +122,12 @@ const Footer = () => {
                                 <ul className="finan">
                                     <div className='row'>
                                         <h4 className="accept">We Accept</h4>
-                                        <img className="img-fluid" src="client/assets/images/financial/bkash.jpg" alt="bkash" />
-                                        <img className="img-fluid" src="client/assets/images/financial/nagad.jpg" alt="nagad" />
-                                        <img className="img-fluid" src="client/assets/images/financial/rocket.jpg" alt="rocket" />
-                                        <img className="img-fluid" src="client/assets/images/financial/mastercard.jpg" alt="mastercard" />
-                                        <img className="img-fluid" src="client/assets/images/financial/visa.jpg" alt="visa" />
-                                        <img className="img-fluid" src="client/assets/images/financial/dbbl.jpg" alt="dbbl" />
+                                        <img className="img-fluid" src="../client/assets/images/financial/bkash.jpg" alt="bkash" />
+                                        <img className="img-fluid" src="../client/assets/images/financial/nagad.jpg" alt="nagad" />
+                                        <img className="img-fluid" src="../client/assets/images/financial/rocket.jpg" alt="rocket" />
+                                        <img className="img-fluid" src="../client/assets/images/financial/mastercard.jpg" alt="mastercard" />
+                                        <img className="img-fluid" src="../client/assets/images/financial/visa.jpg" alt="visa" />
+                                        <img className="img-fluid" src="../client/assets/images/financial/dbbl.jpg" alt="dbbl" />
                                     </div>
                                 </ul>
                             </div>
