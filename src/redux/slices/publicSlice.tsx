@@ -1,7 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { getPublicBlogNews, getPublicSlider, getDoctorSlider, getWishers, getlink, getPublicEvent, getSingleEvent, getSingleBlogNews, getGallery, getSetting, getMissionVision, getfounder, getWhoWeArePage, getBtsHistory, getPublicOurProjects, getSingleProject, getPublicNotices, getPublicTifPages, getPublicYear, getPublicPublication, getSinglePublication, getPublicCountries, getPublicCities, getCommitteeDetail, getStory, getPublicStory, getPublicfinancialdonation, getSinglefinancialdonation, getwhatisthalassemia} from "../api/publicApi";
-
-
+import { getPublicBlogNews, getPublicSlider, getDoctorSlider, getWishers, getlink, getPublicEvent, getSingleEvent, getSingleBlogNews, getGallery, getSetting, getMissionVision, getfounder, getWhoWeArePage, getBtsHistory, getPublicOurProjects, getSingleProject, getPublicNotices, getPublicTifPages, getPublicYear, getPublicPublication, getSinglePublication, getPublicCountries, getPublicCities, getCommitteeDetail, getStory, getPublicStory, getPublicfinancialdonation, getSinglefinancialdonation, getwhatisthalassemia, getPublicLabTestServiceItem, getPublicMedicineItems} from "../api/publicApi";
 
 
 // Define a type for the slider objects
@@ -135,6 +133,7 @@ interface Meta {
 }
 
 interface PubPublications {
+    pdf: string | undefined;
     id: number;
     image: string;
     title: string;
@@ -296,6 +295,8 @@ interface SingleProject {
 interface PublicState {
     sliders: { data: Slider[] };
     countries: { data: Countries[] };
+    labTestServiceItems: { data: CommonData[] };
+    medicineItems: { data: CommonData[] };
     cities:[];
     cities2:[];
     yearList: { data: YearList[] };
@@ -352,11 +353,22 @@ interface WhoWeArePage {
     status: string;
 }
 
+interface CommonData {
+    id: number;
+    name: string;
+    bl_name: string;
+    sorting_index: number;
+    status: string;
+}
+
+
 
 // Initial state
 const initialState: PublicState = {
     sliders: { data: [] },
     countries: { data: [] },
+    labTestServiceItems: { data: [] },
+    medicineItems: { data: [] },
     cities:[],
     cities2:[],
     blogNews: { data: [] },
@@ -418,6 +430,36 @@ export const fetchPublicCountries = createAsyncThunk(
         }
     }
 );
+
+
+export const fetchPublicLabTestServiceItem = createAsyncThunk(
+    'public/fetchPublicLabTestServiceItem',
+    async (params: object = {}, { rejectWithValue }) => {
+        try {
+            const response = await getPublicLabTestServiceItem(params);
+            return response.data.data; // Assuming response.data contains the sliders array
+        } catch (error: any) {
+            return rejectWithValue(error.response ? error.response.data : new Error('Error fetching public data'));
+        }
+    }
+);
+
+
+export const fetchPublicMedicineItems = createAsyncThunk(
+    'public/fetchPublicMedicineItems',
+    async (params: object = {}, { rejectWithValue }) => {
+        try {
+            const response = await getPublicMedicineItems(params);
+            return response.data.data; // Assuming response.data contains the sliders array
+        } catch (error: any) {
+            return rejectWithValue(error.response ? error.response.data : new Error('Error fetching public data'));
+        }
+    }
+);
+
+
+
+
 
 export const fetchPublicCities = createAsyncThunk(
     'public/fetchPublicCities',
@@ -820,6 +862,42 @@ const publicSlice = createSlice({
             })
 
 
+            .addCase(fetchPublicLabTestServiceItem.pending, (state) => {
+                state.isLoading = true;
+                state.isError = false;
+                state.error = null;
+            })
+
+            .addCase(fetchPublicLabTestServiceItem.fulfilled, (state, action: PayloadAction<CommonData[]>) => {
+                state.isLoading = false;
+                state.labTestServiceItems = { data: action.payload };
+            })
+
+            .addCase(fetchPublicLabTestServiceItem.rejected,(state, action: PayloadAction<any>)=>{
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.payload;
+            })
+
+
+            .addCase(fetchPublicMedicineItems.pending, (state) => {
+                state.isLoading = true;
+                state.isError = false;
+                state.error = null;
+            })
+
+            .addCase(fetchPublicMedicineItems.fulfilled, (state, action: PayloadAction<CommonData[]>) => {
+                state.isLoading = false;
+                state.medicineItems = { data: action.payload };
+            })
+
+            .addCase(fetchPublicMedicineItems.rejected,(state, action: PayloadAction<any>)=>{
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.payload;
+            })
+
+
             .addCase(fetchPublicCities.pending, (state) => {
                 state.isLoading = false;
                 state.isError = false;
@@ -973,6 +1051,10 @@ const publicSlice = createSlice({
                 state.isError = true;
                 state.error = action.payload;
             })
+
+
+
+            
 
             //TIF Pages call 
             .addCase(fetchPublicTifPages.pending, (state) => {

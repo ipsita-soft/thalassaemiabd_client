@@ -36,7 +36,7 @@ const Founder = () => {
                         <div className="founder-content text-center mt-5">
 
         
-                            <img className="img-fluid m-0 m-auto" src="/client/assets/images/founder.jpg" alt=""/>
+                            <img className="img-fluid m-0 m-auto" src={founder?.image} alt=""/>
                             <h5 className="card-title">{founder?.name}</h5>
                             <span className="pdesig">{founder?.designation}</span>
                             

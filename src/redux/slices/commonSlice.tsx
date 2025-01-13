@@ -9,6 +9,7 @@ const initialState = {
     genders: [],
     bloodGroups: [],
     departments: [],
+    roleWithUser: [],
     roleWithPatient: [],
     roleWithDoctor: [],
     roles: [],
@@ -66,6 +67,20 @@ export const fetchRoleWithPatient = createAsyncThunk(
         }
     }
 );
+
+export const fetchRoleWithUser = createAsyncThunk(
+    'fetchRoleWithUser',
+    async (params: object = {}, { rejectWithValue }) => {
+        try {
+            const response = await getRoleWithUser(params);
+            return response.data;
+        } catch (error: any) {
+            return rejectWithValue(error.response ? error.response.data : new Error('Error fetching data'));
+        }
+    }
+);
+
+
 export const fetchRoleWithDoctor = createAsyncThunk(
     'fetchRoleWithDoctor',
     async (params: object = {}, { rejectWithValue }) => {
@@ -237,6 +252,21 @@ const commonSlice = createSlice({
                 state.error = action.payload;
             })
 
+
+            .addCase(fetchRoleWithUser.pending, (state) => {
+                state.isLoading = true;
+                state.isError = false;
+            })
+            .addCase(fetchRoleWithUser.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isError = false;
+                state.roleWithUser = action.payload.data;
+            })
+            .addCase(fetchRoleWithUser.rejected, (state, action: PayloadAction<any>) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.error = action.payload;
+            })
 
             .addCase(fetchRoleWithPatient.pending, (state) => {
                 state.isLoading = true;

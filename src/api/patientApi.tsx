@@ -11,6 +11,7 @@ export interface Patient {
 }
 
 export interface PatientListResponse {
+    map(arg0: (report: any, index: any) => import("react/jsx-runtime").JSX.Element): import("react").ReactNode;
     data: Patient[];
 
     meta: {
@@ -60,6 +61,35 @@ export const patientApi = createApi({
     },
     tagTypes: ['Patient'], // Ensure the tag type matches your use case
     endpoints: (builder) => ({
+
+
+        FetchPatientsReports: builder.query<
+            PatientListResponse,
+            { perPage: number;  page: number; search?: string; blood_group_id?: string; gender_id?: string; disease_type_id?: string }
+        >({
+            query: ({ perPage, page, search, blood_group_id, gender_id, disease_type_id }) => {
+                const params = new URLSearchParams({
+                    per_page: perPage?.toString() || '',
+                    page: page?.toString() || '',
+                    search: search || '',
+                    blood_group_id: blood_group_id || '',
+                    gender_id: gender_id || '',
+                    disease_type_id: disease_type_id || '',
+                }).toString();
+
+                return `management/patients-report?${params}`;
+            },
+            providesTags: (result) =>
+                result
+                    ? [
+                        ...result.data.map(({ id }) => ({ type: 'Patient' as const, id })),
+                        { type: 'Patient', id: 'LIST' },
+                    ]
+                    : [{ type: 'Patient', id: 'LIST' }],
+        }),
+
+
+
         fetchPatients: builder.query<PatientListResponse, { perPage: number; page: number; search?: string }>({
             query: ({ perPage, page, search }) =>
                 `management/admin-patient?per_page=${perPage}&page=${page}&search=${search || ''}`,
@@ -71,6 +101,7 @@ export const patientApi = createApi({
                     ]
                     : [{ type: 'Patient', id: 'LIST' }],
         }),
+
 
         fetchPatient: builder.query<Patient, string>({
             query: (id) => `management/admin-patient/${id}`,
@@ -127,6 +158,7 @@ export const patientApi = createApi({
 });
 
 export const {
+    useFetchPatientsReportsQuery,
     useFetchPatientsQuery,
     useFetchPatientQuery,
     useCreatePatientMutation,

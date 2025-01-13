@@ -32,13 +32,24 @@ const EditFounder: React.FC<EditFounderProps> = ({ Id }) => {
       name: Yup.string().required('Name is required'),
       image: Yup.mixed()
         .nullable(),
-       
+
       designation: Yup.string().required('Designation is required'),
       description: Yup.string().required('Description is required'),
     }),
     onSubmit: async (values) => {
       try {
-        await updateFounder({ id: Id, data: values }).unwrap();
+        const formData = new FormData();
+
+        formData.append('_method', 'PUT');
+        formData.append('title', values.title);
+        formData.append('name', values.name);
+        formData.append('description', values.description);
+        formData.append('designation', values.designation);
+        if (values.image) {
+          formData.append('image', values.image);
+        }
+
+        await updateFounder({ id: Id, data: formData }).unwrap();
         toast({
           title: 'Success',
           description: 'Founder details updated successfully!',

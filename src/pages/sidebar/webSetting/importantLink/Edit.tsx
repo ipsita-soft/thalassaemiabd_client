@@ -39,10 +39,10 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
 
   useEffect(() => {
     if (data?.data) {
-      const { title, image, url, description, status, sorting_index } = data.data;
+      const { title, url, description, status, sorting_index } = data.data;
       setFormData({
         title: title || '',
-        image: image|| '',
+        image: null,
         url: url || '',
         description: description || '',
         status: status === 'Active' ? 1 : 2,
@@ -61,27 +61,27 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
     status: Yup.number().required('The status field is required.'),
     image: Yup.mixed().notRequired(),
   });
-  
+
 
 
   const handleSubmit = async (values: typeof formData, { setErrors }: any) => {
     try {
       const formData = new FormData();
+      formData.append('_method', 'PUT'); 
+      formData.append('id', Id.toString());
       formData.append('title', values.title);
       formData.append('url', values.url);
       formData.append('description', values.description);
       formData.append('status', values.status.toString());
       formData.append('sorting_index', values.sorting_index.toString());
-  
       if (values.image) {
         formData.append('image', values.image);
       }
-  
       await updateImportantLink({
         id: Id,
-        data: values,
+        data: formData, 
       }).unwrap();
-  
+
       Swal.fire({
         title: 'Success!',
         text: 'Data updated successfully!',
@@ -89,13 +89,16 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
         timer: 3000,
         timerProgressBar: true,
       });
-  
+
+      window.location.reload();
       setOpen(false);
     } catch (error: any) {
-      setErrors(error?.data.data || {});
+      setErrors(error?.data?.data || {});
     }
   };
-  
+
+
+
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -156,10 +159,23 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
                     className="form-control pt-2"
                     onChange={(event: any) => {
                       const file = event.currentTarget.files[0];
+                      if (file) {
+                        const validTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+                        if (!validTypes.includes(file.type)) {
+                          Swal.fire({
+                            icon: 'error',
+                            title: 'Invalid File Type',
+                            text: 'The image must be a file of type: jpeg, png, jpg, gif.',
+                          });
+                          return;
+                        }
+                      }
                       setFieldValue('image', file);
                     }}
                   />
+                  <ErrorMessage name="image" component="div" className="text-danger" />
                 </div>
+
 
                 {/* Description */}
                 <div>

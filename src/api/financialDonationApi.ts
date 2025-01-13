@@ -100,10 +100,10 @@ export const financialDonationApi = createApi({
             invalidatesTags: [{ type: 'FinancialDonation', id: 'LIST' }],
         }),
 
-        updateFinancialDonation: builder.mutation<FinancialData, { id: string; data: Partial<FinancialData> }>({
+        updateFinancialDonation: builder.mutation<FinancialData, { id: string; data: FormData }>({
             query: ({ id, data }) => ({
                 url: `web/financial-donation/${id}`,
-                method: 'PUT',
+                method: 'POST',
                 body: data,
             }),
             invalidatesTags: (_, error, { id }) =>
