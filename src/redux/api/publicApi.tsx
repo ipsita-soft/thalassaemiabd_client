@@ -56,6 +56,25 @@ export const getPublicCountries = async (params = {}) => {
     }
 };
 
+export const getPublicLabTestServiceItem = async (params = {}) => {
+    try {
+        const response = await api.get('public/lab-test-service-items', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching lab test service items');
+    }
+};
+
+
+export const getPublicMedicineItems = async (params = {}) => {
+    try {
+        const response = await api.get('public/medicine-items', { params });
+        return response;
+    } catch (error: any) {
+        throw error.response ? error.response.data : new Error('Error fetching Medicine Items ');
+    }
+};
+
 
 export const getBloodGroup = async (params = {}) => {
     try {

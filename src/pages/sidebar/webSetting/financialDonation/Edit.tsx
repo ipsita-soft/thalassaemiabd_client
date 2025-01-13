@@ -32,7 +32,7 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
     sorting_index: 0,
   });
 
-  
+
 
   const { data } = useFetchFinancialDonationQuery(Id);
 
@@ -43,7 +43,7 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
       const { title, description, status, sorting_index } = data.data;
       setFormData({
         title: title || '',
-        image:  null,
+        image: null,
         description: description || '',
         status: status === 'Active' ? 1 : 2,
         sorting_index: sorting_index || 0,
@@ -65,15 +65,20 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
 
       const formData = new FormData();
       formData.append('title', values.title);
+      formData.append('_method', 'PUT');
       formData.append('description', values.description);
-      formData.append('image', values.image || '');
+      // formData.append('image', values.image || '');
       formData.append('status', values.status.toString());
       formData.append('sorting_index', values.sorting_index.toString());
 
-    
+      if (values.image) {
+        formData.append('image', values.image);
+      }
+
+
       await updateFinancialDonation({
         id: Id,
-        data: values,
+        data: formData,
       }).unwrap();
 
       Swal.fire({
@@ -83,6 +88,7 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
         timer: 3000,
         timerProgressBar: true,
       });
+      window.location.reload();
 
       setOpen(false);
     } catch (error: any) {
@@ -97,7 +103,7 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
           Edit
         </Button>
       </DialogTrigger>
-      <DialogContent  className="sm:max-w-[425px] md:max-w-[600px] lg:max-w-[700px] xl:max-w-[800px] w-full max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[425px] md:max-w-[600px] lg:max-w-[700px] xl:max-w-[800px] w-full max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Edit Financia Donation</DialogTitle>
         </DialogHeader>
@@ -144,7 +150,7 @@ const Edit: React.FC<EditProps> = ({ Id }) => {
                   />
                   <ErrorMessage name="image" component="div" className="text-danger" />
                 </div> */}
-                
+
                 <input
                   name="image"
                   type="file"

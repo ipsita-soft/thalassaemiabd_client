@@ -33,12 +33,14 @@ const EditModal: React.FC<EditSliderProps> = ({ BlogNewsId }) => {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState<{
     image: File | null;
+    pdf: File | null;
     sorting_index: number | null;
     title: string | null;
     description: string | null;
     status: number;
   }>({
     image: null,
+    pdf: null,
     sorting_index: null,
     title: null,
     description: null,
@@ -49,7 +51,7 @@ const EditModal: React.FC<EditSliderProps> = ({ BlogNewsId }) => {
 
   const blogNews = useSelector((state: RootState) => state.publications.publications);
 
-  const blogNewsError = useSelector((state: RootState) => state.blogNews.error);
+ 
 
   const blogNewsToEdit = blogNews.find((blogNew) => blogNew.id.toString() === BlogNewsId) as MyData | undefined;
 
@@ -61,6 +63,7 @@ const EditModal: React.FC<EditSliderProps> = ({ BlogNewsId }) => {
 
       setFormData({
         image: null,
+        pdf: null,
         sorting_index: blogNewsToEdit.sorting_index,
         title: blogNewsToEdit.title,
         description: blogNewsToEdit.description,
@@ -73,11 +76,12 @@ const EditModal: React.FC<EditSliderProps> = ({ BlogNewsId }) => {
     event.preventDefault();
     const Data = new FormData();
     Data.append('image', formData.image || '');
+    Data.append('pdf', formData.pdf || '');
     Data.append('sorting_index', formData.sorting_index?.toString() || '');
     Data.append('title', formData.title?.toString() || '');
     Data.append('description', formData.description?.toString() || '');
     Data.append('status', formData.status.toString());
-    console.log(blogNewsError);
+    // console.log(blogNewsError);
     try {
       await dispatch(update({ id: BlogNewsId, data: Data }));
 
@@ -131,6 +135,19 @@ const EditModal: React.FC<EditSliderProps> = ({ BlogNewsId }) => {
                   id="image"
                   onChange={(e) => setFormData({ ...formData, image: e.target.files?.[0] || null })}
                   placeholder="Choose Image"
+                />
+              </div>
+
+
+              <div>
+                <Label htmlFor="pdf">PDF </Label>
+                <Input
+                  type="file"
+                  id="pdf"
+                  onChange={(e) => setFormData({ ...formData, pdf: e.target.files ? e.target.files[0] : null })}
+                  placeholder="Choose pdf"
+                  // required
+                  accept='application/pdf'
                 />
               </div>
 

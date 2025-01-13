@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useFetchPatientsQuery } from "@/api/patientApi";
+import { useFetchPrescriptionsApisQuery } from "@/api/prescriptionsApi";
 import {
     SortingState,
     ColumnFiltersState,
@@ -10,10 +10,10 @@ import {
     useReactTable,
     flexRender,
 } from "@tanstack/react-table";
-import { ClipboardPlus, HistoryIcon, PlusCircle } from "lucide-react";
+import { Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import './printStyles.css'; 
+
 import { Input } from "@/components/ui/input";
 import {
     Table,
@@ -23,18 +23,17 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import Show from "./Show";
+
 import { useNavigate } from "react-router-dom";
-import { useFetchMedicalHistoriesQuery } from "@/api/medicalHistoryApi";
-import Add from "./Add";
 
 
-export function PatientPage() {
+
+export function PrescriptionsPage() {
     const [perPage, setPerPage] = useState(10);
     const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
 
-    const { data, isLoading, error } = useFetchPatientsQuery({
+    const { data, isLoading, error } = useFetchPrescriptionsApisQuery({
         perPage,
         search,
         page: currentPage,
@@ -42,16 +41,8 @@ export function PatientPage() {
 
 
 
-    const { data: hItem, isLoading: itemLoading } = useFetchMedicalHistoriesQuery({
-        perPage,
-        search,
-        page: currentPage,
-        status: '1',
-    });
-
-    const firstItem = hItem?.data?.[0]?.id;
     const meta = data?.meta;
-    const patientRegistrationData = data?.data;
+    const prescriptionData = data?.data;
 
 
     const [sorting, setSorting] = useState<SortingState>([]);
@@ -67,21 +58,30 @@ export function PatientPage() {
             id: "serial",
             header: "SL No",
             cell: ({ row }: { row: { index: number } }) => (
-                <div className="text-right">{row.index + 1}</div>
+                <div className="text-left">{row.index + 1}</div>
             ),
         },
+
+        {
+            id: "date",
+            header: "Date",
+            cell: ({ row }: { row: { original: any } }) => (
+                <div className="text-left">{row.original.date}</div>
+            ),
+        },
+
         {
             id: "name",
-            header: "Name",
+            header: "Patient",
             cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.name}</div>
+                <div className="text-left">{row.original.patient.name}</div>
             ),
         },
         {
             id: "bts-id",
             header: "BTS ID",
             cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.bts_id}</div>
+                <div className="text-left">{row.original.patient.bts_id}</div>
             ),
         },
 
@@ -89,31 +89,12 @@ export function PatientPage() {
             id: "old-bts-id",
             header: "OLD BTS ID",
             cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.patientInfo?.old_bts_id}</div>
+                <div className="text-left">{row.original.patient.patient_info?.old_bts_id}</div>
             ),
         },
 
-        {
-            id: "phone",
-            header: "Phone",
-            cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.phone}</div>
-            ),
-        },
-        {
-            id: "email",
-            header: "Email",
-            cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.email}</div>
-            ),
-        },
-        {
-            accessorKey: "status",
-            header: "Status",
-            cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-center">{row.original.status}</div>
-            ),
-        },
+
+
         {
             id: "actions",
             header: "Action",
@@ -132,41 +113,11 @@ export function PatientPage() {
         hover:bg-green-100 hover:border-green-400 transition-all 
         focus:ring-2 focus:ring-green-300 disabled:opacity-50`}
 
-                            onClick={() => navigate(`/dashboard/add-prescription/${data?.id.toString()}`)}
+                            onClick={() => navigate(`/dashboard/show-prescription/${data?.id.toString()}`)}
                         >
-                            <ClipboardPlus className="text-green-600 w-5 h-5" />
-                       
+                            <Eye className="text-green-600 w-5 h-5" />
+
                         </button>
-
-
-
-                        {!itemLoading && (
-                            <button
-                                title="Add History"
-                                className={`flex items-center justify-center rounded-full 
-        p-0 w-8 h-8 bg-transparent border border-gray-300 
-        hover:bg-gray-100 hover:border-gray-400 transition-all 
-        focus:ring-2 focus:ring-gray-300 disabled:opacity-50`}
-                                onClick={() => navigate(`/dashboard/patient-medical-history/${data?.id.toString()}/${firstItem}`)}
-                            >
-                                <PlusCircle className="text-gray-600 w-5 h-5" />
-                            </button>
-                        )}
-
-                        <button
-                            title="Show Patient Medical History"
-                            className={`flex items-center justify-center rounded-full 
-        p-0 w-8 h-8 bg-transparent border border-indigo-300 
-        hover:bg-indigo-100 hover:border-indigo-400 transition-all 
-        focus:ring-2 focus:ring-indigo-300 disabled:opacity-50`}
-
-                            onClick={() => navigate(`/dashboard/show-patient-medical-history/${data?.id.toString()}/${firstItem}`)}
-                        >
-                            <HistoryIcon className="text-indigo-600 w-5 h-5" />
-                        </button>
-
-                        <Show Id={data.id.toString()} open={false} onClose={() => { }} />
-
 
                     </div>
 
@@ -176,7 +127,7 @@ export function PatientPage() {
     ];
 
     const table = useReactTable({
-        data: patientRegistrationData || [],
+        data: prescriptionData || [],
         columns,
         state: {
             sorting,
@@ -199,7 +150,6 @@ export function PatientPage() {
 
     const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
-        console.log(value);
         setSearch(value);
         setFilterValue(value);
         setCurrentPage(1);
@@ -242,7 +192,6 @@ export function PatientPage() {
                         <option value={100}>100</option>
                     </select>
                 </div>
-                <Add />
             </div>
             {error ? (
                 <>Error</>

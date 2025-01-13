@@ -1,0 +1,28 @@
+/* printStyles.css */
+@media print {
+    /* Hide all content */
+    body * {
+      visibility: hidden;
+    }
+  
+    /* Make id-card-container and its content visible */
+    .id-card-container, .id-card-container * {
+      visibility: visible;
+    }
+
+    #id-card-button{
+      visibility: hidden;
+    }
+  
+    /* Ensure the content takes full width and height for printing */
+    .id-card-container {
+      width: 100%;
+      height: 100%;
+    }
+  
+    /* Hide print button while printing */
+    button {
+      display: none;
+    }
+  }
+  
