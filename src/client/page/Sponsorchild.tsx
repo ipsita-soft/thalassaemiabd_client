@@ -1,18 +1,43 @@
-import { useEffect, useState  } from "react";
-import { useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/redux/store";
-import {
-  fetchSingleFinancialDonation,
-  fetchFinancialDonation,
-} from "@/redux/slices/publicSlice";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
 
-const SingleDonation = () => {
+type PaymentMethod = "bkash" | "nagad" | "rocket" | "ibbl";
 
-  type PaymentMethod = "bkash" | "nagad" | "rocket" | "ibbl";
+interface User {
+  btsid: string;
+  name: string;
+  image: string;
+  description: string;
+}
 
+const SponsorChild = () => {
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>("bkash");
+  const [btsidSearch, setBtsidSearch] = useState("");
+  const [searchResults, setSearchResults] = useState<User[]>([]);
+  const [selectedUserBtsid, setSelectedUserBtsid] = useState<string | null>(
+    null
+  );
+
+  const [paymentType, setPaymentType] = useState("");
+  const [transactionLabel, setTransactionLabel] = useState("Transaction ID");
+
+  const handlePaymentTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedType = event.target.value;
+    setPaymentType(selectedType);
+
+    switch (selectedType) {
+      case "1":
+        setTransactionLabel("Cheque Number");
+        break;
+      case "2":
+        setTransactionLabel("Online Transaction ID");
+        break;
+      case "3":
+        setTransactionLabel("Bank Reference Number");
+        break;
+      default:
+        setTransactionLabel("Transaction ID");
+    }
+  };
 
   const accountNumbers: Record<PaymentMethod, string> = {
     bkash: "01705963592 Personal /Send Money",
@@ -21,103 +46,160 @@ const SingleDonation = () => {
     ibbl: "Account No: 5020 4637 4857 4324, Routing No: 223344, Branch: Dhanmondi sub-branch.",
   };
 
-  const handlePaymentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedMethod(event.target.value as PaymentMethod);
+  const users: User[] = [
+    {
+      btsid: "BTS123",
+      name: "John Doe",
+      image: "https://static-00.iconduck.com/assets.00/user-icon-1024x1024-dtzturco.png",
+      description: "A short description of John Doe.",
+    },
+    {
+      btsid: "BTS456",
+      name: "Jane Smith",
+      image: "https://static-00.iconduck.com/assets.00/user-icon-1024x1024-dtzturco.png",
+      description: "A short description of Jane Smith.",
+    },
+    {
+      btsid: "BTS789",
+      name: "Alice Johnson",
+      image: "https://static-00.iconduck.com/assets.00/user-icon-1024x1024-dtzturco.png",
+      description: "A short description of Alice Johnson.",
+    },
+  ];
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const searchTerm = event.target.value.trim().toLowerCase();
+    setBtsidSearch(searchTerm);
+
+    if (searchTerm === "") {
+      setSearchResults([]);
+    } else {
+      const filteredUsers = users.filter((user) =>
+        user.btsid.toLowerCase().includes(searchTerm)
+      );
+      setSearchResults(filteredUsers);
+    }
   };
 
+  const handleUserSelect = (btsid: string) => {
+    setSelectedUserBtsid(btsid);
+  };
 
-    const [paymentType, setPaymentType] = useState("");
-    const [transactionLabel, setTransactionLabel] = useState("Transaction ID");
-  
-    const handlePaymentTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-      const selectedType = event.target.value;
-      setPaymentType(selectedType);
-  
-      switch (selectedType) {
-        case "1":
-          setTransactionLabel("Cheque Number");
-          break;
-        case "2":
-          setTransactionLabel("Online Transaction ID");
-          break;
-        case "3":
-          setTransactionLabel("Bank Reference Number");
-          break;
-        default:
-          setTransactionLabel("Transaction ID");
-      }
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (!selectedUserBtsid) {
+      alert("Please search and select a user before submitting.");
+      return;
+    }
+
+    const formData = {
+      btsid: selectedUserBtsid,
+      paymentMethod: selectedMethod,
     };
 
-
-  const { id } = useParams<{ id: string }>();
-  const dispatch = useDispatch<AppDispatch>();
-
-  const { singleFinancialdonation, isLoading, isError, error } = useSelector(
-    (state: RootState) => state.public
-  );
-
-  const { financialdonations } = useSelector(
-    (state: RootState) => state.public
-  );
-
-  useEffect(() => {
-    dispatch(fetchFinancialDonation({}));
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (id) {
-      dispatch(fetchSingleFinancialDonation(id));
-    }
-  }, [dispatch, id]);
-
-  if (isLoading) return <p className="text-center my-5">Loading...</p>;
-  if (isError)
-    return <p className="text-danger text-center my-5">Error: {error}</p>;
-  if (!singleFinancialdonation)
-    return <p className="text-center my-5">No data found.</p>;
-
-  const donations = Array.isArray(financialdonations?.data)
-    ? financialdonations.data
-    : [];
+    console.log("Form Submitted", formData);
+    alert("Donation submitted successfully!");
+  };
 
   return (
-    <>
-      <section className="financial-donation mt-14 section">
-        <div className="container">
-          <div className="content">
-            <div className="row">
-              <div className="col-lg-6 col-md-7 col-12">
-                <div className="card">
-                    <div className="card-body">
-                        <div className="post-thumbnils">
-                            <img
-                                src={singleFinancialdonation.image}
-                                alt={singleFinancialdonation.title}
-                                className="rounded"
+    <section className="financial-donation mt-14 section">
+      <div className="container">
+        <div className="content">
+          <div className="row">
+            {/* User Search Section */}
+            <div className="col-lg-6 col-md-6 col-12">
+              <div className="card">
+                <div className="card-body">
+                  <h5 className="card-title">Search Child by User BTS-ID</h5>
+                  <div className="input-group mb-3">
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Enter BTSID"
+                      value={btsidSearch}
+                      onChange={handleSearch}
+                    />
+                  </div>
+
+                  {/* Display search results */}
+                  {searchResults.length > 0 ? (
+                    <div>
+                        {searchResults.map((user) => (
+                            <label
+                            key={user.btsid}
+                            className="card p-3 mt-3 d-flex flex-row align-items-center shadow-sm border rounded"
+                            style={{
+                                backgroundColor: "#f8f9fa",
+                                gap: "10px",
+                                cursor: "pointer",
+                            }}
+                            >
+                            <input
+                                className="form-check-input me-3"
+                                type="radio"
+                                name="selectedUser"
+                                value={user.btsid}
+                                checked={selectedUserBtsid === user.btsid}
+                                onChange={() => handleUserSelect(user.btsid)}
+                                style={{
+                                cursor: "pointer",
+                                transform: "scale(1.5)", // Increase size of the radio button
+                                }}
                             />
-                        </div>
-                        <div className="details-content">
-                        <h5
-                        className="card-title mt-3 text-start"
-                        style={{
-                          fontSize: "18px",
-                          fontWeight: "600",
-                          color: "red",
-                        }}
-                      >
-                       {singleFinancialdonation.title}
-                      </h5>
-                        <p className="mt-2" dangerouslySetInnerHTML={{ __html: singleFinancialdonation.description }} />
-                        </div>
+                            <img
+                                src={user.image}
+                                alt={user.name}
+                                style={{
+                                width: "60px",
+                                height: "60px",
+                                borderRadius: "50%",
+                                objectFit: "cover",
+                                }}
+                            />
+                            <div style={{ flex: 1 }}>
+                                <h6
+                                className="card-title mb-1"
+                                style={{ fontSize: "16px", fontWeight: "bold", color: "#333" }}
+                                >
+                                {user.name}
+                                </h6>
+                                <p
+                                className="card-text mb-0"
+                                style={{ fontSize: "14px", color: "#555" }}
+                                >
+                                {user.description}
+                                </p>
+                            </div>
+                            </label>
+                        ))}
                     </div>
+                  ) : (
+                    btsidSearch && (
+                      <div className="alert alert-danger">
+                        No Child found with User BTS-ID: {btsidSearch}
+                      </div>
+                    )
+                  )}
                 </div>
               </div>
+            </div>
 
-              <div className="col-lg-6 col-md-5 col-12 order-2">
-                <div className="financial-form card shadow-lg border-0">
-                  <div className="card-body p-4 pt-3">
-                    <h1 style={{ fontSize: "16px", fontWeight:"600" }} className="text-center text-light bg-danger rounded py-3 mb-4"> DONATE NOW </h1>
-                    <form>
+            {/* Donation Form Section */}
+            <div className="col-lg-6 col-md-6 col-12">
+              <div className="financial-form card shadow-lg border-0">
+                <div className="card-body p-4 pt-3">
+                  <h1
+                    style={{
+                      fontSize: "16px",
+                      fontWeight: "600",
+                    }}
+                    className="text-center text-light bg-danger rounded py-3 mb-4"
+                  >
+                    DONATE NOW
+                  </h1>
+
+                  <form onSubmit={handleSubmit}>
                       <div className="row">       
 
                       <div className="d-flex flex-wrap align-items-center gap-3">
@@ -127,7 +209,7 @@ const SingleDonation = () => {
                             type="radio"
                             name="paymentMethod"
                             value="bkash"
-                            onChange={handlePaymentChange}
+                            onChange={(e) =>setSelectedMethod(e.target.value as PaymentMethod)}
                             checked={selectedMethod === "bkash"}
                           />
                           <img
@@ -144,7 +226,7 @@ const SingleDonation = () => {
                             type="radio"
                             name="paymentMethod"
                             value="nagad"
-                            onChange={handlePaymentChange}
+                            onChange={(e) => setSelectedMethod(e.target.value as PaymentMethod)}
                             checked={selectedMethod === "nagad"}
                           />
                           <img
@@ -161,7 +243,7 @@ const SingleDonation = () => {
                             type="radio"
                             name="paymentMethod"
                             value="rocket"
-                            onChange={handlePaymentChange}
+                            onChange={(e) => setSelectedMethod(e.target.value as PaymentMethod)}
                             checked={selectedMethod === "rocket"}
                           />
                           <img
@@ -178,7 +260,7 @@ const SingleDonation = () => {
                             type="radio"
                             name="paymentMethod"
                             value="ibbl"
-                            onChange={handlePaymentChange}
+                            onChange={(e) => setSelectedMethod(e.target.value as PaymentMethod)}
                             checked={selectedMethod === "ibbl"}
                           />
                           <img
@@ -346,77 +428,18 @@ const SingleDonation = () => {
                         </button>
                       </div>
                     </form>
-                  </div>
+
                 </div>
               </div>
-
-
             </div>
+
+
+            
           </div>
         </div>
-      </section>
-
-      {/* More donations section */}
-
-      <section className="event-section other-donation ">
-        <div className="row">
-          <div className="col-12">
-            <div className="section-title">
-              <h2 className="wow fadeInUp" data-wow-delay=".5s">
-                More Donations
-              </h2>
-            </div>
-          </div>
-        </div>
-
-        <div className="container">
-          <div className="content">
-            <div className="row">
-              {donations.map((donation: any) => (
-                <div className="col-lg-4 col-md-12 col-12" key={donation.id}>
-                    <Link to={`/financial-donation-details/${donation.id}`}>
-                        <div className="card">
-                            <img
-                            src={
-                                donation.image || "assets/images/financial/zakat2.jpg"
-                            }
-                            className="card-img-top img-fluid"
-                            alt={donation.title}
-                            />
-                            <div className="card-body">
-                            <h5
-                                className="card-title text-start"
-                                style={{
-                                fontSize: "18px",
-                                fontWeight: "600",
-                                color: "red",
-                                }}
-                            >
-                                <Link to={`/financial-donation-details/${donation.id}`}>
-                                {donation.title}
-                                </Link>
-                            </h5>
-
-                            <p className="mt-2" dangerouslySetInnerHTML={{ __html: donation.description.substring(0, 200) }} />
-
-
-                            <div className="donate_now text-center">
-                                <Link to={`/financial-donation-details/${donation.id}`}>
-                                Donate Now
-                                </Link>
-                            
-                            </div>
-                            </div>
-                        </div>
-                    </Link>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 };
 
-export default SingleDonation;
+export default SponsorChild;

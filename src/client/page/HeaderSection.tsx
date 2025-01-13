@@ -196,13 +196,12 @@ const Header = () => {
                     </a>
                     <div className="hover-links">
                       <ul className="donate-menu">
-                       
                         <li className="dnt-item">
-                          <a href="sponsor-child.html">Sponsor a Child</a>
+                          <Link to="sponsor-child">Sponsor a Child</Link>          
                         </li>
+
                         <li className="dnt-item">
-                        <Link to="financial-donations">Financial Donation</Link>
-                          
+                          <Link to="financial-donations">Financial Donation</Link>
                         </li>
                       </ul>
                     </div>
