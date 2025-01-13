@@ -15,6 +15,7 @@ const NewBlogNewsModal: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     image: undefined as File | undefined,
+    pdf: undefined as File | undefined,
     title: null as string | null,
     description: null as string | null,
     sorting_index: null as number | null,
@@ -29,6 +30,9 @@ const NewBlogNewsModal: React.FC = () => {
     const sliderData = new FormData();
     if (formData.image) {
       sliderData.append('image', formData.image);
+    }
+    if (formData.pdf) {
+      sliderData.append('pdf', formData.pdf);
     }
     sliderData.append('title', (formData.title ?? '').toString());
     sliderData.append('description', (formData.description ?? '').toString());
@@ -45,6 +49,7 @@ const NewBlogNewsModal: React.FC = () => {
 
       setFormData({
         image: undefined,
+        pdf: undefined,
         title: null,
         description: null,
         sorting_index: null,
@@ -98,6 +103,19 @@ const NewBlogNewsModal: React.FC = () => {
                   onChange={(e) => setFormData({ ...formData, image: e.target.files ? e.target.files[0] : undefined })}
                   placeholder="Choose Image"
                   required
+                />
+              </div>
+
+
+              <div className="">
+                <Label htmlFor="pdf">PDF </Label>
+                <Input
+                  type="file"
+                  id="pdf"
+                  onChange={(e) => setFormData({ ...formData, pdf: e.target.files ? e.target.files[0] : undefined })}
+                  placeholder="Choose pdf"
+                  required
+                  accept='application/pdf'
                 />
               </div>
 

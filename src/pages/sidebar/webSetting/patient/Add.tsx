@@ -111,45 +111,45 @@ const Add: React.FC = () => {
   const validationSchema = Yup.object().shape({
 
     disease_type_id: Yup.string().required('The disease type field is required.'),
-    height_id: Yup.string().required('The height field is required.'),
-    weight_id: Yup.string().required('The weight field is required.'),
+    height_id: Yup.string().nullable('The height field is required.'),
+    weight_id: Yup.string().nullable('The weight field is required.'),
 
-    father_name: Yup.string().required('The father name is required.'),
-    mother_name: Yup.string().required('The mother is required.'),
+    father_name: Yup.string().nullable('The father name is required.'),
+    mother_name: Yup.string().nullable('The mother is required.'),
 
 
     name: Yup.string().required('The name field is required.'),
     phone: Yup.string().required('The phone field is required.').matches(/^[0-9]{11}$/, 'Phone number must be exactly 11 digits.'),
-    email: Yup.string().email('Invalid email format').required('The email field is required.'),
+    email: Yup.string().email('Invalid email format').nullable('The email field is required.'),
     password: Yup.string().min(6, 'Password must be at least 6 characters long').required('The password field is required.'),
     password_confirmation: Yup.string().oneOf([Yup.ref('password'), ''], 'Passwords must match').required('The password confirmation field is required.'),
     gender_id: Yup.string().required('The gender field is required.'),
     date_of_birth: Yup.date().required('The date of birth is required.'),
     age: Yup.number().required('The age field is required.'),
-    marital_status_id: Yup.string().required('The marital status field is required.'),
-    occupation: Yup.string().required('The occupation field is required.'),
+
+    marital_status_id: Yup.string().nullable('The marital status field is required.'),
+    occupation: Yup.string().nullable('The occupation field is required.'),
     blood_group_id: Yup.string().required('The blood group field is required.'),
 
-    father_occupation: Yup.string().required('The father occupation field is required.'),
-    father_income_status: Yup.string().required('The father income status field is required.'),
+    father_occupation: Yup.string().nullable('The father occupation field is required.'),
+    father_income_status: Yup.string().nullable('The father income status field is required.'),
 
-    electrophoresis_report: Yup
-      .mixed()
-      .required('The electrophoresis report is required.')
-      .test('fileType', 'The electrophoresis report must be a file of type: jpeg, png, jpg, or pdf.', (value) => {
-        return value && ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'].includes((value as File).type);
-      }),
+    // electrophoresis_report: Yup
+    //   .mixed()
+    //   .nullable('The electrophoresis report is required.')
+    //   .test('fileType', 'The electrophoresis report must be a file of type: jpeg, png, jpg, or pdf.', (value) => {
+    //     return value && ['image/jpeg', 'image/png', 'image/jpg', 'application/pdf'].includes((value as File).type);
+    //   }),
 
 
     present_address: Yup.object().shape({
       country_id: Yup.string().required('The country field in the present address is required.'),
       city_id: Yup.string().required('The city field in the present address is required.'),
-      post_code: Yup.string().required('The postal code field in the present address is required.'),
-      address: Yup.string().required('The present address field is required.'),
+
     }),
 
     emergency_contact_number: Yup.string()
-      .required('The phone field is required.')
+      .nullable('The phone field is required.')
       .matches(
         /^[0-9]{11}$/,
         'Phone number must be exactly 11 digits.'
@@ -157,8 +157,7 @@ const Add: React.FC = () => {
     permanent_address: Yup.object().shape({
       country_id: Yup.string().required('The country field in the permanent address is required.'),
       city_id: Yup.string().required('The city field in the permanent address is required.'),
-      post_code: Yup.string().required('The postal code field in the permanent address is required.'),
-      address: Yup.string().required('The permanent address field is required.'),
+
     }),
   });
 
@@ -219,6 +218,7 @@ const Add: React.FC = () => {
 
 
             name: '',
+            user_name: '',
             phone: '',
             email: '',
             password: '',
@@ -273,19 +273,32 @@ const Add: React.FC = () => {
 
                     </div>
 
+
+
+
                     <div className='row'>
-                      <div className="col-md-6">
-                        <div className=" form-group mb-2">
-                          <Field name="phone" type="text" placeholder="Phone" className="form-control" />
-                          <ErrorMessage name="phone" component="div" className="text-danger" />
-                        </div>
-                      </div>
+
                       <div className="col-md-6">
                         <div className=" form-group mb-2">
                           <Field name="email" type="email" placeholder="Email" className="form-control" />
                           <ErrorMessage name="email" component="div" className="text-danger" />
                         </div>
                       </div>
+
+                      <div className="col-md-6">
+                        <div className=" form-group mb-2">
+                          <Field name="phone" type="text" placeholder="Phone" className="form-control" />
+                          <ErrorMessage name="phone" component="div" className="text-danger" />
+                        </div>
+                      </div>
+
+                      <div className="col-md-12">
+                        <div className="form-group mb-2">
+                          <Field name="user_name" type="text" placeholder="User name if phone number already exist " className="form-control" />
+                          <ErrorMessage name="user_name" component="div" className="text-danger" />
+                        </div>
+                      </div>
+
                     </div>
 
                     <div className=" form-group mb-2">
@@ -454,7 +467,7 @@ const Add: React.FC = () => {
                           const file = event.currentTarget.files[0];
                           setFieldValue("profile_image", file);
                         }}
-                          accept="image/*"
+                        accept="image/*"
                       />
                       <ErrorMessage name="profile_image" component="div" className="text-danger" />
                     </div>
@@ -497,6 +510,7 @@ const Add: React.FC = () => {
 
                     {/* Family Information */}
                     <div className='row'>
+
                       <div className="col-md-6">
                         <div className="form-group mb-2">
                           <Field name="father_name" type="text" placeholder="Father Name" className="form-control" />

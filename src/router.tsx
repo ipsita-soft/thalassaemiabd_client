@@ -92,6 +92,11 @@ import RegistrationSuccess from './pages/RegistrationSuccess.tsx';
 import { PatientMedicalHistoryPage } from './pages/sidebar/webSetting/PatientMedicalHistory/PatientMedicalHistoryPage.tsx';
 import { PatientAllHistory } from './pages/sidebar/webSetting/PatientMedicalHistory/PatientAllHistory';
 import { CratePatientMedicalHistory } from './pages/sidebar/webSetting/PatientMedicalHistory/CratePatientMedicalHistory.tsx';
+import CreatePrescription from './pages/sidebar/webSetting/prescription/CreatePrescription.tsx';
+
+import { PrescriptionsPage } from './pages/sidebar/webSetting/prescription/PrescriptionsPage.tsx';
+import  ShowPrescription  from './pages/sidebar/webSetting/prescription/ShowPrescription.tsx';
+import PatientReportForm from './pages/sidebar/webSetting/patient/PatientReportForm.tsx';
 
 
 const router = createBrowserRouter([
@@ -130,7 +135,7 @@ const router = createBrowserRouter([
         path: 'financial-donation-details/:id',
         element: <SingleDonation />
       },
-      
+
 
       {
         path: 'page/:TifType',
@@ -363,6 +368,49 @@ const router = createBrowserRouter([
         />,
       },
 
+      
+      {
+        path: 'admin-patient-report',
+        element: <ProtectedRoute
+          element={<PatientReportForm />}
+          requiredPermissions={[
+            'admin-patient-all',
+          ]}
+        />,
+      },
+
+
+
+      {
+        path: 'prescriptions',
+        element: <ProtectedRoute
+          element={<PrescriptionsPage />}
+          requiredPermissions={[
+            'prescriptions-all',
+          ]}
+        />,
+      },
+
+      {
+        path: 'add-prescription/:patient_id',
+        element: <ProtectedRoute
+          element={<CreatePrescription />}
+          requiredPermissions={[
+            'admin-patient-all',
+          ]}
+        />,
+      },
+
+
+      {
+        path: 'show-prescription/:prescription_id',
+        element: <ProtectedRoute
+          element={<ShowPrescription />}
+          requiredPermissions={[
+            'admin-patient-all',
+          ]}
+        />,
+      },
 
 
 

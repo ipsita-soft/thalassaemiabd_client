@@ -30,6 +30,7 @@ api.interceptors.response.use(
       localStorage.removeItem('user');
       localStorage.removeItem('roles');
       localStorage.removeItem('permissions');
+      window.location.reload();
     } else {
       return Promise.reject(error);
     }

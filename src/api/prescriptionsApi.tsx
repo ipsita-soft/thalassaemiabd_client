@@ -3,19 +3,13 @@ import { API_BASE_URL } from '@/config/apiConfig';
 import { logout } from '@/redux/slices/authSlice';
 import { AppDispatch } from '@/redux/store';
 
-export interface ImportantLink {
-    id: any;
-    title?: any;
-    image?: any;
-    url?: any;
-    description?: any;
-    status?: any;
-    sorting_index?: any;
+export interface PrescriptionsApi {
     data?: any;
+    id?:any;
 }
 
-export interface ImportantLinkResponse {
-    data: ImportantLink[];
+export interface PrescriptionsResponse {
+    data: PrescriptionsApi[];
     meta: {
         current_page: number;
         from: number;
@@ -32,8 +26,8 @@ export interface ImportantLinkResponse {
     };
 }
 
-export const importantlinkApi = createApi({
-    reducerPath: 'importantlinkApi',
+export const prescriptionsApi = createApi({
+    reducerPath: 'prescriptionsApi',
     baseQuery: async (args, api, extraOptions) => {
         const baseQuery = fetchBaseQuery({
             baseUrl: API_BASE_URL,
@@ -59,80 +53,76 @@ export const importantlinkApi = createApi({
 
         return result;
     },
-    tagTypes: ['ImportantLink'],
+    tagTypes: ['PrescriptionsApi'],
     endpoints: (builder) => ({
-        fetchImportantLinks: builder.query<
-            ImportantLinkResponse,
+        fetchPrescriptionsApis: builder.query<
+            PrescriptionsResponse,
             { perPage: number; page: number; search?: string }
         >({
             query: ({ perPage, page, search }) =>
-                `web/important-link?per_page=${perPage}&page=${page}&search=${search || ''}`,
+                `management/prescriptions?per_page=${perPage}&page=${page}&search=${search || ''}`,
             providesTags: (result) =>
                 result
                     ? [
-                        ...result.data.map(({ id }) => ({ type: 'ImportantLink' as const, id })),
-                        { type: 'ImportantLink', id: 'LIST' },
+                        ...result.data.map(({ id }) => ({ type: 'PrescriptionsApi' as const, id })),
+                        { type: 'PrescriptionsApi', id: 'LIST' },
                     ]
-                    : [{ type: 'ImportantLink', id: 'LIST' }],
+                    : [{ type: 'PrescriptionsApi', id: 'LIST' }],
         }),
 
-        fetchImportantLink: builder.query<ImportantLink, string>({
-            query: (id) => `web/important-link/${id}`,
-            providesTags: (_, __, id) => [{ type: 'ImportantLink', id }],
+        fetchPrescriptionApi: builder.query<PrescriptionsApi, string>({
+            query: (id) => `management/prescriptions/${id}`,
+            providesTags: (_, __, id) => [{ type: 'PrescriptionsApi', id }],
         }),
 
-        createImportantLink: builder.mutation<ImportantLink, Partial<ImportantLink>>({
+        createPrescriptionsApi: builder.mutation<PrescriptionsApi, Partial<PrescriptionsApi>>({
             query: (newLink) => {
                 const formData = new FormData();
+
                 Object.entries(newLink).forEach(([key, value]) => {
                     if (value !== undefined && value !== null) {
-                        formData.append(key, value as string | Blob);
+                        // Handle arrays and objects
+                        if (Array.isArray(value) || typeof value === 'object') {
+                            formData.append(key, JSON.stringify(value)); // Convert to JSON string
+                        } else {
+                            formData.append(key, value as string | Blob); // Append as string or Blob
+                        }
                     }
                 });
 
                 return {
-                    url: 'web/important-link',
+                    url: 'management/prescriptions',
                     method: 'POST',
                     body: formData,
                 };
             },
-            invalidatesTags: [{ type: 'ImportantLink', id: 'LIST' }],
+            invalidatesTags: [{ type: 'PrescriptionsApi', id: 'LIST' }],
         }),
-
-        // updateImportantLink: builder.mutation<ImportantLink, { id: string; data: Partial<ImportantLink> }>({
-        //     query: ({ id, data }) => ({
-        //         url: `web/important-link/${id}`,
-        //         method: 'post',
-        //         body: data,
-        //     }),
-        //     invalidatesTags: (_, error, { id }) =>
-        //         error ? [] : [{ type: 'ImportantLink', id }],
-        // }),
-
-        updateImportantLink: builder.mutation<ImportantLink, { id: string; data: FormData }>({
+        
+        updatePrescriptionsApi: builder.mutation<PrescriptionsApi, { id: string; data: FormData }>({
             query: ({ id, data }) => ({
-                url: `web/important-link/${id}`,
+                url: `management/prescriptions/${id}`,
                 method: 'POST',
                 body: data,
             }),
             invalidatesTags: (_, error, { id }) =>
-                error ? [] : [{ type: 'ImportantLink', id }],
+                error ? [] : [{ type: 'PrescriptionsApi', id }],
         }),
 
-        deleteImportantLink: builder.mutation<{ success: boolean; id: string }, string>({
+        deletePrescriptionsApi: builder.mutation<{ success: boolean; id: string }, string>({
             query: (id) => ({
-                url: `web/important-links/${id}`,
+                url: `management/prescriptionss/${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: (_, __, id) => [{ type: 'ImportantLink', id }, { type: 'ImportantLink', id: 'LIST' }],
+            invalidatesTags: (_, __, id) => [{ type: 'PrescriptionsApi', id }, { type: 'PrescriptionsApi', id: 'LIST' }],
         }),
     }),
 });
 
 export const {
-    useFetchImportantLinksQuery,
-    useFetchImportantLinkQuery,
-    useCreateImportantLinkMutation,
-    useUpdateImportantLinkMutation,
-    useDeleteImportantLinkMutation,
-} = importantlinkApi;
+    useFetchPrescriptionsApisQuery,
+    useFetchPrescriptionApiQuery,
+    useCreatePrescriptionsApiMutation,
+    useUpdatePrescriptionsApiMutation,
+    useDeletePrescriptionsApiMutation,
+} = prescriptionsApi;

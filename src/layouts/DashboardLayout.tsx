@@ -32,7 +32,8 @@ import {
     History,
     Library,
     DatabaseIcon,
-    GitPullRequest
+    GitPullRequest,
+    DockIcon
 
 } from 'lucide-react';
 
@@ -279,7 +280,7 @@ function DashboardLayout() {
                                             }`}
                                     >
                                         <TargetIcon className="h-4 w-4" />
-                                       What Is thalassemia
+                                        What Is thalassemia
                                     </Link>
                                 )}
 
@@ -293,7 +294,7 @@ function DashboardLayout() {
                                             }`}
                                     >
                                         <TargetIcon className="h-4 w-4" />
-                                       Founder Details
+                                        Founder Details
                                     </Link>
                                 )}
 
@@ -376,7 +377,7 @@ function DashboardLayout() {
                                             Blood Donor
                                         </Link>
                                     )
-                                    }
+                                }
 
 
 
@@ -419,6 +420,36 @@ function DashboardLayout() {
 
 
 
+
+                                {hasPermissions([
+                                    'prescriptions-all',
+                                ], permissions) && (
+
+                                        <Link
+                                            to="/dashboard/prescriptions"
+                                            className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all
+                                             ${isActive('/dashboard/prescriptions') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                                }`}
+                                        >
+                                            <DockIcon className="h-4 w-4" />
+                                            Prescriptions
+                                        </Link>
+                                    )}
+
+                                {hasPermissions([
+                                    'admin-patient-all',
+                                ], permissions) && (
+
+                                        <Link
+                                            to="/dashboard/admin-patient-report"
+                                            className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all
+                                             ${isActive('/dashboard/admin-patient-report') ? 'bg-muted text-primary' : 'text-muted-foreground hover:text-primary'
+                                                }`}
+                                        >
+                                            <DockIcon className="h-4 w-4" />
+                                            Patient-report
+                                        </Link>
+                                    )}
 
 
 
