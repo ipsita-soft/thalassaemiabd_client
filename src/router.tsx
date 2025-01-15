@@ -47,12 +47,26 @@ import TifMembership from './client/page/TifMembership.tsx';
 import { TifPage } from './pages/sidebar/webSetting/tifPage/TifPage.tsx';
 import { TifSliderPage } from './pages/sidebar/webSetting/tifSlider/TifSliderPage.tsx';
 
+import Prescription from './client/userpanel/Prescription.tsx';
+import Medicine from './client/userpanel/Medicine.tsx';
+import MedicalReport from './client/userpanel/MedicalReport.tsx';
+import Appointment from './client/userpanel/Appointment.tsx';
+import MedicalHistory from './client/userpanel/MedicalHistory.tsx';
+import Reminder from './client/userpanel/Reminder.tsx';
 import Notice from './client/userpanel/Notice.tsx';
 import AnnualReports from './client/userpanel/Annualreport.tsx';
 import MyProfile from './client/userpanel/MyProfile.tsx';
 import UpdateProfile from './client/userpanel/UpdateProfile.tsx';
-import BloodDonationHistory from './client/userpanel/bloodDonationHistory.tsx';
+import BloodDonationHistory from './client/userpanel/BloodDonationHistory.tsx';
+import BloodReport from './client/userpanel/BloodReport.tsx';
+import BloodDonateRequest from './client/userpanel/BloodDonateRequest.tsx';
 import HealthHistory from './client/userpanel/HealthHistory.tsx';
+import DonateHistory from './client/userpanel/DonationHistory.tsx';
+import SponsorAChild from './client/userpanel/SponsorChild.tsx';
+import DonateNow from './client/userpanel/DonateNow.tsx';
+
+
+
 import { TifAttachmentPage } from './pages/sidebar/webSetting/tifAttachment/TifAttachmentPage.tsx';
 import { YearsPage } from './pages/sidebar/webSetting/years/YearsPage.tsx';
 import Committee from './client/page/Committee.tsx';
@@ -98,6 +112,7 @@ import ShowPrescription from './pages/sidebar/webSetting/prescription/ShowPrescr
 import PatientReportForm from './pages/sidebar/webSetting/patient/PatientReportForm.tsx';
 import UpdatePrescription from './pages/sidebar/webSetting/prescription/updatePrescriptions.tsx';
 import { PrescribedMedicines } from './pages/sidebar/webSetting/prescription/PrescribedMedicines.tsx';
+
 
 const router = createBrowserRouter([
   {
@@ -871,6 +886,7 @@ const router = createBrowserRouter([
     element: <ProtectedRoute
       element={<UserPanelLayout />}
       requiredRoles={['blood_donor', 'ec_committee', 'financial_donor', 'voluntary', 'patient']}
+      requiredPermissions={['userdashboard']}
     />,
     children: [
       {
@@ -886,17 +902,6 @@ const router = createBrowserRouter([
       },
 
       {
-        path: '/userpanel/notices',
-        element: <Notice />
-      },
-
-
-      {
-        path: '/userpanel/annual-reports',
-        element: <AnnualReports />
-      },
-
-      {
         path: '/userpanel/update-profile',
         element: (
           <ProtectedRoute
@@ -906,14 +911,166 @@ const router = createBrowserRouter([
             requiredPermissions={['profile_edit']}
           />
         ),
-        // element: <UpdateProfile />
       },
 
       {
-        path: '/userpanel/blood-donation-history',
-        element: <BloodDonationHistory />
+        path: "/userpanel/medical-history",
+        element: (
+          <ProtectedRoute
+            element={<MedicalHistory />}
+            requiredPermissions={["self-medical-history"]}
+          />
+        ),
+      },
+    
+      // Prescription
+      {
+        path: "/userpanel/prescription",
+        element: (
+          <ProtectedRoute
+            element={<Prescription />}
+            requiredPermissions={["self-prescription"]}
+          />
+        ),
+      },
+    
+      // Appointment
+      {
+        path: "/userpanel/appointment",
+        element: (
+          <ProtectedRoute
+            element={<Appointment />}
+            requiredPermissions={["self-appointment"]}
+          />
+        ),
+      },
+    
+      // Medicine
+      {
+        path: "/userpanel/medicine",
+        element: (
+          <ProtectedRoute
+            element={<Medicine />}
+            requiredPermissions={["prescribed-medicines"]}
+          />
+        ),
+      },
+    
+      // Medical Report
+      {
+        path: "/userpanel/medical-report",
+        element: (
+          <ProtectedRoute
+            element={<MedicalReport />}
+            requiredPermissions={["self-medical-report"]}
+          />
+        ),
+      },
+    
+      // Reminder
+      {
+        path: "/userpanel/reminder",
+        element: (
+          <ProtectedRoute
+            element={<Reminder />}
+            requiredPermissions={["self-reminder"]}
+          />
+        ),
       },
 
+      // Notice
+      {
+        path: '/userpanel/notices',
+        element: (
+          <ProtectedRoute
+            element={<Notice />}
+            requiredPermissions={["notice"]}
+          />
+        ),
+      },
+
+      // Annual Reports
+      {
+        path: '/userpanel/annual-reports',
+        element: (
+          <ProtectedRoute
+            element={<AnnualReports />}
+            requiredPermissions={["annualreport"]}
+          />
+        ),
+      },
+
+      // Blood Donation History
+      {
+        path: '/userpanel/blood-donation-history',
+        element: (
+          <ProtectedRoute
+            element={<BloodDonationHistory />}
+            requiredPermissions={["self-donation-history"]}
+          />
+        ),
+      },
+
+      // Blood Report
+      {
+        path: '/userpanel/blood-report',
+        element: (
+          <ProtectedRoute
+            element={<BloodReport />}
+            requiredPermissions={["self-blood-report"]}
+          />
+        ),
+      },
+
+      // Blood Donation Request
+      {
+        path: '/userpanel/blood-donate-request',
+        element: (
+          <ProtectedRoute
+            element={<BloodDonateRequest />}
+            requiredPermissions={["self-blood-donate-request"]}
+          />
+        ),
+      },
+
+
+
+
+
+      // Financial Donation
+      {
+        path: '/userpanel/donate-now',
+        element: (
+          <ProtectedRoute
+            element={<DonateNow/>}
+            requiredPermissions={["user-donate-now"]}
+          />
+        ),
+      },
+
+      // Financial Donation
+      {
+        path: '/userpanel/donation-history',
+        element: (
+          <ProtectedRoute
+            element={<DonateHistory/>}
+            requiredPermissions={["user-donation-history"]}
+          />
+        ),
+      },
+                
+
+      // Financial Donation
+      {
+        path: '/userpanel/sponsor-child',
+        element: (
+          <ProtectedRoute
+            element={<SponsorAChild/>}
+            requiredPermissions={["user-sponsor-child"]}
+          />
+        ),
+      },
+            
       {
         path: '/userpanel/health-history',
         element: <HealthHistory />

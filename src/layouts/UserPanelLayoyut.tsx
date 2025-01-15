@@ -11,11 +11,7 @@ import { useSelector } from "react-redux";
 const UserPanelLayout = () => {
   const { user } = useSelector((state: any) => state.auth);
   if (user.bts_id === null) return <Navigate to="/registration-success" />;
-
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const outlet = useOutlet();
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [activeTab, setActiveTab] = useState("dashboard");
 
   const handleTabClick = (tab: any) => {
