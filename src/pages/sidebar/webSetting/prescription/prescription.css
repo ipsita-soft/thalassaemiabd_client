@@ -1,0 +1,78 @@
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+  
+    
+    #print-prescription,
+    #print-prescription * {
+        visibility: visible;
+    }
+
+    #print-prescription {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+
+    }
+
+    /* Specific styling for grid-based header during printing */
+    #main_header {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        /* Define 10 equal columns */
+        align-items: start;
+        /* Align items at the top */
+        gap: 0;
+        width: 98%;
+        /* Ensure header spans full width */
+    }
+
+    #leftHeader {
+        grid-column: span 5;
+        /* Make the left header span 4 columns */
+        justify-self: start;
+        /* Align image part to the left */
+    }
+
+    #rightHeader {
+        grid-column: span 7;
+        /* Make the right header span 6 columns */
+        justify-self: end;
+        /* Align text part to the right */
+        text-align: right;
+    }
+
+    header img {
+        display: block;
+        max-width: 100%;
+        /* Ensure image scales within its container */
+        height: auto;
+        /* Maintain aspect ratio */
+    }
+
+    #prescription_text {
+
+        margin-top: 20px;
+        line-height: 1.20;
+        font-size: 1.225rem;
+        /* equivalent to text-lg */
+        font-weight: 600;
+        /* equivalent to font-semibold */
+        background-color: #9ecee8;
+        /* equivalent to bg-blue-100 */
+        color: #27282a;
+        /* equivalent to text-blue */
+        text-align: center;
+        padding: 0.25rem;
+        /* equivalent to p-1 */
+    }
+
+    .customize_mer {
+        margin-left: 30px;
+        margin-right: 30px;
+    }
+
+}

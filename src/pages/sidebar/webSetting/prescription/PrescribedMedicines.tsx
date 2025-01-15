@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useFetchPrescriptionsApisQuery } from "@/api/prescriptionsApi";
+import { useFetchPrescribedMedicinesApisQuery } from "@/api/prescriptionsApi";
 import {
     SortingState,
     ColumnFiltersState,
@@ -24,34 +24,52 @@ import {
     TableRow,
 } from "@/components/ui/table";
 
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useFetchMedicalHistoriesQuery } from "@/api/medicalHistoryApi";
 
 
 
-export function PrescriptionsPage() {
+export function PrescribedMedicines() {
     const [perPage, setPerPage] = useState(10);
     const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-
-    const { data, isLoading, error } = useFetchPrescriptionsApisQuery({
+    const { patient_id } = useParams();
+    const { data, isLoading, error } = useFetchPrescribedMedicinesApisQuery({
+        patient_id: patient_id || '',
         perPage,
         search,
         page: currentPage,
     });
 
+    const { data: hItem, isLoading: itemLoading } = useFetchMedicalHistoriesQuery({
+        perPage: 1,
+        search: '',
+        page: 1,
+        status: '1',
+    });
 
+    const firstItem = hItem?.data?.[0]?.id;
+
+    const location = useLocation();
+
+    const navigate = useNavigate();
+
+
+    const handleNavigate = () => {
+        const previousRoute = location.state?.from || `/dashboard/show-patient-medical-history/${patient_id}/${itemLoading == false ? firstItem : ''}`;
+        navigate(previousRoute);
+    };
 
     const meta = data?.meta;
-    const prescriptionData = data?.data;
+    const prescribedMedicines = data?.data;
+
+    console.log(prescribedMedicines);
 
 
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [filterValue, setFilterValue] = useState("");
-
-    const navigate = useNavigate();
-
 
     const columns = [
         {
@@ -71,76 +89,25 @@ export function PrescriptionsPage() {
         },
 
         {
-            id: "name",
-            header: "Patient",
+            id: "medicines",
+            header: "Medicines",
             cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.patient.name}</div>
-            ),
-        },
-        {
-            id: "bts-id",
-            header: "BTS ID",
-            cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.patient.bts_id}</div>
-            ),
-        },
-
-        {
-            id: "old-bts-id",
-            header: "OLD BTS ID",
-            cell: ({ row }: { row: { original: any } }) => (
-                <div className="text-left">{row.original.patient.patient_info?.old_bts_id}</div>
+                <div className="text-left">
+                    {row.original.medicines.map((data: any) => (
+                        <span className="bg-blue-100 text-blue-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
+                            {data?.medicine?.name}
+                        </span>
+                    ))}
+                </div>
             ),
         },
 
 
 
-        {
-            id: "actions",
-            header: "Action",
-            enableHiding: false,
-            cell: ({ row }: { row: { original: any } }) => {
-                const data = row.original;
-                return (
-
-                    <div className="flex items-center gap-2">
-
-
-                        <button
-                            title="Add Prescription"
-                            className={`flex items-center justify-center rounded-full 
-        p-0 w-8 h-8 bg-transparent border border-green-300 
-        hover:bg-green-100 hover:border-green-400 transition-all 
-        focus:ring-2 focus:ring-green-300 disabled:opacity-50`}
-
-                            onClick={() => navigate(`/dashboard/show-prescription/${data?.id.toString()}`)}
-                        >
-                            <Eye className="text-green-600 w-5 h-5" />
-
-                        </button>
-
-                        <button
-                            title="Add Prescription"
-                            className={`flex items-center justify-center rounded-full 
-        p-0 w-8 h-8 bg-transparent border border-green-300 
-        hover:bg-green-100 hover:border-green-400 transition-all 
-        focus:ring-2 focus:ring-green-300 disabled:opacity-50`}
-
-                            onClick={() => navigate(`/dashboard/prescriptions-edit/${data?.id.toString()}`)}
-                        >
-                            <Edit className="text-gray-600 w-5 h-5" />
-
-                        </button>
-
-                    </div>
-
-                );
-            },
-        },
     ];
 
     const table = useReactTable({
-        data: prescriptionData || [],
+        data: prescribedMedicines || [],
         columns,
         state: {
             sorting,
@@ -182,6 +149,7 @@ export function PrescriptionsPage() {
         </div>
     ) : (
         <div className="p-4">
+
             <div className="flex flex-col lg:flex-row justify-between items-center mb-4 space-y-4 lg:space-y-0 lg:space-x-4">
                 <Input
                     type="text"
@@ -204,7 +172,11 @@ export function PrescriptionsPage() {
                         <option value={50}>50</option>
                         <option value={100}>100</option>
                     </select>
+                    <Button variant="outline" className="ml-4" onClick={handleNavigate}> {'<<'} Back</Button>
                 </div>
+
+
+
             </div>
             {error ? (
                 <>Error</>

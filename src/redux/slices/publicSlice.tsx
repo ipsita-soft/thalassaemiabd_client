@@ -296,7 +296,9 @@ interface PublicState {
     sliders: { data: Slider[] };
     countries: { data: Countries[] };
     labTestServiceItems: { data: CommonData[] };
-    medicineItems: { data: CommonData[] };
+    medicineItems: {
+        length: number; data: CommonData[] 
+};
     cities:[];
     cities2:[];
     yearList: { data: YearList[] };

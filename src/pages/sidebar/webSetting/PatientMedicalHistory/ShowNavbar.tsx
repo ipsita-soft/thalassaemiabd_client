@@ -41,8 +41,11 @@ const Navbar: React.FC<NavbarProps> = ({ patient_id }) => {
 
     return (
         <div className="mt-6">
+
+
             {/* Scrollable Menu */}
             <div className="flex  overflow-x-auto  whitespace-nowrap pb-1 xl:max-w-6xl  lg:max-w-4xl space-x-4 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
+
                 {patientRegistrationData.map((menu, index) => (
                     <div
                         key={menu.id || index}
@@ -62,6 +65,8 @@ const Navbar: React.FC<NavbarProps> = ({ patient_id }) => {
 
                     </div>
                 ))}
+
+
             </div>
 
             {/* Pagination Section */}
@@ -97,11 +102,17 @@ const Navbar: React.FC<NavbarProps> = ({ patient_id }) => {
                     </Link>
 
 
-                    <Link to={`/dashboard/show-appointment/${apId}`}
+
+
+
+                    <Link to={`/dashboard/prescribed-medicines-list/${patient_id}`}
                         className={`px-2 py-1 text-sm rounded-lg transition-all duration-200 bg-gray-300 text-gray-600 hover:bg-gray-400 hover:text-gray-300`}
                     >
-                        Show
+
+                        Prescribed Medicines List
                     </Link>
+
+
                 </div>
 
 

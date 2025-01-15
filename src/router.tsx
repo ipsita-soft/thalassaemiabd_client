@@ -86,7 +86,6 @@ import PatientManagement from './client/page/PatientManagement.tsx';
 import { FinancialDonationPage } from './pages/sidebar/webSetting/financialDonation/FinancialDonationPage.tsx';
 import { ImportantLinkPage } from './pages/sidebar/webSetting/importantLink/ImportantLinkPage.tsx';
 
-import ShowAppointment from './pages/sidebar/webSetting/appointments/ShowAppointment.tsx';
 import { UpdatePatientMedicalHistory } from './pages/sidebar/webSetting/PatientMedicalHistory/UpdatePatientMedicalHistory.tsx';
 import RegistrationSuccess from './pages/RegistrationSuccess.tsx';
 import { PatientMedicalHistoryPage } from './pages/sidebar/webSetting/PatientMedicalHistory/PatientMedicalHistoryPage.tsx';
@@ -95,8 +94,10 @@ import { CratePatientMedicalHistory } from './pages/sidebar/webSetting/PatientMe
 import CreatePrescription from './pages/sidebar/webSetting/prescription/CreatePrescription.tsx';
 
 import { PrescriptionsPage } from './pages/sidebar/webSetting/prescription/PrescriptionsPage.tsx';
-import  ShowPrescription  from './pages/sidebar/webSetting/prescription/ShowPrescription.tsx';
+import ShowPrescription from './pages/sidebar/webSetting/prescription/ShowPrescription.tsx';
 import PatientReportForm from './pages/sidebar/webSetting/patient/PatientReportForm.tsx';
+import UpdatePrescription from './pages/sidebar/webSetting/prescription/updatePrescriptions.tsx';
+import { PrescribedMedicines } from './pages/sidebar/webSetting/prescription/PrescribedMedicines.tsx';
 
 const router = createBrowserRouter([
   {
@@ -372,7 +373,7 @@ const router = createBrowserRouter([
         />,
       },
 
-      
+
       {
         path: 'admin-patient-report',
         element: <ProtectedRoute
@@ -389,6 +390,16 @@ const router = createBrowserRouter([
         path: 'prescriptions',
         element: <ProtectedRoute
           element={<PrescriptionsPage />}
+          requiredPermissions={[
+            'prescriptions-all',
+          ]}
+        />,
+      },
+
+      {
+        path: 'prescriptions-edit/:prescription_id',
+        element: <ProtectedRoute
+          element={<UpdatePrescription />}
           requiredPermissions={[
             'prescriptions-all',
           ]}
@@ -416,6 +427,17 @@ const router = createBrowserRouter([
         />,
       },
 
+
+      
+      {
+        path: 'prescribed-medicines-list/:patient_id',
+        element: <ProtectedRoute
+          element={<PrescribedMedicines />}
+          requiredPermissions={[
+            'appointment-all',
+          ]}
+        />,
+      },
 
 
       {
@@ -486,15 +508,7 @@ const router = createBrowserRouter([
         />,
       },
 
-      {
-        path: 'show-appointment/:appointment_id',
-        element: <ProtectedRoute
-          element={<ShowAppointment />}
-          requiredPermissions={[
-            'appointment-all',
-          ]}
-        />,
-      },
+
 
 
       {
@@ -506,6 +520,17 @@ const router = createBrowserRouter([
           ]}
         />,
       },
+
+      {
+        path: 'patient-medicine/:patient_id',
+        element: <ProtectedRoute
+          element={<TestPage />}
+          requiredPermissions={[
+            'appointment-all',
+          ]}
+        />,
+      },
+
 
       {
         path: 'admin-user',

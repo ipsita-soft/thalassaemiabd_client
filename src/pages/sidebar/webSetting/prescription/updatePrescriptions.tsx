@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Select from "react-select";
 import { calculateAge } from '@/utils/dateUtils';
-import { useFetchPatientQuery } from "@/api/patientApi";
 import { Spinner } from "@/components/ui/spinner";
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { fetchPublicLabTestServiceItem, fetchPublicMedicineItems } from "@/redux/slices/publicSlice";
-import { useCreatePrescriptionsApiMutation } from "@/api/prescriptionsApi";
+import { useFetchPrescriptionApiQuery, useUpdatePrescriptionsApiMutation } from "@/api/prescriptionsApi";
 import Swal from "sweetalert2";
-import { ArrowBigLeft, ClipboardPlus } from "lucide-react";
+import { useFetchPatientQuery } from "@/api/patientApi";
+import { ArrowBigLeft, SkipBackIcon, StepBack } from "lucide-react";
 
 interface FormData {
     date: string;
@@ -25,79 +25,101 @@ interface FormData {
     spleen: string;
 }
 
-
-const CreatePrescription = () => {
-    const { patient_id } = useParams();
-    const { data: patient, isLoading } = useFetchPatientQuery(patient_id || '');
-    const getAge = calculateAge(patient?.data?.patientInfo?.date_of_birth);
+const UpdatePrescription = () => {
+    const { prescription_id } = useParams();
+    const { data: prescription, isLoading: prescriptionLoading } = useFetchPrescriptionApiQuery(prescription_id || '');
+    const { data: patient, isLoading: getPatientLoading } = useFetchPatientQuery(prescription?.data?.patient?.id || '');
     const dispatch = useDispatch<AppDispatch>();
 
 
-    const navigate = useNavigate();
-
-    const backtoPrescription = () => {
-        navigate("/dashboard/admin-patient");
-    };
-
-
-    const [createPrescription] = useCreatePrescriptionsApiMutation();
+    const [updatePrescription] = useUpdatePrescriptionsApiMutation();
     const { labTestServiceItems, medicineItems, isLoading: commonDataLoading } = useSelector((state: RootState) => state.public);
+
     useEffect(() => {
         dispatch(fetchPublicLabTestServiceItem({ getAll: 'all' }));
         dispatch(fetchPublicMedicineItems({ getAll: 'all' }));
     }, [dispatch]);
 
 
-    const [form, setForm] = useState<FormData>({
-        date: new Date().toISOString().split("T")[0],
-        patient_id: patient_id || null,
-        age: null,
-        cc: "",
-        bp: "",
-        temp: "",
-        height: "",
-        weight: "",
-        liver: "",
-        spleen: "",
-    });
-
-
-    useEffect(() => {
-        if (patient?.data?.patientInfo?.date_of_birth) {
-            const getAge = calculateAge(patient.data.patientInfo.date_of_birth);
-            setForm((prevForm) => ({
-                ...prevForm,
-                age: getAge,
-            }));
-        }
-    }, [patient]);
-
-
-    const [medicines, setMedicines] = useState<any>([
-        { medicine_item_id: null, timing: "", take_time: "", duration: "" },
-    ]);
-
-    const tests = labTestServiceItems?.data?.map((data: any) => ({
+    const tests2 = labTestServiceItems?.data?.map((data: any) => ({
         id: data?.id,
         name: data?.name,
     }));
-
-    const tests2 = medicineItems?.data?.map((data: any) => ({
+    const medicineItem = medicineItems?.data?.map((data: any) => ({
         id: data?.id,
         name: data?.name,
     }));
 
     const [selectedTests, setSelectedTests] = useState<number[]>([]);
 
+
+
+
+    const [form, setForm] = useState<FormData>({
+        date: '',
+        patient_id: prescription?.data?.patient?.id || null,
+        age: null,
+        cc: '',
+        bp: '',
+        temp: '',
+        height: '',
+        weight: '',
+        liver: '',
+        spleen: '',
+    });
+
+    useEffect(() => {
+        if (prescription?.data) {
+            setForm({
+                date: prescription?.data?.date,
+                patient_id: prescription?.data?.patient?.id,
+                age: calculateAge(patient?.data?.patientInfo?.date_of_birth),
+                cc: prescription?.data?.cc,
+                bp: prescription?.data?.bp,
+                temp: prescription?.data?.temp,
+                height: prescription?.data?.height,
+                weight: prescription?.data?.weight,
+                liver: prescription?.data?.liver,
+                spleen: prescription?.data?.spleen,
+            });
+        }
+    }, [prescription, patient]);
+
+    const navigate = useNavigate();
+
+    const backtoPrescription = () => {
+        navigate("/dashboard/prescriptions");
+    };
+
+    const [medicines, setMedicines] = useState<any>(prescription?.data?.medicines || [{ medicine_item_id: null, timing: "", take_time: "", duration: "" }]);
+
+
+    useEffect(() => {
+        if (prescription?.data?.medicines) {
+            const defaultMedicines = prescription.data.medicines.map((med: any) => ({
+                medicine_item_id: med.medicine.id,
+                timing: med.timing,
+                take_time: med.take_time,
+                duration: med.duration,
+            }));
+            setMedicines(defaultMedicines);
+        }
+    }, [prescription, medicineItems]);
+
+
+    useEffect(() => {
+        if (prescription?.data?.advice) {
+            const initialTests = prescription.data.advice.map((advice: any) => advice.id);
+            setSelectedTests(initialTests);
+        }
+    }, [prescription]);
+
+
     const handleInputChange = (field: keyof FormData, value: string) => {
         setForm({ ...form, [field]: value });
     };
 
-    const handleMedicineChange = (
-        index: number,
-        field: null | string,
-        value: string | number | null
-    ) => {
+    const handleMedicineChange = (index: number, field: null | string, value: string | number | null) => {
         const updatedMedicines = [...medicines];
         if (field != null) {
             updatedMedicines[index][field] = value;
@@ -117,7 +139,6 @@ const CreatePrescription = () => {
         setMedicines(updatedMedicines);
     };
 
-
     const handleSubmit = async () => {
         if (!form.patient_id || !form.cc || medicines.some((m: any) => !m.medicine_item_id)) {
             Swal.fire({
@@ -128,28 +149,24 @@ const CreatePrescription = () => {
             return;
         }
 
-
-
+        const advice = selectedTests.map((testId) =>
+            labTestServiceItems?.data?.find((test: any) => test.id === testId)
+        );
 
         const payload: any = {
             ...form,
-            advice: selectedTests.map((testId) =>
-                labTestServiceItems?.data?.find((test: any) => test.id === testId)
-            ),
-            medicines,
+            medicines: JSON.stringify(medicines),
+            advice: JSON.stringify(advice),
+            _method: 'PUT',
         };
 
-        // console.log(payload);
-
         try {
-            await createPrescription(payload).unwrap();
+            await updatePrescription({ id: prescription_id, data: payload }).unwrap();
             Swal.fire({
                 title: "Success!",
-                text: "Prescription created successfully!",
+                text: "Prescription updated successfully!",
                 icon: "success",
             });
-            window.location.reload();
-
         } catch (error: any) {
             Swal.fire({
                 title: "Error",
@@ -159,33 +176,29 @@ const CreatePrescription = () => {
         }
     };
 
-    return isLoading && commonDataLoading ? (
+
+
+    return prescriptionLoading || getPatientLoading || commonDataLoading ? (
         <Spinner />
     ) : (
         <div className="max-w-7xl p-5 pt-4 rounded border">
-
-            {/* <h1 className="text-2xl font-bold mb-6 text-center border p-2 mt-3">
-                Prescription Information
-            </h1> */}
-
-
             <div className="grid grid-cols-1 sm:grid-cols-2 items-center gap-4 mb-6 bg-white p-6 rounded-lg shadow-md border">
+                
                 <h1 className="text-1xl   text-lg text-left">
 
                     <span className="border-b-2 pb-1">
-                    # Prescription Information
+                    # Update Prescription
                     </span>
                 </h1>
-
 
                 <div className="flex justify-center sm:justify-end text-1xl ">
                     <Button onClick={backtoPrescription} className="text-1xl" variant={"outline"}>  <ArrowBigLeft></ArrowBigLeft> Back</Button>
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 mb-6">
-                <div>
 
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <div>
                     <label className="block text-sm mb-1 font-medium">Name:</label>
                     <input
                         className="border p-2 rounded w-full"
@@ -194,14 +207,8 @@ const CreatePrescription = () => {
                         disabled
                     />
 
-                    <input
-                        className="border p-2 rounded w-full"
-                        type="hidden"
-                        value={patient_id || ""}
-                    />
 
                 </div>
-
                 <div>
                     <label className="block text-sm mb-1 font-medium">Date:</label>
                     <input
@@ -211,13 +218,11 @@ const CreatePrescription = () => {
                         onChange={(e) => handleInputChange("date", e.target.value)}
                     />
                 </div>
-
-
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
                 <div>
-                    <label className="block text-sm mb-1  font-medium">Disease type:</label>
+                    <label className="block text-sm mb-1 font-medium">Disease type:</label>
                     <input
                         className="border p-2 rounded w-full"
                         type="text"
@@ -225,7 +230,6 @@ const CreatePrescription = () => {
                         disabled
                     />
                 </div>
-
                 <div>
                     <label className="block text-sm mb-1 font-medium">Sex:</label>
                     <input
@@ -235,23 +239,21 @@ const CreatePrescription = () => {
                         disabled
                     />
                 </div>
-
                 <div>
                     <label className="block text-sm mb-1 font-medium">Age:</label>
                     <input
                         className="border p-2 rounded w-full"
                         type="text"
-                        value={getAge}
+                        value={form.age || ''}
                         disabled
                     />
                 </div>
             </div>
 
+            {/* Form Inputs for Prescription Details (CC, BP, etc.) */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-6">
                 <div className="lg:col-span-3">
-
-
-
+                    {/* CC, BP, Temp, etc. */}
                     <div className="mb-1">
                         <label className="block text-sm mb-1 font-medium">C/C:</label>
                         <textarea
@@ -262,67 +264,73 @@ const CreatePrescription = () => {
                         />
                     </div>
 
-
-
+                    {/* BP */}
                     <div className="mb-1">
-                        <label className="block text-sm mb-1 font-medium">BP:</label>
+                        <label className="block text-sm mb-1 font-medium">Blood Pressure:</label>
                         <input
                             className="border p-2 rounded w-full"
                             type="text"
+                            placeholder="Enter BP"
                             value={form.bp}
                             onChange={(e) => handleInputChange("bp", e.target.value)}
                         />
                     </div>
 
+                    {/* Temp */}
                     <div className="mb-1">
-                        <label className="block text-sm mb-1 font-medium">Temp:</label>
+                        <label className="block text-sm mb-1 font-medium">Temperature:</label>
                         <input
                             className="border p-2 rounded w-full"
                             type="text"
+                            placeholder="Enter Temp"
                             value={form.temp}
                             onChange={(e) => handleInputChange("temp", e.target.value)}
                         />
                     </div>
 
-
+                    {/* Height */}
                     <div className="mb-1">
                         <label className="block text-sm mb-1 font-medium">Height:</label>
                         <input
                             className="border p-2 rounded w-full"
                             type="text"
+                            placeholder="Enter Height"
                             value={form.height}
                             onChange={(e) => handleInputChange("height", e.target.value)}
                         />
                     </div>
 
-
+                    {/* Weight */}
                     <div className="mb-1">
                         <label className="block text-sm mb-1 font-medium">Weight:</label>
                         <input
                             className="border p-2 rounded w-full"
                             type="text"
+                            placeholder="Enter Weight"
                             value={form.weight}
                             onChange={(e) => handleInputChange("weight", e.target.value)}
                         />
                     </div>
 
+                    {/* Liver */}
                     <div className="mb-1">
                         <label className="block text-sm mb-1 font-medium">Liver:</label>
                         <input
                             className="border p-2 rounded w-full"
                             type="text"
+                            placeholder="Enter Liver Condition"
                             value={form.liver}
                             onChange={(e) => handleInputChange("liver", e.target.value)}
                         />
                     </div>
 
-
-
+                    {/* Spleen */}
                     <div className="mb-1">
                         <label className="block text-sm mb-1 font-medium">Spleen:</label>
                         <input
                             className="border p-2 rounded w-full"
                             type="text"
+                            placeholder="Enter Spleen Condition"
                             value={form.spleen}
                             onChange={(e) => handleInputChange("spleen", e.target.value)}
                         />
@@ -330,10 +338,11 @@ const CreatePrescription = () => {
 
 
 
+
                 </div>
 
                 <div className="lg:col-span-9">
-                    {/* RX Section */}
+                    {/* RX Section (Medicines) */}
                     <div className="mb-6">
                         <label className="block text-sm mb-1 font-medium">RX (Medicines):</label>
                         {medicines.map((medicine: any, index: any) => (
@@ -341,10 +350,27 @@ const CreatePrescription = () => {
                                 <div className="flex-grow" style={{ flexBasis: "45%" }}>
                                     <Select
                                         className="border w-full"
-                                        options={tests2.map((test) => ({
+                                        options={medicineItem.map((test) => ({
                                             value: test.id,
                                             label: test.name,
                                         }))}
+
+                                        value={
+                                            medicine.id
+                                                ? { value: medicine.id, label: medicine.name }
+                                                : medicine.medicine_item_id
+                                                    ? {
+                                                        value: medicine.medicine_item_id,
+                                                        label:
+                                                            medicineItem.find(
+                                                                (item) => item.id === medicine.medicine_item_id
+                                                            )?.name || '',
+                                                    }
+                                                    : null
+                                        }
+
+
+
                                         placeholder="Select Medicine"
                                         onChange={(option) =>
                                             handleMedicineChange(
@@ -419,35 +445,42 @@ const CreatePrescription = () => {
                         </button>
                     </div>
 
-                    {/* Advice Section */}
+
+                    {/* Advice Section (Lab Tests) */}
                     <div className="mb-6">
-                        <label className="block text-sm mb-1 font-medium">Advice:</label>
+                        <label className="block text-sm mb-1 font-medium">Advice (Lab Tests):</label>
                         <Select
                             isMulti
-                            className="w-full"
-                            options={tests.map((test) => ({
+                            options={tests2?.map((test: any) => ({
                                 value: test.id,
                                 label: test.name,
                             }))}
-                            onChange={(options) =>
-                                setSelectedTests(options.map((option) => option.value))
-                            }
+                            value={selectedTests.map((testId) => {
+                                const matchedTest = tests2?.find((test: any) => test.id === testId);
+                                return matchedTest ? { value: matchedTest.id, label: matchedTest.name } : null;
+                            })}
+                            onChange={(selectedOptions) => {
+                                setSelectedTests(selectedOptions.map((option: any) => option.value));
+                            }}
+                            placeholder="Select Advice"
                         />
+
+                        {/* <Select
+                            isMulti
+                            options={tests2}
+                            value={tests2?.filter((test: any) => selectedTests.includes(test.id))}
+                            onChange={(selectedOptions) =>
+                                setSelectedTests(selectedOptions.map((option: any) => option.id))
+                            }
+                        /> */}
+
                     </div>
+
+                    <Button onClick={handleSubmit}>Update Prescription</Button>
                 </div>
-            </div>
-
-
-            <div className="text-center">
-
-                <Button onClick={handleSubmit}>
-
-                    Submit Prescription
-
-                </Button>
             </div>
         </div>
     );
 };
 
-export default CreatePrescription;
+export default UpdatePrescription;
