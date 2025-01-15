@@ -37,7 +37,6 @@ import { Link, useParams } from "react-router-dom";
 
 export default function ShowPatientMedicalHistory() {
   const { mhid } = useParams();
-  console.log(mhid);
   const { data, isLoading, isError: error, refetch } = useFetchPatientMedicalHistoryQuery(mhid || '');
   useEffect(() => {
     refetch();

@@ -48,7 +48,7 @@ export function PatientAllHistory() {
 
 
 
-  const perPage = 1;
+  const perPage = 2;
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
 

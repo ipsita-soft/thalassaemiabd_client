@@ -32,15 +32,26 @@ import {
 import Delete from "@/pages/sidebar/webSetting/medicalHistory/Delete";
 
 import Swal from "sweetalert2";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { useFetchMedicalHistoriesQuery } from "@/api/medicalHistoryApi";
 
 export default function ShowAppointment() {
-  const { appointment_id } = useParams();
-  console.log(appointment_id);
-  const { data, isLoading, isError: error, refetch } = useAppointmentsItemQuery(appointment_id || '');
-  useEffect(() => {
-    refetch();
-  }, []);
+  const { patient_id } = useParams();
+
+  const { data: hItem, isLoading: itemLoading } = useFetchMedicalHistoriesQuery({
+    perPage: 1,
+    search: '',
+    page: 1,
+    status: '1',
+  });
+
+  const firstItem = hItem?.data?.[0]?.id;
+
+
+  const { data, isLoading, isError: error } = useAppointmentsItemQuery('31');
+  // useEffect(() => {
+  //   refetch();
+  // }, []);
   const patientRegistrationData = data?.data?.patient_medical_history;
   console.log(data?.data);
 
@@ -170,6 +181,14 @@ export default function ShowAppointment() {
     },
   });
 
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleNavigate = () => {
+    const previousRoute = location.state?.from || `/dashboard/show-patient-medical-history/${patient_id}/${itemLoading == false ? firstItem : ''}`;
+    navigate(previousRoute);
+  };
+
 
 
 
@@ -190,12 +209,7 @@ export default function ShowAppointment() {
           </div>
         </div>
 
-
-        <Button className="bg-white text-black border">
-          <Link className=" hover:text-black" to={'/dashboard/appointments'}>
-            Back Appointments
-          </Link>
-        </Button>
+        <Button variant="outline" onClick={handleNavigate}> {'<<'} Back</Button>
       </div>
       {error ? (
         <>Error</>

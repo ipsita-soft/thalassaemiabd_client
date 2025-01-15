@@ -5,7 +5,7 @@ import { AppDispatch } from '@/redux/store';
 
 export interface PrescriptionsApi {
     data?: any;
-    id?:any;
+    id?: any;
 }
 
 export interface PrescriptionsResponse {
@@ -55,6 +55,22 @@ export const prescriptionsApi = createApi({
     },
     tagTypes: ['PrescriptionsApi'],
     endpoints: (builder) => ({
+        fetchPrescribedMedicinesApis: builder.query<
+            PrescriptionsResponse,
+            { patient_id: string; perPage: number; page: number; search?: string }
+        >({
+            query: ({ patient_id, perPage, page, search }) =>
+                `management/prescribed-medicines?patient_id=${patient_id}&per_page=${perPage}&page=${page}&search=${search || ''}`,
+            providesTags: (result) =>
+                result
+                    ? [
+                        ...result.data.map(({ id }) => ({ type: 'PrescriptionsApi' as const, id })),
+                        { type: 'PrescriptionsApi', id: 'LIST' },
+                    ]
+                    : [{ type: 'PrescriptionsApi', id: 'LIST' }],
+        }),
+
+
         fetchPrescriptionsApis: builder.query<
             PrescriptionsResponse,
             { perPage: number; page: number; search?: string }
@@ -69,6 +85,10 @@ export const prescriptionsApi = createApi({
                     ]
                     : [{ type: 'PrescriptionsApi', id: 'LIST' }],
         }),
+
+
+
+
 
         fetchPrescriptionApi: builder.query<PrescriptionsApi, string>({
             query: (id) => `management/prescriptions/${id}`,
@@ -98,13 +118,14 @@ export const prescriptionsApi = createApi({
             },
             invalidatesTags: [{ type: 'PrescriptionsApi', id: 'LIST' }],
         }),
-        
-        updatePrescriptionsApi: builder.mutation<PrescriptionsApi, { id: string; data: FormData }>({
+
+        updatePrescriptionsApi: builder.mutation<PrescriptionsApi, { id: any; data: FormData }>({
             query: ({ id, data }) => ({
                 url: `management/prescriptions/${id}`,
                 method: 'POST',
                 body: data,
             }),
+
             invalidatesTags: (_, error, { id }) =>
                 error ? [] : [{ type: 'PrescriptionsApi', id }],
         }),
@@ -120,6 +141,7 @@ export const prescriptionsApi = createApi({
 });
 
 export const {
+    useFetchPrescribedMedicinesApisQuery,
     useFetchPrescriptionsApisQuery,
     useFetchPrescriptionApiQuery,
     useCreatePrescriptionsApiMutation,
