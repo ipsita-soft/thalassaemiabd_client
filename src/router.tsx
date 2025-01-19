@@ -111,6 +111,8 @@ import CreatePrescription from './pages/sidebar/webSetting/prescription/CreatePr
 import { PrescriptionsPage } from './pages/sidebar/webSetting/prescription/PrescriptionsPage.tsx';
 import  ShowPrescription  from './pages/sidebar/webSetting/prescription/ShowPrescription.tsx';
 import PatientReportForm from './pages/sidebar/webSetting/patient/PatientReportForm.tsx';
+import { MedicineItem } from './pages/sidebar/webSetting/medicineItem/MedicineItem.tsx';
+import { LabTestServiceItem } from './pages/sidebar/webSetting/labTestServiceItem/LabTestServiceItem.tsx';
 
 
 const router = createBrowserRouter([
@@ -786,6 +788,26 @@ const router = createBrowserRouter([
           element={<ImportantLinkPage />}
           requiredPermissions={[
             'medical-history-all',
+          ]}
+        />,
+      },
+
+      {
+        path: 'medicine-items',
+        element: <ProtectedRoute
+          element={<MedicineItem />}
+          requiredPermissions={[
+            'medicine-item-all',
+          ]}
+        />,
+      },
+
+      {
+        path: 'lab-test-service-items',
+        element: <ProtectedRoute
+          element={<LabTestServiceItem />}
+          requiredPermissions={[
+            'lab-test-service-item-all',
           ]}
         />,
       },

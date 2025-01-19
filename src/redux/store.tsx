@@ -37,6 +37,8 @@ import { importantlinkApi } from '@/api/ImportantLinkApi';
 import { whatisthalassemiaApi } from '@/api/WhatIsThalassemiaApi';
 import { founderApi } from '@/api/founderApi';
 import { prescriptionsApi } from '@/api/prescriptionsApi';
+import { medicineItemApi } from '@/api/medicineItemApi';
+import { labTestServiceItemApi } from '@/api/labTestServiceItemApi';
 
 export const store = configureStore({
   reducer: {
@@ -79,6 +81,8 @@ export const store = configureStore({
     [whatisthalassemiaApi.reducerPath]: whatisthalassemiaApi.reducer,
     [founderApi.reducerPath]: founderApi.reducer,
     [prescriptionsApi.reducerPath]: prescriptionsApi.reducer,
+    [medicineItemApi.reducerPath]: medicineItemApi.reducer,
+    [labTestServiceItemApi.reducerPath]: labTestServiceItemApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
@@ -92,6 +96,8 @@ export const store = configureStore({
       .concat(whatisthalassemiaApi.middleware)
       .concat(founderApi.middleware)
       .concat(prescriptionsApi.middleware)
+      .concat(medicineItemApi.middleware)
+      .concat(labTestServiceItemApi.middleware)
 });
 
 export type AppDispatch = typeof store.dispatch;
