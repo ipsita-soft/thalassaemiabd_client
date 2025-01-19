@@ -66,7 +66,15 @@ const ShowNavbar: React.FC<ShowNavbarProps> = ({ patient_id }) => {
                         </Link>
 
                     </div>
+
+
+
+
+
                 ))}
+
+
+               
             </div>
 
             {/* Pagination Section */}

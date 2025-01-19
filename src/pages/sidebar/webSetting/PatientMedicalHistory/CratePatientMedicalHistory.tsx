@@ -16,7 +16,10 @@ export function CratePatientMedicalHistory() {
     const perPage = 250;
     const search = '';
     const currentPage = 1;
-    const { data, isLoading, error } = useFetchMedicalHistoriesQuery({ perPage, search, page: currentPage, mhid: mhId });
+    const status = 1;
+    const { data, isLoading, error } = useFetchMedicalHistoriesQuery({ perPage, search, page: currentPage, mhid: mhId, status: status });
+
+    console.log(data);
 
     const currentDate = new Date();
     const localeDate = currentDate.toLocaleDateString('en-US');
@@ -103,7 +106,7 @@ export function CratePatientMedicalHistory() {
     ) : (
         <div className="p-6 bg-gray-50 min-h-screen">
             <Navbar patient_id={patient_id?.toString() || ''} />
-            
+
             {error ? (
                 <div className="text-red-500 text-center font-semibold text-base mt-8">
                     Unable to load data. Please try again later.
