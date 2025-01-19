@@ -177,7 +177,6 @@ const Header = () => {
 
                     <li className="nav-item">
                       <Link to="notice">Notice</Link>
-
                     </li>
 
                     {/* Additional Nav Items */}
